@@ -112,7 +112,12 @@ func _rebuild_recipe_list() -> void:
 		child.queue_free()
 	_recipe_buttons.clear()
 	_selected_recipe = null
-	for recipe in ContentRegistry.get_recipes():
+	var registry := get_node_or_null("/root/ContentRegistry")
+	if registry == null:
+		status_label.text = "Recipe catalog is unavailable."
+		return
+	var recipes: Array[Resource] = registry.get_recipes()
+	for recipe in recipes:
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(0, 48)
 		button.focus_mode = Control.FOCUS_NONE
@@ -122,8 +127,8 @@ func _rebuild_recipe_list() -> void:
 		recipe_list.add_child(button)
 		_recipe_buttons.append(button)
 	_refresh_recipe_states()
-	if not ContentRegistry.get_recipes().is_empty():
-		_select_recipe(ContentRegistry.get_recipes()[0])
+	if not recipes.is_empty():
+		_select_recipe(recipes[0])
 
 
 func _refresh_recipe_states() -> void:
