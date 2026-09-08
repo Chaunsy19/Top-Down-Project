@@ -1,6 +1,6 @@
 # Frontier Hearth
 
-A top-down 2D survival and settlement game built with Godot 4. The player directly controls one survivor; recruited settlers will eventually work autonomously through jobs and priorities.
+A true-isometric 2D survival and settlement game built with Godot 4. The player directly controls one survivor; recruited settlers will eventually work autonomously through jobs and priorities.
 
 The complete development roadmap is maintained in `Project Basis/rimworld_style_survival_codex_plan.md`. Work proceeds one milestone at a time, and every completed milestone must leave the project runnable.
 
@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, press **E** to interact or collect drops, **I** for inventory/equipment, and **C** for hand crafting. Interact with the campfire to open workstation crafting.
+The current test scene uses a logical 14×14 grid projected into 64×32 isometric diamonds. Move in screen-relative directions with **WASD** or the arrow keys, press **E** to interact or collect drops, **I** for inventory/equipment, and **C** for hand crafting. Interact with the campfire to open workstation crafting.
 
 ## Project structure
 
@@ -72,6 +72,14 @@ Tool requirements use capability tags rather than specific item IDs. A resource 
 
 Add a definition file, reference it from the matching catalog, then instantiate the generic scene. New resource types should not require a new behavior script unless they truly behave differently.
 
+## Isometric world coordinates
+
+- Gameplay cells remain logical integer coordinates; `GridWorld` is the authority that projects them into 2:1 diamond-shaped screen coordinates.
+- Use `cell_to_world()` and `world_to_cell()` for discrete placement and queries.
+- Use `grid_position_to_local()` and `world_to_grid_position()` for continuous movement, range checks, and future pathfinding.
+- World objects are anchored at their ground-contact point and the world uses Y-sorting for correct front/behind ordering.
+- Player movement remains screen-relative for direct-control readability, while interaction distance is measured in logical grid space.
+
 ## Inventory controls
 
 - Click a populated slot, then another slot, to move, merge, or swap stacks.
@@ -102,4 +110,5 @@ godot --headless --path . --script res://tests/milestone_3_test.gd
 godot --headless --path . --script res://tests/milestone_4_test.gd
 godot --headless --path . --script res://tests/tool_requirement_test.gd
 godot --headless --path . --script res://tests/milestone_5_test.gd
+godot --headless --path . --script res://tests/isometric_grid_test.gd
 ```
