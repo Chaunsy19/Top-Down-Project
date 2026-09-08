@@ -79,6 +79,7 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - Use `grid_position_to_local()` and `world_to_grid_position()` for continuous movement, range checks, and future pathfinding.
 - World objects are anchored at their ground-contact point and the world uses Y-sorting for correct front/behind ordering.
 - Player movement remains screen-relative for direct-control readability, while interaction distance is measured in logical grid space.
+- The test scene's brick storehouse is assembled from reusable atlas regions and uses `GridFootprintObstacle` to keep its four blocked cells and physical collision together.
 
 ## Inventory controls
 
@@ -111,4 +112,5 @@ godot --headless --path . --script res://tests/milestone_4_test.gd
 godot --headless --path . --script res://tests/tool_requirement_test.gd
 godot --headless --path . --script res://tests/milestone_5_test.gd
 godot --headless --path . --script res://tests/isometric_grid_test.gd
+godot --headless --path . --script res://tests/isometric_building_test.gd
 ```
