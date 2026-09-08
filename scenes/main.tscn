@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/test/foundation_test.tscn" id="2_test"]
+[ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="3_debug"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="FoundationTest" parent="." instance=ExtResource("2_test")]
+
+[node name="DebugOverlay" parent="." instance=ExtResource("3_debug")]
+

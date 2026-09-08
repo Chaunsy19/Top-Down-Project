@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/debug/debug_overlay.gd" id="1_overlay"]
+
+[node name="DebugOverlay" type="CanvasLayer"]
+script = ExtResource("1_overlay")
+
+[node name="Title" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 700.0
+offset_bottom = 56.0
+theme_override_colors/font_color = Color(0.902, 0.765, 0.416, 1)
+theme_override_font_sizes/font_size = 24
+text = "FRONTIER HEARTH — FOUNDATION TEST"
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 24.0
+offset_top = 58.0
+offset_right = 700.0
+offset_bottom = 88.0
+theme_override_colors/font_color = Color(0.78, 0.84, 0.81, 1)
+text = "Milestone 0  •  F3 debug overlay  •  P pause"
+
+[node name="Panel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+offset_left = 1012.0
+offset_top = 20.0
+offset_right = 1256.0
+offset_bottom = 112.0
+
+[node name="Readout" type="Label" parent="Panel"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/outline_size = 4
+text = "State: Booting\nFPS: 0\nScene: None"
+
