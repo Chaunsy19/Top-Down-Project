@@ -31,4 +31,3 @@ func validate() -> PackedStringArray:
 			errors.append("Duplicate item_id '%s'." % item.item_id)
 		seen_ids[item.item_id] = true
 	return errors
-
