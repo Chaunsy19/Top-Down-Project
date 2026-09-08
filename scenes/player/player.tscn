@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
+[ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
+[ext_resource type="Script" path="res://scripts/player/interaction_range.gd" id="3_range"]
+[ext_resource type="Script" path="res://scripts/camera/player_camera.gd" id="4_camera"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_player"]
+radius = 11.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interaction"]
+radius = 56.0
+
+[node name="Player" type="CharacterBody2D"]
+unique_name_in_owner = true
+collision_layer = 1
+collision_mask = 1
+script = ExtResource("1_controller")
+
+[node name="Visual" type="Node2D" parent="."]
+script = ExtResource("2_visual")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_player")
+
+[node name="InteractionRange" type="Area2D" parent="."]
+z_index = -1
+collision_layer = 0
+collision_mask = 1
+monitorable = false
+script = ExtResource("3_range")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionRange"]
+shape = SubResource("CircleShape2D_interaction")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+script = ExtResource("4_camera")
+

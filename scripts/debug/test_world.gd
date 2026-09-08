@@ -23,7 +23,8 @@ func _draw() -> void:
 		var y_position := float(y * GRID_SIZE)
 		draw_line(Vector2(0.0, y_position), Vector2(room_rect.size.x, y_position), GRID_COLOR)
 
-	draw_rect(room_rect, WALL_COLOR, false, 8.0)
-	draw_circle(room_rect.get_center(), 18.0, Color("#e6c36a"))
-	draw_circle(room_rect.get_center(), 8.0, Color("#473b30"))
-
+	var wall_thickness := float(GRID_SIZE)
+	draw_rect(Rect2(0.0, 0.0, room_rect.size.x, wall_thickness), WALL_COLOR)
+	draw_rect(Rect2(0.0, room_rect.size.y - wall_thickness, room_rect.size.x, wall_thickness), WALL_COLOR)
+	draw_rect(Rect2(0.0, 0.0, wall_thickness, room_rect.size.y), WALL_COLOR)
+	draw_rect(Rect2(room_rect.size.x - wall_thickness, 0.0, wall_thickness, room_rect.size.y), WALL_COLOR)

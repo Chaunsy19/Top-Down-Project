@@ -1,8 +1,35 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/debug/test_world.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
+size = Vector2(896, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vertical"]
+size = Vector2(32, 512)
 
 [node name="FoundationTest" type="Node2D"]
 position = Vector2(192, 104)
 script = ExtResource("1_world")
 
+[node name="RoomWalls" type="StaticBody2D" parent="."]
+
+[node name="Top" type="CollisionShape2D" parent="RoomWalls"]
+position = Vector2(448, 16)
+shape = SubResource("RectangleShape2D_horizontal")
+
+[node name="Bottom" type="CollisionShape2D" parent="RoomWalls"]
+position = Vector2(448, 496)
+shape = SubResource("RectangleShape2D_horizontal")
+
+[node name="Left" type="CollisionShape2D" parent="RoomWalls"]
+position = Vector2(16, 256)
+shape = SubResource("RectangleShape2D_vertical")
+
+[node name="Right" type="CollisionShape2D" parent="RoomWalls"]
+position = Vector2(880, 256)
+shape = SubResource("RectangleShape2D_vertical")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(448, 256)
