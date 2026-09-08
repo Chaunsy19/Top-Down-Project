@@ -33,6 +33,11 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/player/skill_tracker.gd",
 	"res://scripts/world/resource_node.gd",
 	"res://scripts/world/world_item_drop.gd",
+	"res://scripts/inventory/inventory_component.gd",
+	"res://scripts/inventory/inventory_slot_ui.gd",
+	"res://scripts/inventory/inventory_panel.gd",
+	"res://scripts/inventory/inventory_ui.gd",
+	"res://scripts/world/inventory_container.gd",
 ]
 
 

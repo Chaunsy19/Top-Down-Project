@@ -39,3 +39,14 @@ All notable project changes are recorded here by milestone.
 - Added data-defined trees, rocks, and berry bushes producing typed world-item drops.
 - Added a reusable skill tracker shared by future player and NPC character systems.
 - Added automated catalog, requirement, harvesting, drop, depletion, and regrowth checks.
+
+### Milestone 4 — Inventory and containers
+
+- Added reusable slot-based inventories with data-defined stack limits and weight capacity.
+- Added stack splitting, merging, swapping, partial transfer, and full transfer behavior.
+- Connected world drops to player pickup and inventory-backed dropping.
+- Added a reusable paired container/inventory interface inspired by the supplied layout reference.
+- Added category-colored slots, quantities, tooltips, selection state, and inventory notifications.
+- Reserved a dedicated player-inventory footer for future currencies.
+- Added a supply crate and stone axe to exercise the complete item lifecycle.
+- Added automated inventory-unit and scene-integration coverage.

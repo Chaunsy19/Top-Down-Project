@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
 [ext_resource type="Script" path="res://scripts/interaction/player_interactor.gd" id="3_range"]
 [ext_resource type="Script" path="res://scripts/camera/player_camera.gd" id="4_camera"]
 [ext_resource type="Script" path="res://scripts/player/skill_tracker.gd" id="5_skills"]
+[ext_resource type="Script" path="res://scripts/inventory/inventory_component.gd" id="6_inventory"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 11.0
@@ -32,6 +33,11 @@ starting_levels = {
 &"forestry": 1,
 &"mining": 1
 }
+
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource("6_inventory")
+slot_count = 30
+maximum_weight = 40.0
 
 [node name="InteractionRange" type="Area2D" parent="."]
 z_index = -1

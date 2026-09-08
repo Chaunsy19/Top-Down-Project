@@ -1,5 +1,5 @@
 class_name WorldItemDrop
-extends Node2D
+extends "res://scripts/interaction/interactable.gd"
 
 const ItemStackScript = preload("res://scripts/data/items/item_stack.gd")
 
@@ -9,6 +9,9 @@ var item_stack: ItemStackScript
 
 
 func _ready() -> void:
+	display_name = "item"
+	interaction_verb = "Pick up"
+	super()
 	add_to_group("world_item_drop")
 	_update_presentation()
 
@@ -21,11 +24,49 @@ func configure(item_definition: Resource, quantity: int) -> void:
 		_update_presentation()
 
 
+func can_interact(actor: Node2D) -> bool:
+	if not super(actor) or item_stack == null or not item_stack.is_valid():
+		return false
+	var inventory := actor.get_node_or_null("Inventory")
+	return inventory != null and inventory.get_addable_quantity(item_stack.item_definition) > 0
+
+
+func get_prompt_text() -> String:
+	if item_stack == null or not item_stack.is_valid():
+		return "Invalid item"
+	return "Pick up %d× %s" % [item_stack.quantity, item_stack.item_definition.display_name]
+
+
+func get_debug_state() -> String:
+	if item_stack == null or not item_stack.is_valid():
+		return "Invalid drop"
+	return "%d× %s" % [item_stack.quantity, item_stack.item_definition.display_name]
+
+
+func _perform_interaction(actor: Node2D) -> void:
+	var inventory := actor.get_node_or_null("Inventory")
+	var remainder: int = inventory.add_item(item_stack.item_definition, item_stack.quantity)
+	var collected := item_stack.quantity - remainder
+	item_stack.quantity = remainder
+	_show_notification("Picked up %d× %s" % [collected, item_stack.item_definition.display_name])
+	if item_stack.quantity <= 0:
+		queue_free()
+	else:
+		_update_presentation()
+
+
+func _show_notification(message: String) -> void:
+	var inventory_ui := get_tree().get_first_node_in_group("inventory_ui")
+	if inventory_ui:
+		inventory_ui.show_notification(message)
+
+
 func _update_presentation() -> void:
 	if item_stack == null or not item_stack.is_valid():
 		item_label.text = "Invalid drop"
 		queue_redraw()
 		return
+	display_name = item_stack.item_definition.display_name
 	item_label.text = "%d× %s" % [item_stack.quantity, item_stack.item_definition.display_name]
 	queue_redraw()
 

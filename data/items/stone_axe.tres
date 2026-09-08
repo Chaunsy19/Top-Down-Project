@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+item_id = &"stone_axe"
+display_name = "Stone Axe"
+description = "A simple stone-headed axe. Tool behavior is introduced in Milestone 5."
+categories = Array[StringName]([&"tool", &"weapon"])
+stack_limit = 1
+weight = 2.5
+world_color = Color(0.67, 0.72, 0.68, 1)

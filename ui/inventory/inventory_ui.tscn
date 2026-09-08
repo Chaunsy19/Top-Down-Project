@@ -1,0 +1,73 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/inventory/inventory_ui.gd" id="1_ui"]
+[ext_resource type="PackedScene" path="res://ui/inventory/inventory_panel.tscn" id="2_panel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_backdrop"]
+bg_color = Color(0.04, 0.055, 0.05, 0.72)
+
+[node name="InventoryUI" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_ui")
+
+[node name="Overlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Backdrop" type="Panel" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_backdrop")
+
+[node name="ContainerPanel" parent="Overlay" instance=ExtResource("2_panel")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 410)
+layout_mode = 0
+offset_left = 86.0
+offset_top = 155.0
+offset_right = 458.0
+offset_bottom = 565.0
+panel_title = "SUPPLY CRATE"
+columns = 4
+slots_minimum_height = 215.0
+show_currency_footer = false
+show_drop_button = false
+
+[node name="PlayerPanel" parent="Overlay" instance=ExtResource("2_panel")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(540, 580)
+layout_mode = 0
+offset_left = 536.0
+offset_top = 70.0
+offset_right = 1094.0
+offset_bottom = 650.0
+panel_title = "INVENTORY"
+columns = 6
+slots_minimum_height = 360.0
+
+[node name="NotificationLabel" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 440.0
+offset_top = 26.0
+offset_right = 840.0
+offset_bottom = 62.0
+theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 18
+text = "Item collected"
+horizontal_alignment = 1
+
+[node name="NotificationTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.0
+one_shot = true

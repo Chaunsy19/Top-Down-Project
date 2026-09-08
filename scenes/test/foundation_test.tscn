@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://data/resource_nodes/tree.tres" id="5_tree"]
 [ext_resource type="Resource" path="res://data/resource_nodes/rock.tres" id="6_rock"]
 [ext_resource type="Resource" path="res://data/resource_nodes/berry_bush.tres" id="7_bush"]
+[ext_resource type="PackedScene" path="res://scenes/world/inventory_container.tscn" id="8_container"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
 size = Vector2(896, 32)
@@ -54,3 +55,6 @@ definition = ExtResource("6_rock")
 [node name="BerryBush" parent="." instance=ExtResource("4_resource")]
 position = Vector2(592, 368)
 definition = ExtResource("7_bush")
+
+[node name="SupplyCrate" parent="." instance=ExtResource("8_container")]
+position = Vector2(272, 368)

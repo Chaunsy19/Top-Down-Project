@@ -32,4 +32,3 @@ func add_experience(skill_id: StringName, amount: int) -> void:
 
 func get_experience(skill_id: StringName) -> int:
 	return _experience.get(skill_id, 0)
-

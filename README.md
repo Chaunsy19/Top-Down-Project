@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, approach the terminal or a resource node and press **E** to act, zoom with the mouse wheel, press **F** to reset the camera zoom, and press **F3** to toggle grid/object debug information. Harvested items appear as labeled world drops.
+The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, press **E** to interact or collect drops, and press **I** to open the player inventory. The supply crate opens a paired container/inventory view. Harvested items now enter the same pickup, inventory, transfer, and drop lifecycle.
 
 ## Project structure
 
@@ -66,6 +66,14 @@ Gameplay content is defined in Godot Resource files rather than hard-coded into 
 
 Add a definition file, reference it from the matching catalog, then instantiate the generic scene. New resource types should not require a new behavior script unless they truly behave differently.
 
+## Inventory controls
+
+- Click a populated slot, then another slot, to move, merge, or swap stacks.
+- Right-click a stack to split it into the first empty slot.
+- With a container open, Shift-click or double-click a stack to transfer it.
+- Select a player stack and use **Drop selected** to place it in the world.
+- The player inventory footer reserves space for future currencies; currency state is not implemented yet.
+
 ## Automated checks
 
 From the project directory, run the smoke and movement suites with the Godot executable:
@@ -75,4 +83,5 @@ godot --headless --path . --script res://tests/smoke_test.gd
 godot --headless --path . --script res://tests/milestone_1_test.gd
 godot --headless --path . --script res://tests/milestone_2_test.gd
 godot --headless --path . --script res://tests/milestone_3_test.gd
+godot --headless --path . --script res://tests/milestone_4_test.gd
 ```
