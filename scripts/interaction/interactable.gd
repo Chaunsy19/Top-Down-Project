@@ -11,6 +11,7 @@ signal availability_changed(is_available: bool)
 
 var _grid_world: Node2D
 var _occupied_cell := Vector2i(-1, -1)
+var _is_grid_occupancy_registered := false
 
 
 func _ready() -> void:
@@ -20,8 +21,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	if is_instance_valid(_grid_world) and _occupied_cell != Vector2i(-1, -1):
-		_grid_world.set_cell_blocked(_occupied_cell, false)
+	set_grid_occupancy_enabled(false)
 
 
 func get_interaction_point() -> Vector2:
@@ -56,14 +56,28 @@ func get_debug_state() -> String:
 	return "Available" if is_available else "Unavailable"
 
 
+func set_grid_occupancy_enabled(enabled: bool) -> void:
+	if not blocks_grid_cell:
+		return
+	if enabled and not _is_grid_occupancy_registered:
+		_register_grid_occupancy()
+	elif not enabled and _is_grid_occupancy_registered:
+		if is_instance_valid(_grid_world):
+			_grid_world.set_cell_blocked(_occupied_cell, false)
+		_is_grid_occupancy_registered = false
+
+
 func _perform_interaction(_actor: Node2D) -> void:
 	pass
 
 
 func _register_grid_occupancy() -> void:
+	if _is_grid_occupancy_registered:
+		return
 	_grid_world = get_tree().get_first_node_in_group("grid_world") as Node2D
 	if _grid_world == null:
 		push_warning("%s could not find a GridWorld for occupancy registration." % name)
 		return
 	_occupied_cell = _grid_world.world_to_cell(global_position)
 	_grid_world.set_cell_blocked(_occupied_cell, true)
+	_is_grid_occupancy_registered = true

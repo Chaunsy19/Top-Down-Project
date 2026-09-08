@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ItemCatalog" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_catalog.gd" id="1_catalog"]
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="2_wood"]
+[ext_resource type="Resource" path="res://data/items/stone.tres" id="3_stone"]
+[ext_resource type="Resource" path="res://data/items/berries.tres" id="4_berries"]
+
+[resource]
+script = ExtResource("1_catalog")
+items = Array[Resource]([ExtResource("2_wood"), ExtResource("3_stone"), ExtResource("4_berries")])
+

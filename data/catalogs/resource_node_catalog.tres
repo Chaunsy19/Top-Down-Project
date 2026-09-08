@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ResourceNodeCatalog" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/resource_nodes/resource_node_catalog.gd" id="1_catalog"]
+[ext_resource type="Resource" path="res://data/resource_nodes/tree.tres" id="2_tree"]
+[ext_resource type="Resource" path="res://data/resource_nodes/rock.tres" id="3_rock"]
+[ext_resource type="Resource" path="res://data/resource_nodes/berry_bush.tres" id="4_bush"]
+
+[resource]
+script = ExtResource("1_catalog")
+resource_nodes = Array[Resource]([ExtResource("2_tree"), ExtResource("3_rock"), ExtResource("4_bush")])
+

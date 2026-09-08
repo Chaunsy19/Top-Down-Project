@@ -25,6 +25,14 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/world/grid_world.gd",
 	"res://scripts/world/test_terminal.gd",
 	"res://scripts/debug/debug_overlay.gd",
+	"res://scripts/data/content_registry.gd",
+	"res://scripts/data/items/item_definition.gd",
+	"res://scripts/data/items/item_catalog.gd",
+	"res://scripts/data/items/item_stack.gd",
+	"res://scripts/data/resource_nodes/resource_node_definition.gd",
+	"res://scripts/player/skill_tracker.gd",
+	"res://scripts/world/resource_node.gd",
+	"res://scripts/world/world_item_drop.gd",
 ]
 
 

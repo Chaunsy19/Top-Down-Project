@@ -1,0 +1,241 @@
+class_name HarvestableResourceNode
+extends "res://scripts/interaction/interactable.gd"
+
+const WorldItemDropScene = preload("res://scenes/world/world_item_drop.tscn")
+const WorldItemDropScript = preload("res://scripts/world/world_item_drop.gd")
+const DEPLETION_PERMANENT := 0
+const DEPLETION_RESPAWN := 1
+const DEPLETION_REGROW := 2
+
+signal harvest_started(actor: Node2D)
+signal harvest_cancelled(actor: Node2D)
+signal harvest_completed(actor: Node2D, drops: Array[Node2D], experience_reward: int)
+signal depleted()
+signal recovered()
+
+@export var definition: Resource
+
+var remaining_harvests := 0
+var harvest_progress := 0.0
+var recovery_remaining := 0.0
+var _harvesting_actor: Node2D
+var _random := RandomNumberGenerator.new()
+
+@onready var name_label: Label = %NameLabel
+@onready var status_label: Label = %StatusLabel
+
+
+func _ready() -> void:
+	super()
+	add_to_group("resource_node")
+	if definition == null:
+		push_error("ResourceNode '%s' has no definition." % name)
+		set_available(false)
+		return
+	display_name = definition.display_name
+	interaction_verb = "Harvest"
+	remaining_harvests = definition.max_harvests
+	_random.seed = hash("%s:%s:%s" % [definition.node_id, global_position.x, global_position.y])
+	_update_presentation()
+
+
+func _process(delta: float) -> void:
+	advance_simulation(delta)
+
+
+func can_interact(actor: Node2D) -> bool:
+	return (
+		super(actor)
+		and not is_depleted()
+		and not is_harvesting()
+		and get_actor_skill_level(actor) >= definition.required_skill_level
+	)
+
+
+func get_prompt_text() -> String:
+	if definition == null:
+		return "Invalid resource"
+	if is_harvesting():
+		return "Harvesting %s (%d%%)" % [display_name, roundi(get_harvest_ratio() * 100.0)]
+	if is_depleted():
+		return "%s depleted" % display_name
+	return "%s %s" % [interaction_verb, display_name]
+
+
+func get_debug_state() -> String:
+	if definition == null:
+		return "Invalid definition"
+	if is_harvesting():
+		return "Harvesting %d%% | %d remaining" % [roundi(get_harvest_ratio() * 100.0), remaining_harvests]
+	if is_depleted():
+		if recovery_remaining > 0.0:
+			return "Depleted | recovers in %.1fs" % recovery_remaining
+		return "Depleted"
+	return "Ready | %d harvests | %s %d+" % [
+		remaining_harvests,
+		String(definition.skill_id).capitalize(),
+		definition.required_skill_level,
+	]
+
+
+func is_harvesting() -> bool:
+	return is_instance_valid(_harvesting_actor)
+
+
+func is_depleted() -> bool:
+	return remaining_harvests <= 0
+
+
+func get_harvest_ratio() -> float:
+	if definition == null or definition.harvest_time_seconds <= 0.0:
+		return 0.0
+	return clampf(harvest_progress / definition.harvest_time_seconds, 0.0, 1.0)
+
+
+func get_actor_skill_level(actor: Node2D) -> int:
+	if not is_instance_valid(actor) or definition == null or definition.skill_id.is_empty():
+		return 0
+	var skills := actor.get_node_or_null("Skills")
+	return skills.get_skill_level(definition.skill_id) if skills else 0
+
+
+func advance_simulation(delta: float) -> void:
+	if definition == null:
+		return
+	if is_harvesting():
+		if global_position.distance_to(_harvesting_actor.global_position) > definition.cancel_distance:
+			cancel_harvest()
+			return
+		harvest_progress += delta
+		if harvest_progress >= definition.harvest_time_seconds:
+			_complete_harvest()
+		else:
+			_update_presentation()
+	elif is_depleted() and recovery_remaining > 0.0:
+		recovery_remaining = maxf(recovery_remaining - delta, 0.0)
+		if recovery_remaining <= 0.0:
+			_recover()
+		else:
+			_update_presentation()
+
+
+func cancel_harvest() -> void:
+	if not is_harvesting():
+		return
+	var previous_actor := _harvesting_actor
+	_harvesting_actor = null
+	harvest_progress = 0.0
+	harvest_cancelled.emit(previous_actor)
+	_update_presentation()
+
+
+func _perform_interaction(actor: Node2D) -> void:
+	_harvesting_actor = actor
+	harvest_progress = 0.0
+	harvest_started.emit(actor)
+	_update_presentation()
+
+
+func _complete_harvest() -> void:
+	var actor := _harvesting_actor
+	_harvesting_actor = null
+	harvest_progress = 0.0
+	remaining_harvests = maxi(remaining_harvests - 1, 0)
+	var drops := _spawn_yields()
+	_award_experience(actor)
+	harvest_completed.emit(actor, drops, definition.experience_reward)
+	if is_depleted():
+		_begin_depletion()
+	_update_presentation()
+
+
+func _spawn_yields() -> Array[Node2D]:
+	var drops: Array[Node2D] = []
+	for index in definition.yields.size():
+		var harvest_yield: Resource = definition.yields[index]
+		var quantity: int = harvest_yield.roll_quantity(_random)
+		var drop := WorldItemDropScene.instantiate() as WorldItemDropScript
+		drop.configure(harvest_yield.item_definition, quantity)
+		get_parent().add_child(drop)
+		drop.global_position = global_position + Vector2(22.0 + index * 10.0, 18.0 + index * 6.0)
+		drops.append(drop)
+	return drops
+
+
+func _award_experience(actor: Node2D) -> void:
+	if not is_instance_valid(actor) or definition.skill_id.is_empty():
+		return
+	var skills := actor.get_node_or_null("Skills")
+	if skills:
+		skills.add_experience(definition.skill_id, definition.experience_reward)
+
+
+func _begin_depletion() -> void:
+	set_available(false)
+	depleted.emit()
+	if definition.depletion_behavior != DEPLETION_PERMANENT:
+		recovery_remaining = definition.recovery_time_seconds
+	if definition.depletion_behavior == DEPLETION_RESPAWN:
+		visible = false
+		set_grid_occupancy_enabled(false)
+		_set_collision_shapes_disabled(true)
+
+
+func _recover() -> void:
+	remaining_harvests = definition.max_harvests
+	recovery_remaining = 0.0
+	visible = true
+	set_available(true)
+	if definition.depletion_behavior == DEPLETION_RESPAWN:
+		set_grid_occupancy_enabled(true)
+		_set_collision_shapes_disabled(false)
+	recovered.emit()
+	_update_presentation()
+
+
+func _set_collision_shapes_disabled(disabled: bool) -> void:
+	for child in find_children("*", "CollisionShape2D", true, false):
+		(child as CollisionShape2D).set_deferred("disabled", disabled)
+
+
+func _update_presentation() -> void:
+	if definition == null or not is_instance_valid(name_label):
+		return
+	name_label.text = definition.display_name
+	if is_harvesting():
+		status_label.text = "%d%%" % roundi(get_harvest_ratio() * 100.0)
+	elif is_depleted():
+		status_label.text = "DEPLETED"
+	else:
+		status_label.text = "%d LEFT" % remaining_harvests
+	queue_redraw()
+
+
+func _draw() -> void:
+	if definition == null:
+		return
+	var depleted_color: Color = definition.depleted_color
+	if is_depleted():
+		draw_rect(Rect2(-10.0, -5.0, 20.0, 10.0), depleted_color)
+	elif definition.visual_kind == "tree":
+		draw_rect(Rect2(-5.0, 2.0, 10.0, 24.0), definition.depleted_color)
+		draw_circle(Vector2(-7.0, -4.0), 15.0, definition.secondary_color)
+		draw_circle(Vector2(8.0, -6.0), 17.0, definition.primary_color)
+		draw_circle(Vector2(0.0, -15.0), 16.0, definition.primary_color.lightened(0.08))
+	elif definition.visual_kind == "rock":
+		var rock_points := PackedVector2Array([
+			Vector2(-18.0, 10.0), Vector2(-13.0, -10.0), Vector2(0.0, -18.0),
+			Vector2(16.0, -9.0), Vector2(19.0, 10.0), Vector2(5.0, 17.0), Vector2(-9.0, 16.0),
+		])
+		draw_colored_polygon(rock_points, definition.primary_color)
+		draw_polyline(PackedVector2Array([rock_points[0], rock_points[1], rock_points[2], rock_points[3]]), definition.secondary_color, 3.0)
+	else:
+		draw_circle(Vector2(-9.0, 2.0), 13.0, definition.primary_color)
+		draw_circle(Vector2(9.0, 1.0), 14.0, definition.primary_color.lightened(0.06))
+		draw_circle(Vector2(0.0, -9.0), 13.0, definition.primary_color)
+		for berry_position in [Vector2(-9.0, -3.0), Vector2(7.0, -7.0), Vector2(10.0, 7.0)]:
+			draw_circle(berry_position, 3.0, definition.secondary_color)
+
+	if is_harvesting():
+		draw_rect(Rect2(-20.0, 28.0, 40.0, 5.0), Color("#16201c"))
+		draw_rect(Rect2(-19.0, 29.0, 38.0 * get_harvest_ratio(), 3.0), Color("#e6c36a"))

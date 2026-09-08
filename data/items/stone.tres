@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+item_id = &"stone"
+display_name = "Stone"
+description = "Dense stone suitable for tools and durable structures."
+categories = Array[StringName]([&"material", &"crafting"])
+stack_limit = 75
+weight = 0.8
+world_color = Color(0.48, 0.53, 0.56, 1)
+

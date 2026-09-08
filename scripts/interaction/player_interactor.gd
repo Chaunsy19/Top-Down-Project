@@ -45,6 +45,7 @@ func refresh_target() -> void:
 			nearest_distance = distance
 
 	set_current_target(nearest_target)
+	_update_prompt()
 
 
 func try_interact() -> bool:

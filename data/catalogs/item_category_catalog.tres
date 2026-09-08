@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="ItemCategoryCatalog" load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_category_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://scripts/data/items/item_category_definition.gd" id="2_category"]
+
+[sub_resource type="Resource" id="Category_material"]
+script = ExtResource("2_category")
+category_id = &"material"
+display_name = "Material"
+description = "Raw or processed matter used by other systems."
+
+[sub_resource type="Resource" id="Category_crafting"]
+script = ExtResource("2_category")
+category_id = &"crafting"
+display_name = "Crafting"
+description = "An ingredient accepted by one or more recipes."
+
+[sub_resource type="Resource" id="Category_consumable"]
+script = ExtResource("2_category")
+category_id = &"consumable"
+display_name = "Consumable"
+description = "An item consumed when used."
+
+[sub_resource type="Resource" id="Category_food"]
+script = ExtResource("2_category")
+category_id = &"food"
+display_name = "Food"
+description = "A consumable that satisfies hunger."
+
+[sub_resource type="Resource" id="Category_medical"]
+script = ExtResource("2_category")
+category_id = &"medical"
+display_name = "Medical"
+description = "Medicine or treatment supplies."
+
+[sub_resource type="Resource" id="Category_tool"]
+script = ExtResource("2_category")
+category_id = &"tool"
+display_name = "Tool"
+description = "Equipment used to perform work."
+
+[sub_resource type="Resource" id="Category_weapon"]
+script = ExtResource("2_category")
+category_id = &"weapon"
+display_name = "Weapon"
+description = "Equipment primarily used for combat."
+
+[sub_resource type="Resource" id="Category_apparel"]
+script = ExtResource("2_category")
+category_id = &"apparel"
+display_name = "Apparel"
+description = "Wearable clothing or armor."
+
+[resource]
+script = ExtResource("1_catalog")
+categories = Array[Resource]([SubResource("Category_material"), SubResource("Category_crafting"), SubResource("Category_consumable"), SubResource("Category_food"), SubResource("Category_medical"), SubResource("Category_tool"), SubResource("Category_weapon"), SubResource("Category_apparel")])
+

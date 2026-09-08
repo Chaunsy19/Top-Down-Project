@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="ResourceNodeDefinition" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/resource_nodes/resource_node_definition.gd" id="1_definition"]
+[ext_resource type="Script" path="res://scripts/data/resource_nodes/harvest_yield_definition.gd" id="2_yield"]
+[ext_resource type="Resource" path="res://data/items/berries.tres" id="3_berries"]
+
+[sub_resource type="Resource" id="Yield_berries"]
+script = ExtResource("2_yield")
+item_definition = ExtResource("3_berries")
+minimum_quantity = 2
+maximum_quantity = 3
+
+[resource]
+script = ExtResource("1_definition")
+node_id = &"berry_bush"
+display_name = "Berry Bush"
+resource_tags = Array[StringName]([&"plant", &"food_source", &"renewable"])
+harvest_time_seconds = 0.75
+skill_id = &"foraging"
+required_skill_level = 0
+experience_reward = 3
+max_harvests = 2
+yields = Array[ExtResource("2_yield")]([SubResource("Yield_berries")])
+cancel_distance = 82.0
+depletion_behavior = 2
+recovery_time_seconds = 6.0
+visual_kind = "bush"
+primary_color = Color(0.28, 0.53, 0.3, 1)
+secondary_color = Color(0.67, 0.16, 0.3, 1)
+depleted_color = Color(0.25, 0.34, 0.23, 1)
+

@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="ResourceNodeDefinition" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/resource_nodes/resource_node_definition.gd" id="1_definition"]
+[ext_resource type="Script" path="res://scripts/data/resource_nodes/harvest_yield_definition.gd" id="2_yield"]
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="3_wood"]
+
+[sub_resource type="Resource" id="Yield_wood"]
+script = ExtResource("2_yield")
+item_definition = ExtResource("3_wood")
+minimum_quantity = 2
+maximum_quantity = 3
+
+[resource]
+script = ExtResource("1_definition")
+node_id = &"tree"
+display_name = "Tree"
+resource_tags = Array[StringName]([&"plant", &"wood_source"])
+harvest_time_seconds = 1.25
+skill_id = &"forestry"
+required_skill_level = 0
+experience_reward = 5
+max_harvests = 3
+yields = Array[ExtResource("2_yield")]([SubResource("Yield_wood")])
+cancel_distance = 82.0
+depletion_behavior = 0
+recovery_time_seconds = 0.0
+visual_kind = "tree"
+primary_color = Color(0.36, 0.58, 0.32, 1)
+secondary_color = Color(0.2, 0.38, 0.24, 1)
+depleted_color = Color(0.39, 0.27, 0.18, 1)
+

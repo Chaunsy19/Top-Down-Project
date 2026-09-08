@@ -30,3 +30,12 @@ All notable project changes are recorded here by milestone.
 - Expanded the debug overlay with player grid coordinates, walkability, and target state.
 - Added automated grid, occupancy, targeting, and interaction checks.
 - Centered test-object interaction reach and added four-direction range regression coverage.
+
+### Milestone 3 — Resource nodes and harvesting
+
+- Added editable catalogs for item categories, items, and resource-node definitions.
+- Added reusable item-definition and item-stack data types for future inventory work.
+- Added generic timed harvesting with skill checks, XP rewards, cancellation, yields, depletion, respawning, and regrowth.
+- Added data-defined trees, rocks, and berry bushes producing typed world-item drops.
+- Added a reusable skill tracker shared by future player and NPC character systems.
+- Added automated catalog, requirement, harvesting, drop, depletion, and regrowth checks.

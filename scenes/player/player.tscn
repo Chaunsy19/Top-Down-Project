@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
 [ext_resource type="Script" path="res://scripts/interaction/player_interactor.gd" id="3_range"]
 [ext_resource type="Script" path="res://scripts/camera/player_camera.gd" id="4_camera"]
+[ext_resource type="Script" path="res://scripts/player/skill_tracker.gd" id="5_skills"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 11.0
@@ -23,6 +24,14 @@ script = ExtResource("2_visual")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_player")
+
+[node name="Skills" type="Node" parent="."]
+script = ExtResource("5_skills")
+starting_levels = {
+&"foraging": 1,
+&"forestry": 1,
+&"mining": 1
+}
 
 [node name="InteractionRange" type="Area2D" parent="."]
 z_index = -1
