@@ -29,3 +29,4 @@ All notable project changes are recorded here by milestone.
 - Added an interactive test terminal that toggles state and occupies a blocked grid cell.
 - Expanded the debug overlay with player grid coordinates, walkability, and target state.
 - Added automated grid, occupancy, targeting, and interaction checks.
+- Centered test-object interaction reach and added four-direction range regression coverage.

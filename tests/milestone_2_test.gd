@@ -39,6 +39,7 @@ func run_tests() -> void:
 
 	test_coordinate_conversion(world)
 	test_walkability(world)
+	test_interaction_reach_symmetry(player, terminal, interactor)
 	test_interaction(player, terminal, interactor)
 
 	main.queue_free()
@@ -81,6 +82,25 @@ func test_interaction(
 		return
 	if terminal.get_debug_state() != "Active (uses: 1)":
 		_failures.append("Test terminal did not update its interaction state.")
+
+
+func test_interaction_reach_symmetry(
+	player: CharacterBody2D,
+	terminal: InteractableScript,
+	interactor: PlayerInteractorScript
+) -> void:
+	var directions := [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
+	for direction in directions:
+		player.global_position = terminal.global_position + direction * 52.0
+		if not interactor.is_target_in_range(terminal):
+			_failures.append("Terminal was unreachable from direction %s at equal distance." % direction)
+
+	player.global_position = terminal.global_position + Vector2.RIGHT * 60.0
+	if interactor.is_target_in_range(terminal):
+		_failures.append("Terminal remained reachable beyond the configured interaction radius.")
+
+	player.position = Vector2(448.0, 256.0)
+	player.velocity = Vector2.ZERO
 
 
 func finish_with_failure(message: String) -> void:

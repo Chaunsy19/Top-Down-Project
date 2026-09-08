@@ -37,6 +37,8 @@ func refresh_target() -> void:
 		if area is not InteractableScript:
 			continue
 		var candidate := area as InteractableScript
+		if not is_target_in_range(candidate):
+			continue
 		var distance := global_position.distance_squared_to(candidate.get_interaction_point())
 		if distance < nearest_distance:
 			nearest_target = candidate
@@ -48,10 +50,8 @@ func refresh_target() -> void:
 func try_interact() -> bool:
 	refresh_target()
 	var succeeded := false
-	if is_instance_valid(_current_target):
-		var in_range := global_position.distance_to(_current_target.get_interaction_point()) <= radius
-		if in_range:
-			succeeded = _current_target.interact(get_parent() as Node2D)
+	if is_target_in_range(_current_target):
+		succeeded = _current_target.interact(get_parent() as Node2D)
 	interaction_attempted.emit(_current_target, succeeded)
 	_update_prompt()
 	return succeeded
@@ -59,6 +59,13 @@ func try_interact() -> bool:
 
 func get_current_target() -> InteractableScript:
 	return _current_target
+
+
+func is_target_in_range(target: InteractableScript) -> bool:
+	return (
+		is_instance_valid(target)
+		and global_position.distance_to(target.get_interaction_point()) <= radius
+	)
 
 
 func set_current_target(target: InteractableScript) -> void:
