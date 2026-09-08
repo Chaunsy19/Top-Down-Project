@@ -45,6 +45,7 @@ func open_player_inventory() -> void:
 	player_panel.bind_inventory(_player_inventory)
 	overlay.visible = true
 	_pause_for_inventory()
+	_register_modal()
 
 
 func open_container(
@@ -65,10 +66,14 @@ func open_container(
 	player_panel.bind_inventory(actor_inventory, container_inventory)
 	overlay.visible = true
 	_pause_for_inventory()
+	_register_modal()
 
 
 func close_inventory() -> void:
 	overlay.visible = false
+	var ui_manager := get_node_or_null("/root/UIManager")
+	if ui_manager:
+		ui_manager.unregister_modal(self)
 	if _paused_by_inventory:
 		get_tree().paused = false
 		var game_state := get_node_or_null("/root/GameState")
@@ -114,3 +119,9 @@ func _pause_for_inventory() -> void:
 		if game_state:
 			game_state.set_paused(true)
 		_paused_by_inventory = true
+
+
+func _register_modal() -> void:
+	var ui_manager := get_node_or_null("/root/UIManager")
+	if ui_manager:
+		ui_manager.register_modal(self, Callable(self, "close_inventory"))

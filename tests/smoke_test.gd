@@ -15,6 +15,7 @@ const REQUIRED_ACTIONS := [
 	"camera_zoom_out",
 	"camera_reset",
 	"debug_toggle",
+	"ui_cancel",
 ]
 const REQUIRED_SCRIPTS := [
 	"res://scripts/core/game_state.gd",
@@ -38,6 +39,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/inventory/inventory_panel.gd",
 	"res://scripts/inventory/inventory_ui.gd",
 	"res://scripts/world/inventory_container.gd",
+	"res://scripts/ui/ui_manager.gd",
 ]
 
 

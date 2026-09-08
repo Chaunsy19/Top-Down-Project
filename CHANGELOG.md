@@ -50,3 +50,9 @@ All notable project changes are recorded here by milestone.
 - Reserved a dedicated player-inventory footer for future currencies.
 - Added a supply crate and stone axe to exercise the complete item lifecycle.
 - Added automated inventory-unit and scene-integration coverage.
+
+### Interface foundation
+
+- Added a reusable modal UI stack for current and future screens.
+- Escape closes the topmost open inventory or container interface and restores world pause state.
+- Escape intentionally does nothing when no modal interface is open; pause-menu behavior remains deferred.

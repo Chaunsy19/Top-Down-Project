@@ -73,6 +73,7 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - With a container open, Shift-click or double-click a stack to transfer it.
 - Select a player stack and use **Drop selected** to place it in the world.
 - The player inventory footer reserves space for future currencies; currency state is not implemented yet.
+- Press **Escape** to close the topmost open modal UI. With no modal open, Escape intentionally does nothing until the pause menu is implemented.
 
 ## Automated checks
 

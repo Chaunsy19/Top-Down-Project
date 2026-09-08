@@ -13,9 +13,20 @@ func _initialize() -> void:
 
 
 func run_tests() -> void:
+	test_escape_mapping()
 	await test_inventory_operations()
 	await test_scene_item_lifecycle()
 	finish()
+
+
+func test_escape_mapping() -> void:
+	var escape_is_mapped := false
+	for event in InputMap.action_get_events(&"ui_cancel"):
+		if event is InputEventKey and (event.keycode == KEY_ESCAPE or event.physical_keycode == KEY_ESCAPE):
+			escape_is_mapped = true
+			break
+	if not escape_is_mapped:
+		_failures.append("The ui_cancel action is not mapped to the Escape key.")
 
 
 func test_inventory_operations() -> void:
@@ -85,7 +96,8 @@ func test_scene_item_lifecycle() -> void:
 	var interactor := world.get_node_or_null("Player/InteractionRange") as PlayerInteractorScript if world else null
 	var crate := world.get_node_or_null("SupplyCrate") as InventoryContainerScript if world else null
 	var inventory_ui := main.get_node_or_null("InventoryUI") as InventoryUIScript
-	if player == null or player_inventory == null or interactor == null or crate == null or inventory_ui == null:
+	var ui_manager := root.get_node_or_null("UIManager")
+	if player == null or player_inventory == null or interactor == null or crate == null or inventory_ui == null or ui_manager == null:
 		_failures.append("Milestone 4 integration nodes are incomplete.")
 		main.queue_free()
 		return
@@ -108,9 +120,17 @@ func test_scene_item_lifecycle() -> void:
 		_failures.append("Player inventory currency reservation footer is missing.")
 	if inventory_ui.container_panel.currency_footer.visible:
 		_failures.append("Container incorrectly displays the player currency footer.")
-	inventory_ui.close_inventory()
-	if paused:
-		_failures.append("Closing inventory did not resume a world paused by the UI.")
+	test_escape_closes_ui(inventory_ui, ui_manager)
+
+	inventory_ui.open_player_inventory()
+	if not inventory_ui.is_open() or ui_manager.get_open_modal_count() != 1:
+		_failures.append("Player inventory did not register as an open modal.")
+	test_escape_closes_ui(inventory_ui, ui_manager)
+
+	var was_paused := paused
+	simulate_escape(ui_manager)
+	if inventory_ui.is_open() or paused != was_paused:
+		_failures.append("Escape changed UI or pause state when no modal was open.")
 
 	if not inventory_ui.drop_player_stack(player_axe_slot):
 		_failures.append("Player could not drop the stone axe into the world.")
@@ -134,12 +154,30 @@ func test_scene_item_lifecycle() -> void:
 	await process_frame
 
 
+func test_escape_closes_ui(inventory_ui: InventoryUIScript, ui_manager: Node) -> void:
+	if ui_manager.get_open_modal_count() != 1:
+		_failures.append("Open inventory was not registered with UIManager.")
+	simulate_escape(ui_manager)
+	if inventory_ui.is_open():
+		_failures.append("Escape did not close the open inventory UI.")
+	if paused:
+		_failures.append("Escape did not resume the world after closing inventory.")
+	if ui_manager.has_open_modal():
+		_failures.append("Closed inventory remained in the modal UI stack.")
+
+
+func simulate_escape(ui_manager: Node) -> void:
+	var cancel_event := InputEventAction.new()
+	cancel_event.action = &"ui_cancel"
+	cancel_event.pressed = true
+	ui_manager._unhandled_input(cancel_event)
+
+
 func finish() -> void:
 	if _failures.is_empty():
-		print("MILESTONE 4 TEST PASSED: stacking, splitting, merging, capacity, transfer, UI, drop, and pickup are valid.")
+		print("MILESTONE 4 TEST PASSED: inventory lifecycle, modal UI, and Escape closing are valid.")
 		quit(0)
 	else:
 		for failure in _failures:
 			push_error(failure)
 		quit(1)
-
