@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a collision-backed room. Move with **WASD** or the arrow keys, zoom with the mouse wheel, press **F** to reset the camera zoom, and press **F3** to toggle the debug overlay.
+The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, approach the test terminal and press **E** to interact, zoom with the mouse wheel, press **F** to reset the camera zoom, and press **F3** to toggle grid/object debug information.
 
 ## Project structure
 
@@ -61,4 +61,5 @@ From the project directory, run the smoke and movement suites with the Godot exe
 ```powershell
 godot --headless --path . --script res://tests/smoke_test.gd
 godot --headless --path . --script res://tests/milestone_1_test.gd
+godot --headless --path . --script res://tests/milestone_2_test.gd
 ```

@@ -1,0 +1,69 @@
+class_name Interactable
+extends Area2D
+
+signal interacted(actor: Node2D)
+signal availability_changed(is_available: bool)
+
+@export var display_name := "Interactable"
+@export var interaction_verb := "Use"
+@export var is_available := true
+@export var blocks_grid_cell := false
+
+var _grid_world: Node2D
+var _occupied_cell := Vector2i(-1, -1)
+
+
+func _ready() -> void:
+	add_to_group("interactable")
+	if blocks_grid_cell:
+		call_deferred("_register_grid_occupancy")
+
+
+func _exit_tree() -> void:
+	if is_instance_valid(_grid_world) and _occupied_cell != Vector2i(-1, -1):
+		_grid_world.set_cell_blocked(_occupied_cell, false)
+
+
+func get_interaction_point() -> Vector2:
+	var interaction_point := get_node_or_null("InteractionPoint") as Node2D
+	return interaction_point.global_position if interaction_point else global_position
+
+
+func can_interact(actor: Node2D) -> bool:
+	return is_available and is_instance_valid(actor)
+
+
+func interact(actor: Node2D) -> bool:
+	if not can_interact(actor):
+		return false
+	_perform_interaction(actor)
+	interacted.emit(actor)
+	return true
+
+
+func set_available(value: bool) -> void:
+	if is_available == value:
+		return
+	is_available = value
+	availability_changed.emit(is_available)
+
+
+func get_prompt_text() -> String:
+	return "%s %s" % [interaction_verb, display_name]
+
+
+func get_debug_state() -> String:
+	return "Available" if is_available else "Unavailable"
+
+
+func _perform_interaction(_actor: Node2D) -> void:
+	pass
+
+
+func _register_grid_occupancy() -> void:
+	_grid_world = get_tree().get_first_node_in_group("grid_world") as Node2D
+	if _grid_world == null:
+		push_warning("%s could not find a GridWorld for occupancy registration." % name)
+		return
+	_occupied_cell = _grid_world.world_to_cell(global_position)
+	_grid_world.set_cell_blocked(_occupied_cell, true)

@@ -20,18 +20,17 @@ offset_top = 58.0
 offset_right = 700.0
 offset_bottom = 88.0
 theme_override_colors/font_color = Color(0.78, 0.84, 0.81, 1)
-text = "Milestone 0  •  F3 debug overlay  •  P pause"
+text = "Milestone 2  •  E interact  •  F3 debug overlay  •  P pause"
 
 [node name="Panel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
-offset_left = 1012.0
-offset_top = 20.0
+offset_left = 872.0
+offset_top = 92.0
 offset_right = 1256.0
-offset_bottom = 112.0
+offset_bottom = 232.0
 
 [node name="Readout" type="Label" parent="Panel"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/outline_size = 4
-text = "State: Booting\nFPS: 0\nScene: None"
-
+text = "State: Booting\nFPS: 0\nScene: None\nGrid cell: Unknown\nTarget: None"

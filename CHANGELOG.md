@@ -20,3 +20,12 @@ All notable project changes are recorded here by milestone.
 - Added a smooth follow camera with bounded zoom and reset controls.
 - Added placeholder player visuals and a visible interaction-range indicator.
 - Added automated movement, normalization, and collision checks.
+
+### Milestone 2 — Grid world and interactable objects
+
+- Added reusable world/cell coordinate conversion and blocked-cell tracking.
+- Added an extensible interactable contract with approach points, validation, use, prompts, and debug state.
+- Added player-side nearest-target discovery and interaction handling.
+- Added an interactive test terminal that toggles state and occupies a blocked grid cell.
+- Expanded the debug overlay with player grid coordinates, walkability, and target state.
+- Added automated grid, occupancy, targeting, and interaction checks.

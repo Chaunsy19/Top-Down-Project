@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://scripts/debug/test_world.gd" id="1_world"]
+[ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/world/test_terminal.tscn" id="3_terminal"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
 size = Vector2(896, 32)
@@ -11,6 +12,7 @@ size = Vector2(32, 512)
 
 [node name="FoundationTest" type="Node2D"]
 position = Vector2(192, 104)
+groups = ["grid_world"]
 script = ExtResource("1_world")
 
 [node name="RoomWalls" type="StaticBody2D" parent="."]
@@ -33,3 +35,6 @@ shape = SubResource("RectangleShape2D_vertical")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(448, 256)
+
+[node name="TestTerminal" parent="." instance=ExtResource("3_terminal")]
+position = Vector2(400, 256)

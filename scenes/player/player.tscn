@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
-[ext_resource type="Script" path="res://scripts/player/interaction_range.gd" id="3_range"]
+[ext_resource type="Script" path="res://scripts/interaction/player_interactor.gd" id="3_range"]
 [ext_resource type="Script" path="res://scripts/camera/player_camera.gd" id="4_camera"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
@@ -13,6 +13,7 @@ radius = 56.0
 
 [node name="Player" type="CharacterBody2D"]
 unique_name_in_owner = true
+groups = ["player"]
 collision_layer = 1
 collision_mask = 1
 script = ExtResource("1_controller")
@@ -26,9 +27,10 @@ shape = SubResource("CircleShape2D_player")
 [node name="InteractionRange" type="Area2D" parent="."]
 z_index = -1
 collision_layer = 0
-collision_mask = 1
+collision_mask = 2
 monitorable = false
 script = ExtResource("3_range")
+prompt_label_path = NodePath("../InteractionHUD/InteractionPrompt")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionRange"]
 shape = SubResource("CircleShape2D_interaction")
@@ -38,3 +40,16 @@ position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 script = ExtResource("4_camera")
 
+[node name="InteractionHUD" type="CanvasLayer" parent="."]
+
+[node name="InteractionPrompt" type="Label" parent="InteractionHUD"]
+offset_left = 490.0
+offset_top = 646.0
+offset_right = 790.0
+offset_bottom = 686.0
+theme_override_colors/font_color = Color(0.902, 0.765, 0.416, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 18
+text = "[E] Interact"
+horizontal_alignment = 1
+vertical_alignment = 1
