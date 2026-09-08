@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+
+[resource]
+script = ExtResource("1_item")
+item_id = &"cooked_berry_meal"
+display_name = "Cooked Berry Meal"
+description = "Warm mashed berries cooked over a campfire."
+categories = Array[StringName]([&"consumable", &"food"])
+stack_limit = 20
+weight = 0.25
+world_color = Color(0.78, 0.35, 0.28, 1)

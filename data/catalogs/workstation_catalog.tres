@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="WorkstationCatalog" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/workstations/workstation_catalog.gd" id="1_catalog"]
+[ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="2_campfire"]
+
+[resource]
+script = ExtResource("1_catalog")
+workstations = Array[Resource]([ExtResource("2_campfire")])

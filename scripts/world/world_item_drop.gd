@@ -25,6 +25,13 @@ func configure(item_definition: Resource, quantity: int) -> void:
 	item_stack = ItemStackScript.new()
 	item_stack.item_definition = item_definition
 	item_stack.quantity = quantity
+	item_stack.initialize_runtime_state()
+	if is_node_ready():
+		_update_presentation()
+
+
+func configure_stack(stack: Resource) -> void:
+	item_stack = stack.duplicate_stack() if stack != null else null
 	if is_node_ready():
 		_update_presentation()
 
@@ -50,7 +57,7 @@ func get_debug_state() -> String:
 
 func _perform_interaction(actor: Node2D) -> void:
 	var inventory := actor.get_node_or_null("Inventory")
-	var remainder: int = inventory.add_item(item_stack.item_definition, item_stack.quantity)
+	var remainder: int = inventory.add_stack(item_stack)
 	var collected := item_stack.quantity - remainder
 	item_stack.quantity = remainder
 	_show_notification("Picked up %d× %s" % [collected, item_stack.item_definition.display_name])

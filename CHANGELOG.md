@@ -63,4 +63,17 @@ All notable project changes are recorded here by milestone.
 - Trees now require an axe; rocks require a pickaxe; berry bushes require no tool.
 - Added a tier-one stone pickaxe and configured the stone axe as a tier-one harvesting tool.
 - Added loose stick and stone pickups to support the future first-tool crafting loop.
-- Compatible carried tools are selected automatically until Milestone 5 adds equipment.
+- Compatible tools are selected by the equipment system added in Milestone 5.
+
+### Milestone 5 — Tools, gathering actions, and basic crafting
+
+- Added a reusable hand equipment component shared by future player and NPC actors.
+- Added per-item tool durability that survives inventory transfers, equipment, dropping, and pickup.
+- Harvesting now requires the correct equipped tool, consumes durability, and removes broken tools.
+- Added data-driven recipe ingredients, recipes, recipe catalogs, workstation tags, and validation.
+- Added timed hand crafting for stone axes and stone pickaxes.
+- Added a generic campfire workstation and a campfire-only cooked berry meal recipe.
+- Added a modal crafting UI with recipe availability, ingredient counts, results, workstation requirements, progress, and clear failure feedback.
+- Added equipment controls and durability display to the inventory UI.
+- Expanded loose starter materials so both first-tier tools can be crafted in the test world.
+- Added automated Milestone 5 coverage for crafting, equipment, durability, breakage, replacement, workstation rules, and modal behavior.

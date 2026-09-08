@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WorkstationDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/workstations/workstation_definition.gd" id="1_workstation"]
+
+[resource]
+script = ExtResource("1_workstation")
+workstation_id = &"campfire"
+display_name = "Campfire"
+workstation_tags = Array[StringName]([&"campfire", &"cooking"])
+primary_color = Color(0.86, 0.3, 0.13, 1)

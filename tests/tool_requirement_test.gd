@@ -20,6 +20,7 @@ func run_tests() -> void:
 	var world := main.get_node("FoundationTest")
 	var player := world.get_node("Player") as CharacterBody2D
 	var inventory := player.get_node("Inventory") as InventoryComponentScript
+	var equipment := player.get_node("Equipment")
 	var tree := world.get_node("Tree") as ResourceNodeScript
 	var rock := world.get_node("Rock") as ResourceNodeScript
 	var bush := world.get_node("BerryBush") as ResourceNodeScript
@@ -43,13 +44,17 @@ func run_tests() -> void:
 		_failures.append("Tier-one tools are missing future durability capacity.")
 
 	inventory.add_item(axe, 1)
+	if tree.has_required_tool(player):
+		_failures.append("A carried but unequipped axe satisfied the tree requirement.")
+	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_axe"))
 	if not tree.has_required_tool(player) or not tree.can_interact(player):
-		_failures.append("A carried axe did not satisfy the tree requirement.")
+		_failures.append("An equipped axe did not satisfy the tree requirement.")
 	if rock.has_required_tool(player):
 		_failures.append("An axe incorrectly satisfied the rock's pickaxe requirement.")
 	inventory.add_item(pickaxe, 1)
+	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_pickaxe"))
 	if not rock.has_required_tool(player) or not rock.can_interact(player):
-		_failures.append("A carried pickaxe did not satisfy the rock requirement.")
+		_failures.append("An equipped pickaxe did not satisfy the rock requirement.")
 
 	if tree.definition.required_tool_tags != axe_tags:
 		_failures.append("Tree data does not explicitly require the axe tag.")

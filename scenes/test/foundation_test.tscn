@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/world_item_drop.tscn" id="9_drop"]
 [ext_resource type="Resource" path="res://data/items/stick.tres" id="10_stick"]
 [ext_resource type="Resource" path="res://data/items/stone.tres" id="11_stone"]
+[ext_resource type="PackedScene" path="res://scenes/world/crafting_workstation.tscn" id="12_workstation"]
+[ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="13_campfire"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
 size = Vector2(896, 32)
@@ -65,9 +67,13 @@ position = Vector2(272, 368)
 [node name="LooseSticks" parent="." instance=ExtResource("9_drop")]
 position = Vector2(368, 144)
 starting_item_definition = ExtResource("10_stick")
-starting_quantity = 3
+starting_quantity = 6
 
 [node name="LooseStones" parent="." instance=ExtResource("9_drop")]
 position = Vector2(720, 368)
 starting_item_definition = ExtResource("11_stone")
-starting_quantity = 3
+starting_quantity = 6
+
+[node name="Campfire" parent="." instance=ExtResource("12_workstation")]
+position = Vector2(720, 256)
+definition = ExtResource("13_campfire")

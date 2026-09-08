@@ -33,6 +33,9 @@ func configure(index: int, stack: Resource) -> void:
 		item_name.text = definition.display_name
 		quantity_label.text = str(item_stack.quantity) if definition.stack_limit > 1 else ""
 		tooltip_text = "%s\n%s\nWeight: %.2f each" % [definition.display_name, definition.description, definition.weight]
+		if item_stack.has_durability():
+			item_stack.initialize_runtime_state()
+			tooltip_text += "\nDurability: %d/%d" % [item_stack.current_durability, definition.tool_profile.maximum_durability]
 	_update_style(false)
 
 
@@ -78,4 +81,3 @@ func _get_category_color(categories: Array[StringName]) -> Color:
 	if &"material" in categories:
 		return Color("#b38a50")
 	return Color("#77817d")
-

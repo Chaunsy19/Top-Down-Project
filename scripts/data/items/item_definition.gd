@@ -28,6 +28,8 @@ func validate() -> PackedStringArray:
 		errors.append("Item '%s' has an invalid stack_limit." % item_id)
 	if has_category(&"tool") and tool_profile == null:
 		errors.append("Tool item '%s' is missing a tool profile." % item_id)
+	if tool_profile != null and stack_limit != 1:
+		errors.append("Durable tool item '%s' must have a stack limit of one." % item_id)
 	if tool_profile != null:
 		errors.append_array(tool_profile.validate(item_id))
 	return errors

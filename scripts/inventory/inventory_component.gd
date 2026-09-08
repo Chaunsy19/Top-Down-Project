@@ -24,7 +24,7 @@ func initialize_slots() -> void:
 	_slots.resize(slot_count)
 	for starting_stack in starting_stacks:
 		if starting_stack != null and starting_stack.is_valid():
-			add_item(starting_stack.item_definition, starting_stack.quantity)
+			add_stack(starting_stack.duplicate_stack())
 	changed.emit()
 
 
@@ -67,6 +67,34 @@ func get_addable_quantity(item_definition: Resource) -> int:
 	return mini(slot_capacity, weight_capacity)
 
 
+func get_addable_quantity_after_removals(item_definition: Resource, removals: Dictionary) -> int:
+	if item_definition == null:
+		return 0
+	var remaining_removals := removals.duplicate()
+	var slot_capacity := 0
+	var projected_weight := get_total_weight()
+	for item_id in remaining_removals:
+		var removed_definition := get_item_definition(item_id)
+		if removed_definition != null:
+			projected_weight -= removed_definition.weight * int(remaining_removals[item_id])
+	for stack in _slots:
+		var projected_quantity := 0
+		if stack != null:
+			projected_quantity = stack.quantity
+			var stack_id: StringName = stack.item_definition.item_id
+			var removable: int = mini(projected_quantity, int(remaining_removals.get(stack_id, 0)))
+			projected_quantity -= removable
+			remaining_removals[stack_id] = int(remaining_removals.get(stack_id, 0)) - removable
+		if projected_quantity <= 0:
+			slot_capacity += item_definition.stack_limit
+		elif stack.item_definition == item_definition:
+			slot_capacity += maxi(item_definition.stack_limit - projected_quantity, 0)
+	if item_definition.weight <= 0.0 or maximum_weight <= 0.0:
+		return slot_capacity
+	var weight_capacity := floori(maxf(maximum_weight - projected_weight, 0.0) / item_definition.weight)
+	return mini(slot_capacity, weight_capacity)
+
+
 func add_item(item_definition: Resource, quantity: int) -> int:
 	if item_definition == null or quantity <= 0:
 		return maxi(quantity, 0)
@@ -90,6 +118,7 @@ func add_item(item_definition: Resource, quantity: int) -> int:
 		var stack := ItemStackScript.new()
 		stack.item_definition = item_definition
 		stack.quantity = mini(item_definition.stack_limit, remaining_to_place)
+		stack.initialize_runtime_state()
 		remaining_to_place -= stack.quantity
 		_slots[index] = stack
 
@@ -99,14 +128,29 @@ func add_item(item_definition: Resource, quantity: int) -> int:
 	return quantity - amount_to_add
 
 
+func add_stack(incoming_stack: Resource) -> int:
+	if incoming_stack == null or not incoming_stack.is_valid():
+		return 0
+	if incoming_stack.item_definition.stack_limit > 1 or not incoming_stack.has_durability():
+		return add_item(incoming_stack.item_definition, incoming_stack.quantity)
+	if get_addable_quantity(incoming_stack.item_definition) < incoming_stack.quantity:
+		return incoming_stack.quantity
+	var empty_index := find_first_empty_slot()
+	if empty_index < 0:
+		return incoming_stack.quantity
+	var placed_stack: Resource = incoming_stack.duplicate_stack()
+	_slots[empty_index] = placed_stack
+	item_added.emit(placed_stack.item_definition, placed_stack.quantity)
+	changed.emit()
+	return 0
+
+
 func remove_from_slot(index: int, quantity: int) -> Resource:
 	var stack := get_slot(index)
 	if stack == null or quantity <= 0:
 		return null
 	var removed_quantity := mini(quantity, stack.quantity)
-	var removed_stack := ItemStackScript.new()
-	removed_stack.item_definition = stack.item_definition
-	removed_stack.quantity = removed_quantity
+	var removed_stack: Resource = stack.duplicate_stack(removed_quantity)
 	stack.quantity -= removed_quantity
 	if stack.quantity <= 0:
 		_slots[index] = null
@@ -154,9 +198,7 @@ func split_stack(index: int) -> bool:
 	if stack == null or stack.quantity < 2 or empty_index < 0:
 		return false
 	var split_quantity: int = stack.quantity / 2
-	var split_stack_value := ItemStackScript.new()
-	split_stack_value.item_definition = stack.item_definition
-	split_stack_value.quantity = split_quantity
+	var split_stack_value: Resource = stack.duplicate_stack(split_quantity)
 	stack.quantity -= split_quantity
 	_slots[empty_index] = split_stack_value
 	changed.emit()
@@ -173,10 +215,42 @@ func transfer_to(target: InventoryComponent, from_index: int, quantity := -1) ->
 		return 0
 	var definition: Resource = source.item_definition
 	var removed := remove_from_slot(from_index, transferable)
-	var remainder := target.add_item(definition, removed.quantity)
+	var remainder := target.add_stack(removed)
 	if remainder > 0:
-		add_item(definition, remainder)
+		add_stack(removed.duplicate_stack(remainder))
 	return transferable - remainder
+
+
+func get_item_quantity(item_id: StringName) -> int:
+	var total := 0
+	for stack in _slots:
+		if stack != null and stack.item_definition.item_id == item_id:
+			total += stack.quantity
+	return total
+
+
+func get_item_definition(item_id: StringName) -> Resource:
+	var index := find_first_item(item_id)
+	var stack := get_slot(index)
+	return stack.item_definition if stack != null else null
+
+
+func has_item_quantity(item_id: StringName, quantity: int) -> bool:
+	return quantity <= 0 or get_item_quantity(item_id) >= quantity
+
+
+func remove_item(item_id: StringName, quantity: int) -> int:
+	var remaining := maxi(quantity, 0)
+	for index in _slots.size():
+		if remaining <= 0:
+			break
+		var stack := _slots[index]
+		if stack == null or stack.item_definition.item_id != item_id:
+			continue
+		var removed := remove_from_slot(index, remaining)
+		if removed != null:
+			remaining -= removed.quantity
+	return remaining
 
 
 func find_first_empty_slot() -> int:

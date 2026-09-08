@@ -7,17 +7,21 @@ const InventorySlotScript = preload("res://scripts/inventory/inventory_slot_ui.g
 
 signal close_requested()
 signal drop_requested(slot_index: int)
+signal equip_requested(slot_index: int)
+signal unequip_requested()
 
 @export var panel_title := "INVENTORY"
 @export_range(1, 10, 1) var columns := 6
 @export_range(100.0, 600.0, 5.0) var slots_minimum_height := 300.0
 @export var show_currency_footer := true
 @export var show_drop_button := true
+@export var show_equipment_controls := false
 
 var _inventory: InventoryComponentScript
 var _transfer_inventory: InventoryComponentScript
 var _slot_controls: Array[Control] = []
 var _selected_slot := -1
+var _equipment: Node
 
 @onready var title_label: Label = %Title
 @onready var slot_grid: GridContainer = %SlotGrid
@@ -26,6 +30,10 @@ var _selected_slot := -1
 @onready var weight_label: Label = %WeightLabel
 @onready var currency_footer: Control = %CurrencyFooter
 @onready var drop_button: Button = %DropButton
+@onready var equipment_row: Control = %EquipmentRow
+@onready var equipped_label: Label = %EquippedLabel
+@onready var equip_button: Button = %EquipButton
+@onready var unequip_button: Button = %UnequipButton
 
 
 func _ready() -> void:
@@ -35,8 +43,11 @@ func _ready() -> void:
 	slots_scroll.custom_minimum_size.y = slots_minimum_height
 	currency_footer.visible = show_currency_footer
 	drop_button.visible = show_drop_button
+	equipment_row.visible = show_equipment_controls
 	%CloseButton.pressed.connect(func() -> void: close_requested.emit())
 	drop_button.pressed.connect(_on_drop_pressed)
+	equip_button.pressed.connect(_on_equip_pressed)
+	unequip_button.pressed.connect(func() -> void: unequip_requested.emit())
 
 
 func bind_inventory(inventory: InventoryComponentScript, transfer_inventory: InventoryComponentScript = null) -> void:
@@ -55,6 +66,18 @@ func set_panel_title(value: String) -> void:
 	panel_title = value
 	if is_instance_valid(title_label):
 		title_label.text = panel_title
+
+
+func bind_equipment(equipment: Node) -> void:
+	if _equipment != null and _equipment.changed.is_connected(_refresh):
+		_equipment.changed.disconnect(_refresh)
+	_equipment = equipment
+	show_equipment_controls = equipment != null
+	if is_instance_valid(equipment_row):
+		equipment_row.visible = show_equipment_controls
+	if _equipment != null and not _equipment.changed.is_connected(_refresh):
+		_equipment.changed.connect(_refresh)
+	_refresh()
 
 
 func get_inventory() -> InventoryComponentScript:
@@ -94,6 +117,7 @@ func _refresh() -> void:
 	var selected_stack := _inventory.get_slot(_selected_slot)
 	selection_label.text = selected_stack.item_definition.display_name if selected_stack else "Select a slot"
 	drop_button.disabled = selected_stack == null
+	_refresh_equipment(selected_stack)
 
 
 func _on_slot_activated(index: int, mouse_button: int, shift_pressed: bool, double_click: bool) -> void:
@@ -121,6 +145,27 @@ func _on_drop_pressed() -> void:
 		drop_requested.emit(_selected_slot)
 		_selected_slot = -1
 		_refresh()
+
+
+func _on_equip_pressed() -> void:
+	if _selected_slot >= 0:
+		equip_requested.emit(_selected_slot)
+		_selected_slot = -1
+		_refresh()
+
+
+func _refresh_equipment(selected_stack: Resource) -> void:
+	if not show_equipment_controls or _equipment == null:
+		return
+	var hand_stack: Resource = _equipment.get_hand_stack()
+	if hand_stack == null:
+		equipped_label.text = "HAND  Empty"
+		unequip_button.disabled = true
+	else:
+		var profile: Resource = hand_stack.item_definition.tool_profile
+		equipped_label.text = "HAND  %s  %d/%d" % [hand_stack.item_definition.display_name, hand_stack.current_durability, profile.maximum_durability]
+		unequip_button.disabled = false
+	equip_button.disabled = selected_stack == null or selected_stack.item_definition.tool_profile == null
 
 
 func _apply_panel_style() -> void:

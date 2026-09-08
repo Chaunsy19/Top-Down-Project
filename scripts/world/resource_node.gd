@@ -19,7 +19,7 @@ var remaining_harvests := 0
 var harvest_progress := 0.0
 var recovery_remaining := 0.0
 var _harvesting_actor: Node2D
-var _active_tool_definition: Resource
+var _active_tool_stack: Resource
 var _random := RandomNumberGenerator.new()
 
 @onready var name_label: Label = %NameLabel
@@ -63,7 +63,7 @@ func get_prompt_text() -> String:
 		return "%s depleted" % display_name
 	var player := get_tree().get_first_node_in_group("player") as Node2D
 	if not definition.required_tool_tags.is_empty() and not has_required_tool(player):
-		return "Requires %s" % _get_tool_requirement_name()
+		return "Equip %s" % _get_tool_requirement_name()
 	return "%s %s" % [interaction_verb, display_name]
 
 
@@ -116,21 +116,21 @@ func has_required_tool(actor: Node2D) -> bool:
 func find_compatible_tool(actor: Node2D) -> Resource:
 	if not is_instance_valid(actor) or definition == null:
 		return null
-	var inventory := actor.get_node_or_null("Inventory")
-	if inventory == null:
+	var equipment := actor.get_node_or_null("Equipment")
+	if equipment == null:
 		return null
-	return inventory.find_compatible_tool(definition.required_tool_tags, definition.minimum_tool_tier)
+	return equipment.get_equipped_tool(definition.required_tool_tags, definition.minimum_tool_tier)
 
 
 func get_effective_harvest_time(actor: Node2D = null) -> float:
 	if definition == null:
 		return 0.0
-	var tool_definition := _active_tool_definition
-	if tool_definition == null and is_instance_valid(actor):
-		tool_definition = find_compatible_tool(actor)
+	var tool_stack := _active_tool_stack
+	if tool_stack == null and is_instance_valid(actor):
+		tool_stack = find_compatible_tool(actor)
 	var speed_multiplier := 1.0
-	if tool_definition != null and tool_definition.tool_profile != null:
-		speed_multiplier = tool_definition.tool_profile.work_speed_multiplier
+	if tool_stack != null and tool_stack.item_definition.tool_profile != null:
+		speed_multiplier = tool_stack.item_definition.tool_profile.work_speed_multiplier
 	return definition.harvest_time_seconds / maxf(speed_multiplier, 0.01)
 
 
@@ -138,6 +138,9 @@ func advance_simulation(delta: float) -> void:
 	if definition == null:
 		return
 	if is_harvesting():
+		if not definition.required_tool_tags.is_empty() and find_compatible_tool(_harvesting_actor) != _active_tool_stack:
+			cancel_harvest()
+			return
 		if global_position.distance_to(_harvesting_actor.global_position) > definition.cancel_distance:
 			cancel_harvest()
 			return
@@ -159,7 +162,7 @@ func cancel_harvest() -> void:
 		return
 	var previous_actor := _harvesting_actor
 	_harvesting_actor = null
-	_active_tool_definition = null
+	_active_tool_stack = null
 	harvest_progress = 0.0
 	harvest_cancelled.emit(previous_actor)
 	_update_presentation()
@@ -167,7 +170,7 @@ func cancel_harvest() -> void:
 
 func _perform_interaction(actor: Node2D) -> void:
 	_harvesting_actor = actor
-	_active_tool_definition = find_compatible_tool(actor)
+	_active_tool_stack = find_compatible_tool(actor)
 	harvest_progress = 0.0
 	harvest_started.emit(actor)
 	_update_presentation()
@@ -175,12 +178,14 @@ func _perform_interaction(actor: Node2D) -> void:
 
 func _complete_harvest() -> void:
 	var actor := _harvesting_actor
+	var used_tool := _active_tool_stack
 	_harvesting_actor = null
-	_active_tool_definition = null
+	_active_tool_stack = null
 	harvest_progress = 0.0
 	remaining_harvests = maxi(remaining_harvests - 1, 0)
 	var drops := _spawn_yields()
 	_award_experience(actor)
+	_wear_used_tool(actor, used_tool)
 	harvest_completed.emit(actor, drops, definition.experience_reward)
 	if is_depleted():
 		_begin_depletion()
@@ -206,6 +211,19 @@ func _award_experience(actor: Node2D) -> void:
 	var skills := actor.get_node_or_null("Skills")
 	if skills:
 		skills.add_experience(definition.skill_id, definition.experience_reward)
+
+
+func _wear_used_tool(actor: Node2D, used_tool: Resource) -> void:
+	if used_tool == null or not is_instance_valid(actor):
+		return
+	var equipment := actor.get_node_or_null("Equipment")
+	if equipment == null or equipment.get_hand_stack() != used_tool:
+		return
+	var item_name: String = used_tool.item_definition.display_name
+	if equipment.damage_hand_item(1):
+		var inventory_ui := get_tree().get_first_node_in_group("inventory_ui")
+		if inventory_ui != null:
+			inventory_ui.show_notification("%s broke" % item_name)
 
 
 func _begin_depletion() -> void:

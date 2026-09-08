@@ -29,17 +29,20 @@ func run_tests() -> void:
 	var interactor := world.get_node_or_null("Player/InteractionRange") as PlayerInteractorScript if world else null
 	var skills := world.get_node_or_null("Player/Skills") as SkillTrackerScript if world else null
 	var inventory := world.get_node_or_null("Player/Inventory") if world else null
+	var equipment := world.get_node_or_null("Player/Equipment") if world else null
 	var tree := world.get_node_or_null("Tree") as ResourceNodeScript if world else null
 	var rock := world.get_node_or_null("Rock") as ResourceNodeScript if world else null
 	var bush := world.get_node_or_null("BerryBush") as ResourceNodeScript if world else null
-	if world == null or player == null or interactor == null or skills == null or inventory == null or tree == null or rock == null or bush == null:
+	if world == null or player == null or interactor == null or skills == null or inventory == null or equipment == null or tree == null or rock == null or bush == null:
 		finish_with_failure("Milestone 3 world nodes are incomplete.")
 		return
 	var registry := root.get_node("ContentRegistry")
 	inventory.add_item(registry.get_item(&"stone_axe"), 1)
 	inventory.add_item(registry.get_item(&"stone_pickaxe"), 1)
 
+	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_pickaxe"))
 	test_skill_requirement(player, skills, rock)
+	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_axe"))
 	await test_timed_harvest(player, skills, interactor, tree)
 	test_regrowth(player, bush)
 
@@ -64,8 +67,8 @@ func test_content_catalogs() -> void:
 			_failures.append("Resource-node catalog is missing '%s'." % node_id)
 	if registry.get_items_in_category(&"material").size() != 3:
 		_failures.append("Material category query should return wood, stone, and sticks.")
-	if registry.get_items_in_category(&"food").size() != 1:
-		_failures.append("Food category query should return berries.")
+	if registry.get_items_in_category(&"food").size() != 2:
+		_failures.append("Food category query should return berries and the cooked meal.")
 
 
 func test_skill_requirement(

@@ -1,0 +1,165 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/crafting/crafting_ui.gd" id="1_ui"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_backdrop"]
+bg_color = Color(0.02, 0.025, 0.024, 0.72)
+
+[node name="CraftingUI" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_ui")
+
+[node name="Overlay" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Backdrop" type="Panel" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_backdrop")
+
+[node name="Panel" type="PanelContainer" parent="Overlay"]
+custom_minimum_size = Vector2(830, 540)
+layout_mode = 0
+offset_left = 225.0
+offset_top = 90.0
+offset_right = 1055.0
+offset_bottom = 630.0
+
+[node name="Margin" type="MarginContainer" parent="Overlay/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="Layout" type="VBoxContainer" parent="Overlay/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Overlay/Panel/Margin/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 22
+text = "CRAFTING"
+
+[node name="ContextLabel" type="Label" parent="Overlay/Panel/Margin/Layout/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.61, 0.7, 0.65, 1)
+text = "HAND CRAFTING"
+horizontal_alignment = 2
+
+[node name="CloseButton" type="Button" parent="Overlay/Panel/Margin/Layout/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+focus_mode = 0
+text = "×"
+
+[node name="HeaderLine" type="HSeparator" parent="Overlay/Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Columns" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="RecipeScroll" type="ScrollContainer" parent="Overlay/Panel/Margin/Layout/Columns"]
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="RecipeList" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns/RecipeScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="Divider" type="VSeparator" parent="Overlay/Panel/Margin/Layout/Columns"]
+layout_mode = 2
+
+[node name="Details" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 9
+
+[node name="RecipeName" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
+theme_override_font_sizes/font_size = 20
+text = "Select a recipe"
+
+[node name="Description" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
+text = "Recipe details"
+autowrap_mode = 2
+
+[node name="Ingredients" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.78, 0.72, 1)
+text = "INGREDIENTS"
+
+[node name="Requirement" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "WORKSTATION"
+
+[node name="Result" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "RESULT"
+
+[node name="CraftTime" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CRAFT TIME"
+
+[node name="Spacer" type="Control" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Status" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
+text = "Select a recipe."
+autowrap_mode = 2
+
+[node name="ProgressBar" type="ProgressBar" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+show_percentage = false
+
+[node name="CraftButton" type="Button" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+focus_mode = 0
+text = "CRAFT"
+
+[node name="Help" type="Label" parent="Overlay/Panel/Margin/Layout"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.62, 0.59, 1)
+theme_override_font_sizes/font_size = 11
+text = "C: open/close hand crafting  •  E: use workstation  •  Esc: close"
