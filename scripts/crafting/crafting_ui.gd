@@ -137,7 +137,7 @@ func _refresh_recipe_states() -> void:
 	for button in _recipe_buttons:
 		var recipe: Resource = button.get_meta("recipe")
 		var reason: String = _crafting.get_failure_reason(recipe, _workstation_tags)
-		button.text = "%s   %s" % [recipe.display_name, "READY" if reason.is_empty() else "LOCKED"]
+		button.text = "%s   %s" % [recipe.display_name, "Craftable" if reason.is_empty() else "Unavailable"]
 		button.modulate = Color.WHITE if reason.is_empty() else Color("#8b918e")
 	_update_details()
 
