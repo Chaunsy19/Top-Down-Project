@@ -18,6 +18,8 @@ enum DepletionBehavior {
 @export_range(0.05, 120.0, 0.05) var harvest_time_seconds := 1.0
 @export var skill_id: StringName
 @export_range(0, 100, 1) var required_skill_level := 0
+@export var required_tool_tags: Array[StringName] = []
+@export_range(1, 100, 1) var minimum_tool_tier := 1
 @export_range(0, 10000, 1) var experience_reward := 0
 @export_range(1, 1000, 1) var max_harvests := 1
 @export var yields: Array[HarvestYieldScript] = []
@@ -42,6 +44,8 @@ func validate() -> PackedStringArray:
 		errors.append("Resource node '%s' is missing display_name." % node_id)
 	if yields.is_empty():
 		errors.append("Resource node '%s' has no harvest yields." % node_id)
+	if required_tool_tags.is_empty() and minimum_tool_tier > 1:
+		errors.append("Resource node '%s' sets a tool tier without requiring a tool tag." % node_id)
 	for harvest_yield in yields:
 		if harvest_yield == null:
 			errors.append("Resource node '%s' has an empty yield entry." % node_id)
@@ -50,4 +54,3 @@ func validate() -> PackedStringArray:
 	if depletion_behavior != DepletionBehavior.PERMANENT and recovery_time_seconds <= 0.0:
 		errors.append("Recovering resource node '%s' needs a positive recovery time." % node_id)
 	return errors
-

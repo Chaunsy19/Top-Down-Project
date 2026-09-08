@@ -18,6 +18,8 @@ resource_tags = Array[StringName]([&"plant", &"wood_source"])
 harvest_time_seconds = 1.25
 skill_id = &"forestry"
 required_skill_level = 0
+required_tool_tags = Array[StringName]([&"axe"])
+minimum_tool_tier = 1
 experience_reward = 5
 max_harvests = 3
 yields = Array[ExtResource("2_yield")]([SubResource("Yield_wood")])
@@ -28,4 +30,3 @@ visual_kind = "tree"
 primary_color = Color(0.36, 0.58, 0.32, 1)
 secondary_color = Color(0.2, 0.38, 0.24, 1)
 depleted_color = Color(0.39, 0.27, 0.18, 1)
-

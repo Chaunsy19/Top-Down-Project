@@ -19,6 +19,7 @@ var remaining_harvests := 0
 var harvest_progress := 0.0
 var recovery_remaining := 0.0
 var _harvesting_actor: Node2D
+var _active_tool_definition: Resource
 var _random := RandomNumberGenerator.new()
 
 @onready var name_label: Label = %NameLabel
@@ -49,6 +50,7 @@ func can_interact(actor: Node2D) -> bool:
 		and not is_depleted()
 		and not is_harvesting()
 		and get_actor_skill_level(actor) >= definition.required_skill_level
+		and has_required_tool(actor)
 	)
 
 
@@ -59,6 +61,9 @@ func get_prompt_text() -> String:
 		return "Harvesting %s (%d%%)" % [display_name, roundi(get_harvest_ratio() * 100.0)]
 	if is_depleted():
 		return "%s depleted" % display_name
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	if not definition.required_tool_tags.is_empty() and not has_required_tool(player):
+		return "Requires %s" % _get_tool_requirement_name()
 	return "%s %s" % [interaction_verb, display_name]
 
 
@@ -71,10 +76,12 @@ func get_debug_state() -> String:
 		if recovery_remaining > 0.0:
 			return "Depleted | recovers in %.1fs" % recovery_remaining
 		return "Depleted"
-	return "Ready | %d harvests | %s %d+" % [
+	var tool_text := "Hands" if definition.required_tool_tags.is_empty() else _get_tool_requirement_name()
+	return "Ready | %d harvests | %s %d+ | %s" % [
 		remaining_harvests,
 		String(definition.skill_id).capitalize(),
 		definition.required_skill_level,
+		tool_text,
 	]
 
 
@@ -87,9 +94,10 @@ func is_depleted() -> bool:
 
 
 func get_harvest_ratio() -> float:
-	if definition == null or definition.harvest_time_seconds <= 0.0:
+	var effective_time := get_effective_harvest_time()
+	if definition == null or effective_time <= 0.0:
 		return 0.0
-	return clampf(harvest_progress / definition.harvest_time_seconds, 0.0, 1.0)
+	return clampf(harvest_progress / effective_time, 0.0, 1.0)
 
 
 func get_actor_skill_level(actor: Node2D) -> int:
@@ -97,6 +105,33 @@ func get_actor_skill_level(actor: Node2D) -> int:
 		return 0
 	var skills := actor.get_node_or_null("Skills")
 	return skills.get_skill_level(definition.skill_id) if skills else 0
+
+
+func has_required_tool(actor: Node2D) -> bool:
+	if definition == null or definition.required_tool_tags.is_empty():
+		return true
+	return find_compatible_tool(actor) != null
+
+
+func find_compatible_tool(actor: Node2D) -> Resource:
+	if not is_instance_valid(actor) or definition == null:
+		return null
+	var inventory := actor.get_node_or_null("Inventory")
+	if inventory == null:
+		return null
+	return inventory.find_compatible_tool(definition.required_tool_tags, definition.minimum_tool_tier)
+
+
+func get_effective_harvest_time(actor: Node2D = null) -> float:
+	if definition == null:
+		return 0.0
+	var tool_definition := _active_tool_definition
+	if tool_definition == null and is_instance_valid(actor):
+		tool_definition = find_compatible_tool(actor)
+	var speed_multiplier := 1.0
+	if tool_definition != null and tool_definition.tool_profile != null:
+		speed_multiplier = tool_definition.tool_profile.work_speed_multiplier
+	return definition.harvest_time_seconds / maxf(speed_multiplier, 0.01)
 
 
 func advance_simulation(delta: float) -> void:
@@ -107,7 +142,7 @@ func advance_simulation(delta: float) -> void:
 			cancel_harvest()
 			return
 		harvest_progress += delta
-		if harvest_progress >= definition.harvest_time_seconds:
+		if harvest_progress >= get_effective_harvest_time():
 			_complete_harvest()
 		else:
 			_update_presentation()
@@ -124,6 +159,7 @@ func cancel_harvest() -> void:
 		return
 	var previous_actor := _harvesting_actor
 	_harvesting_actor = null
+	_active_tool_definition = null
 	harvest_progress = 0.0
 	harvest_cancelled.emit(previous_actor)
 	_update_presentation()
@@ -131,6 +167,7 @@ func cancel_harvest() -> void:
 
 func _perform_interaction(actor: Node2D) -> void:
 	_harvesting_actor = actor
+	_active_tool_definition = find_compatible_tool(actor)
 	harvest_progress = 0.0
 	harvest_started.emit(actor)
 	_update_presentation()
@@ -139,6 +176,7 @@ func _perform_interaction(actor: Node2D) -> void:
 func _complete_harvest() -> void:
 	var actor := _harvesting_actor
 	_harvesting_actor = null
+	_active_tool_definition = null
 	harvest_progress = 0.0
 	remaining_harvests = maxi(remaining_harvests - 1, 0)
 	var drops := _spawn_yields()
@@ -239,3 +277,10 @@ func _draw() -> void:
 	if is_harvesting():
 		draw_rect(Rect2(-20.0, 28.0, 40.0, 5.0), Color("#16201c"))
 		draw_rect(Rect2(-19.0, 29.0, 38.0 * get_harvest_ratio(), 3.0), Color("#e6c36a"))
+
+
+func _get_tool_requirement_name() -> String:
+	var names: PackedStringArray = []
+	for required_tag in definition.required_tool_tags:
+		names.append(String(required_tag).replace("_", " ").capitalize())
+	return " + ".join(names)

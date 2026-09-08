@@ -194,5 +194,17 @@ func find_first_item(item_id: StringName) -> int:
 	return -1
 
 
+func find_compatible_tool(required_tags: Array[StringName], minimum_tier := 1) -> Resource:
+	if required_tags.is_empty():
+		return null
+	for stack in _slots:
+		if stack == null or stack.item_definition == null:
+			continue
+		var tool_profile: Resource = stack.item_definition.tool_profile
+		if tool_profile != null and tool_profile.satisfies(required_tags, minimum_tier):
+			return stack.item_definition
+	return null
+
+
 func is_valid_slot(index: int) -> bool:
 	return index >= 0 and index < _slots.size()

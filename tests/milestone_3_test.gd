@@ -28,12 +28,16 @@ func run_tests() -> void:
 	var player := world.get_node_or_null("Player") as CharacterBody2D if world else null
 	var interactor := world.get_node_or_null("Player/InteractionRange") as PlayerInteractorScript if world else null
 	var skills := world.get_node_or_null("Player/Skills") as SkillTrackerScript if world else null
+	var inventory := world.get_node_or_null("Player/Inventory") if world else null
 	var tree := world.get_node_or_null("Tree") as ResourceNodeScript if world else null
 	var rock := world.get_node_or_null("Rock") as ResourceNodeScript if world else null
 	var bush := world.get_node_or_null("BerryBush") as ResourceNodeScript if world else null
-	if world == null or player == null or interactor == null or skills == null or tree == null or rock == null or bush == null:
+	if world == null or player == null or interactor == null or skills == null or inventory == null or tree == null or rock == null or bush == null:
 		finish_with_failure("Milestone 3 world nodes are incomplete.")
 		return
+	var registry := root.get_node("ContentRegistry")
+	inventory.add_item(registry.get_item(&"stone_axe"), 1)
+	inventory.add_item(registry.get_item(&"stone_pickaxe"), 1)
 
 	test_skill_requirement(player, skills, rock)
 	await test_timed_harvest(player, skills, interactor, tree)
@@ -58,8 +62,8 @@ func test_content_catalogs() -> void:
 	for node_id in [&"tree", &"rock", &"berry_bush"]:
 		if registry.get_resource_node(node_id) == null:
 			_failures.append("Resource-node catalog is missing '%s'." % node_id)
-	if registry.get_items_in_category(&"material").size() != 2:
-		_failures.append("Material category query should return wood and stone.")
+	if registry.get_items_in_category(&"material").size() != 3:
+		_failures.append("Material category query should return wood, stone, and sticks.")
 	if registry.get_items_in_category(&"food").size() != 1:
 		_failures.append("Food category query should return berries.")
 
@@ -98,11 +102,12 @@ func test_timed_harvest(
 	if not tree.is_harvesting():
 		_failures.append("Tree did not enter its timed harvesting state.")
 		return
-	tree.advance_simulation(tree.definition.harvest_time_seconds * 0.5)
+	var effective_harvest_time := tree.get_effective_harvest_time(player)
+	tree.advance_simulation(effective_harvest_time * 0.5)
 	if tree.remaining_harvests != initial_harvests or not tree.is_harvesting():
 		_failures.append("Tree harvest completed before its configured duration.")
 		return
-	tree.advance_simulation(tree.definition.harvest_time_seconds * 0.5 + 0.01)
+	tree.advance_simulation(effective_harvest_time * 0.5 + 0.01)
 	if tree.remaining_harvests != initial_harvests - 1:
 		_failures.append("Tree did not consume one harvest after its duration.")
 	if skills.get_experience(&"forestry") != tree.definition.experience_reward:

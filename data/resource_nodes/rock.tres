@@ -18,6 +18,8 @@ resource_tags = Array[StringName]([&"mineral", &"stone_source"])
 harvest_time_seconds = 1.75
 skill_id = &"mining"
 required_skill_level = 1
+required_tool_tags = Array[StringName]([&"pickaxe"])
+minimum_tool_tier = 1
 experience_reward = 7
 max_harvests = 4
 yields = Array[ExtResource("2_yield")]([SubResource("Yield_stone")])
@@ -28,4 +30,3 @@ visual_kind = "rock"
 primary_color = Color(0.46, 0.5, 0.53, 1)
 secondary_color = Color(0.31, 0.35, 0.37, 1)
 depleted_color = Color(0.29, 0.3, 0.3, 1)
-

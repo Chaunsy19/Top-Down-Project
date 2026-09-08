@@ -9,6 +9,7 @@ extends Resource
 @export_range(0.0, 1000.0, 0.01) var weight := 0.1
 @export var world_color := Color.WHITE
 @export var icon: Texture2D
+@export var tool_profile: Resource
 
 
 func has_category(category_id: StringName) -> bool:
@@ -25,5 +26,8 @@ func validate() -> PackedStringArray:
 		errors.append("Item '%s' has no categories." % item_id)
 	if stack_limit < 1:
 		errors.append("Item '%s' has an invalid stack_limit." % item_id)
+	if has_category(&"tool") and tool_profile == null:
+		errors.append("Tool item '%s' is missing a tool profile." % item_id)
+	if tool_profile != null:
+		errors.append_array(tool_profile.validate(item_id))
 	return errors
-

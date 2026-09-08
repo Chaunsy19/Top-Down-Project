@@ -3,6 +3,9 @@ extends "res://scripts/interaction/interactable.gd"
 
 const ItemStackScript = preload("res://scripts/data/items/item_stack.gd")
 
+@export var starting_item_definition: Resource
+@export_range(1, 9999, 1) var starting_quantity := 1
+
 var item_stack: ItemStackScript
 
 @onready var item_label: Label = %ItemLabel
@@ -12,6 +15,8 @@ func _ready() -> void:
 	display_name = "item"
 	interaction_verb = "Pick up"
 	super()
+	if item_stack == null and starting_item_definition != null:
+		configure(starting_item_definition, starting_quantity)
 	add_to_group("world_item_drop")
 	_update_presentation()
 

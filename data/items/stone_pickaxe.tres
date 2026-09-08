@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+[ext_resource type="Script" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
+
+[sub_resource type="Resource" id="ToolProfile_pickaxe"]
+script = ExtResource("2_tool")
+capability_tags = Array[StringName]([&"pickaxe"])
+tier = 1
+work_speed_multiplier = 1.0
+maximum_durability = 90
+
+[resource]
+script = ExtResource("1_item")
+item_id = &"stone_pickaxe"
+display_name = "Stone Pickaxe"
+description = "A basic mining pick. Equipping and durability are introduced in Milestone 5."
+categories = Array[StringName]([&"tool"])
+stack_limit = 1
+weight = 2.8
+world_color = Color(0.58, 0.65, 0.65, 1)
+tool_profile = SubResource("ToolProfile_pickaxe")
+

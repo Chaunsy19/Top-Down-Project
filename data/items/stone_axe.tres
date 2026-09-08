@@ -1,6 +1,14 @@
-[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+[ext_resource type="Script" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
+
+[sub_resource type="Resource" id="ToolProfile_axe"]
+script = ExtResource("2_tool")
+capability_tags = Array[StringName]([&"axe"])
+tier = 1
+work_speed_multiplier = 1.0
+maximum_durability = 80
 
 [resource]
 script = ExtResource("1_item")
@@ -11,3 +19,4 @@ categories = Array[StringName]([&"tool", &"weapon"])
 stack_limit = 1
 weight = 2.5
 world_color = Color(0.67, 0.72, 0.68, 1)
+tool_profile = SubResource("ToolProfile_axe")

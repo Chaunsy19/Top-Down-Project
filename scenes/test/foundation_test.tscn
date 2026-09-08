@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -8,6 +8,9 @@
 [ext_resource type="Resource" path="res://data/resource_nodes/rock.tres" id="6_rock"]
 [ext_resource type="Resource" path="res://data/resource_nodes/berry_bush.tres" id="7_bush"]
 [ext_resource type="PackedScene" path="res://scenes/world/inventory_container.tscn" id="8_container"]
+[ext_resource type="PackedScene" path="res://scenes/world/world_item_drop.tscn" id="9_drop"]
+[ext_resource type="Resource" path="res://data/items/stick.tres" id="10_stick"]
+[ext_resource type="Resource" path="res://data/items/stone.tres" id="11_stone"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
 size = Vector2(896, 32)
@@ -58,3 +61,13 @@ definition = ExtResource("7_bush")
 
 [node name="SupplyCrate" parent="." instance=ExtResource("8_container")]
 position = Vector2(272, 368)
+
+[node name="LooseSticks" parent="." instance=ExtResource("9_drop")]
+position = Vector2(368, 144)
+starting_item_definition = ExtResource("10_stick")
+starting_quantity = 3
+
+[node name="LooseStones" parent="." instance=ExtResource("9_drop")]
+position = Vector2(720, 368)
+starting_item_definition = ExtResource("11_stone")
+starting_quantity = 3

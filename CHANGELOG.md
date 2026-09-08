@@ -56,3 +56,11 @@ All notable project changes are recorded here by milestone.
 - Added a reusable modal UI stack for current and future screens.
 - Escape closes the topmost open inventory or container interface and restores world pause state.
 - Escape intentionally does nothing when no modal interface is open; pause-menu behavior remains deferred.
+
+### Tool requirement foundation
+
+- Added reusable tool profiles with capability tags, tiers, work-speed multipliers, and durability capacity.
+- Trees now require an axe; rocks require a pickaxe; berry bushes require no tool.
+- Added a tier-one stone pickaxe and configured the stone axe as a tier-one harvesting tool.
+- Added loose stick and stone pickups to support the future first-tool crafting loop.
+- Compatible carried tools are selected automatically until Milestone 5 adds equipment.
