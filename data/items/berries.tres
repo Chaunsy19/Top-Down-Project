@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="ItemDefinition" format=3 uid="uid://btibk6t8qswqj"]
 
-[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+[ext_resource type="Script" uid="uid://di4s6xtou0gr2" path="res://scripts/data/items/item_definition.gd" id="1_item"]
 
 [resource]
 script = ExtResource("1_item")
@@ -9,6 +9,4 @@ display_name = "Berries"
 description = "A handful of edible wild berries."
 categories = Array[StringName]([&"consumable", &"food"])
 stack_limit = 30
-weight = 0.1
 world_color = Color(0.72, 0.2, 0.35, 1)
-

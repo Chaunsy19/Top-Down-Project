@@ -1,13 +1,11 @@
-[gd_resource type="Resource" script_class="ItemDefinition" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="ItemDefinition" format=3 uid="uid://b4v7bjvyf0h6e"]
 
-[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1_item"]
-[ext_resource type="Script" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
+[ext_resource type="Script" uid="uid://di4s6xtou0gr2" path="res://scripts/data/items/item_definition.gd" id="1_item"]
+[ext_resource type="Script" uid="uid://cvhgtqr7m0e0q" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
 
 [sub_resource type="Resource" id="ToolProfile_axe"]
 script = ExtResource("2_tool")
 capability_tags = Array[StringName]([&"axe"])
-tier = 1
-work_speed_multiplier = 1.0
 maximum_durability = 80
 
 [resource]
