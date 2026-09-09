@@ -54,6 +54,10 @@ func test_inventory_operations() -> void:
 		_failures.append("Inventory could not merge matching stacks.")
 	elif source.get_slot(1).quantity != 62 or source.get_slot(2) != null:
 		_failures.append("Stack merge produced an incorrect result.")
+	if source.transfer_to_slot(source, 1, 2, 12) != 12:
+		_failures.append("Inventory drag logic could not move a partial stack to an exact empty slot.")
+	elif source.get_slot(1).quantity != 50 or source.get_slot(2).quantity != 12:
+		_failures.append("Exact-slot movement produced incorrect stack quantities.")
 
 	var target := InventoryComponentScript.new()
 	target.slot_count = 2
@@ -62,8 +66,12 @@ func test_inventory_operations() -> void:
 	await process_frame
 	if source.transfer_to(target, 1, 20) != 20:
 		_failures.append("Inventory-to-inventory transfer moved the wrong quantity.")
-	elif target.get_slot(0).quantity != 20 or source.get_slot(1).quantity != 42:
+	elif target.get_slot(0).quantity != 20 or source.get_slot(1).quantity != 30:
 		_failures.append("Inventory transfer did not preserve source and target quantities.")
+	if source.transfer_to_slot(target, 2, 1) != 12:
+		_failures.append("Cross-inventory drag did not target the requested container slot.")
+	elif target.get_slot(1).quantity != 12 or source.get_slot(2) != null:
+		_failures.append("Cross-inventory drag produced incorrect source or target state.")
 
 	var weight_limited := InventoryComponentScript.new()
 	weight_limited.slot_count = 4
@@ -175,7 +183,7 @@ func simulate_escape(ui_manager: Node) -> void:
 
 func finish() -> void:
 	if _failures.is_empty():
-		print("MILESTONE 4 TEST PASSED: inventory lifecycle, modal UI, and Escape closing are valid.")
+		print("MILESTONE 4 TEST PASSED: inventory lifecycle, exact-slot drag transfers, modal UI, and Escape closing are valid.")
 		quit(0)
 	else:
 		for failure in _failures:

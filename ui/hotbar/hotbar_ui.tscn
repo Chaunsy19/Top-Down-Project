@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ui/hotbar_ui.gd" id="1_ui"]
 
 [node name="HotbarUI" type="CanvasLayer"]
-layer = 11
+layer = 21
 script = ExtResource("1_ui")
 
 [node name="Root" type="Control" parent="."]
@@ -32,7 +32,7 @@ grow_vertical = 0
 mouse_filter = 2
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 14
-text = "HOLSTERED  •  LMB interact  •  R draw"
+text = "HANDS FREE  •  LMB interact  •  Select a hotbar item"
 horizontal_alignment = 1
 
 [node name="HotbarPanel" type="PanelContainer" parent="Root"]

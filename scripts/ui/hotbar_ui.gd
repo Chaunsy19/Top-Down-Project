@@ -25,6 +25,8 @@ func _bind_player_hotbar() -> void:
 	_hotbar = get_tree().get_first_node_in_group("player_hotbar") as HotbarComponent
 	if _hotbar != null:
 		_hotbar.changed.connect(_refresh)
+		for slot in _slots:
+			slot.bind_hotbar(_hotbar)
 		_player = _hotbar.get_parent() as PlayerController
 		if _player != null:
 			_player.combat_mode_changed.connect(_on_combat_mode_changed)

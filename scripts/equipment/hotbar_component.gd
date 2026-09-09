@@ -92,6 +92,10 @@ func get_assignment(hotbar_slot: int) -> StringName:
 	return _assignments[hotbar_slot] if is_valid_slot(hotbar_slot) else &""
 
 
+func get_inventory() -> InventoryComponent:
+	return _inventory
+
+
 func get_stack_for_slot(hotbar_slot: int) -> Resource:
 	var item_id := get_assignment(hotbar_slot)
 	if item_id.is_empty():

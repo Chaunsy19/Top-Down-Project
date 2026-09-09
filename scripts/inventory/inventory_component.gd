@@ -192,6 +192,63 @@ func move_or_merge(from_index: int, to_index: int, quantity := -1) -> bool:
 	return false
 
 
+func transfer_to_slot(target: InventoryComponent, from_index: int, to_index: int, quantity := -1) -> int:
+	if target == null or not is_valid_slot(from_index) or not target.is_valid_slot(to_index):
+		return 0
+	if target == self:
+		var source_before := get_slot(from_index)
+		if source_before == null:
+			return 0
+		var source_quantity: int = source_before.quantity
+		if not move_or_merge(from_index, to_index, quantity):
+			return 0
+		var source_after := get_slot(from_index)
+		if source_after == source_before:
+			return source_quantity - source_after.quantity
+		return mini(source_quantity, quantity) if quantity >= 0 else source_quantity
+
+	var source := get_slot(from_index)
+	if source == null or source.item_definition == null:
+		return 0
+	var requested: int = source.quantity if quantity < 0 else mini(quantity, source.quantity)
+	var destination := target.get_slot(to_index)
+
+	if destination == null or destination.item_definition == source.item_definition:
+		var slot_capacity: int = source.item_definition.stack_limit
+		if destination != null:
+			slot_capacity -= destination.quantity
+		var movable := mini(requested, mini(slot_capacity, target._get_weight_capacity(source.item_definition)))
+		if movable <= 0:
+			return 0
+		var moved_stack: Resource = source.duplicate_stack(movable)
+		source.quantity -= movable
+		if source.quantity <= 0:
+			_slots[from_index] = null
+		if destination == null:
+			target._slots[to_index] = moved_stack
+		else:
+			destination.quantity += movable
+		item_removed.emit(moved_stack.item_definition, movable)
+		target.item_added.emit(moved_stack.item_definition, movable)
+		changed.emit()
+		target.changed.emit()
+		return movable
+
+	if requested != source.quantity:
+		return 0
+	if not target._can_replace_slot(to_index, source) or not _can_replace_slot(from_index, destination):
+		return 0
+	_slots[from_index] = destination
+	target._slots[to_index] = source
+	item_removed.emit(source.item_definition, source.quantity)
+	item_added.emit(destination.item_definition, destination.quantity)
+	target.item_removed.emit(destination.item_definition, destination.quantity)
+	target.item_added.emit(source.item_definition, source.quantity)
+	changed.emit()
+	target.changed.emit()
+	return source.quantity
+
+
 func split_stack(index: int) -> bool:
 	var stack := get_slot(index)
 	var empty_index := find_first_empty_slot()
@@ -282,3 +339,26 @@ func find_compatible_tool(required_tags: Array[StringName], minimum_tier := 1) -
 
 func is_valid_slot(index: int) -> bool:
 	return index >= 0 and index < _slots.size()
+
+
+func _get_weight_capacity(item_definition: Resource) -> int:
+	if item_definition == null:
+		return 0
+	if item_definition.weight <= 0.0 or maximum_weight <= 0.0:
+		return item_definition.stack_limit
+	return floori(maxf(maximum_weight - get_total_weight(), 0.0) / item_definition.weight)
+
+
+func _can_replace_slot(index: int, incoming_stack: Resource) -> bool:
+	if not is_valid_slot(index) or incoming_stack == null or not incoming_stack.is_valid():
+		return false
+	if incoming_stack.quantity > incoming_stack.item_definition.stack_limit:
+		return false
+	if maximum_weight <= 0.0:
+		return true
+	var outgoing_stack := get_slot(index)
+	var projected_weight := get_total_weight()
+	if outgoing_stack != null:
+		projected_weight -= outgoing_stack.item_definition.weight * outgoing_stack.quantity
+	projected_weight += incoming_stack.item_definition.weight * incoming_stack.quantity
+	return projected_weight <= maximum_weight + 0.0001

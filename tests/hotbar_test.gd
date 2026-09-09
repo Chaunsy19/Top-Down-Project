@@ -46,9 +46,20 @@ func _run_tests() -> void:
 
 	inventory_ui.open_player_inventory()
 	var axe_inventory_slot := inventory.find_first_item(&"stone_axe")
-	inventory_ui.player_panel._on_slot_activated(axe_inventory_slot, MOUSE_BUTTON_LEFT, false, false)
-	_assert(inventory_ui.assign_selected_to_hotbar(2), "Selecting an inventory tool and assigning it to a number should succeed.")
+	var drag_data := {
+		"kind": &"inventory_stack",
+		"inventory": inventory,
+		"slot_index": axe_inventory_slot,
+		"item_id": &"stone_axe",
+	}
+	var hotbar_slot := hotbar_ui._slots[2] as HotbarSlotUI
+	_assert(hotbar_slot._can_drop_data(Vector2.ZERO, drag_data), "A player inventory tool should be accepted by a hotbar drop target.")
+	hotbar_slot._drop_data(Vector2.ZERO, drag_data)
 	_assert(hotbar.get_assignment(2) == &"stone_axe", "Inventory assignment should update the requested hotbar slot.")
+	var berry_drag_data := drag_data.duplicate()
+	berry_drag_data.slot_index = inventory.find_first_item(&"berries")
+	berry_drag_data.item_id = &"berries"
+	_assert(not hotbar_slot._can_drop_data(Vector2.ZERO, berry_drag_data), "A consumable should be rejected by a tool/weapon hotbar slot.")
 	inventory_ui.close_inventory()
 	_assert(hotbar.select_slot(2), "The reassigned axe should be selectable.")
 	_assert(hotbar.select_slot(2), "Selecting the active occupied slot again should holster it.")
@@ -62,7 +73,7 @@ func _run_tests() -> void:
 	main.queue_free()
 	await process_frame
 	if _failures.is_empty():
-		print("HOTBAR TEST PASSED: key actions, assignment, category filtering, contextual readiness, toggle holstering, and nine-slot HUD are valid.")
+		print("HOTBAR TEST PASSED: key actions, drag assignment, category filtering, contextual readiness, toggle holstering, and nine-slot HUD are valid.")
 		quit(0)
 	else:
 		for failure in _failures:

@@ -94,12 +94,11 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 
 ## Inventory controls
 
-- Click a populated slot, then another slot, to move, merge, or swap stacks.
-- Select a tool or weapon and press **1–9** to assign it to that hotbar slot; press a number with nothing selected to clear it.
 - Right-click a stack to split it into the first empty slot.
 - With a container open, Shift-click or double-click a stack to transfer it.
-- Select a player stack and use **Drop selected** to place it in the world.
-- Select a tool and choose **Equip selected** to place it in the hand slot; choose **Unequip** to return it to inventory.
+- Drag inventory stacks between slots to move, merge, or swap them; dragging between the player and an open container transfers them directly.
+- Drag tools and weapons from the player inventory onto hotbar slots. Right-click a hotbar slot to clear its assignment.
+- Select a player stack and use **Drop selected** to place it in the world. Held tools and weapons are controlled from the hotbar.
 - Select food and choose **Eat selected** to consume one item and restore hunger.
 - The player inventory footer reserves space for future currencies; currency state is not implemented yet.
 - Press **Escape** to close the topmost open modal UI. With no modal open, Escape intentionally does nothing until the pause menu is implemented.

@@ -2,6 +2,12 @@
 
 All notable project changes are recorded here by milestone.
 
+### Drag-and-drop inventory
+
+- Added direct inventory slot dragging for moves, merges, swaps, and player/container transfers.
+- Replaced click-plus-number hotbar assignment with dragging tools and weapons onto visible hotbar slots.
+- Added right-click clearing for hotbar assignments while preserving number-key item selection during play.
+
 ### Hotbar-driven held-item mode
 
 - Removed the separate `R` combat-mode input.
