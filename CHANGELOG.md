@@ -31,6 +31,13 @@ All notable project changes are recorded here by milestone.
 - Connected terrain walkability to both physics collision and the shared `GridWorld` blocked-cell API.
 - Added a map-design guide and automated terrain integration coverage.
 
+### Tilebase terrain variations and blending
+
+- Converted the five large Tilebase textures into reproducible 32×32 atlases with eight variations per terrain.
+- Added walkable sand, retained blocked deep-water collision, and painted a sand band around the starter shoreline.
+- Added deterministic runtime variation and reusable terrain-painting helpers.
+- Added soft priority-based transitions from deep water through shallow water, sand, grassy dirt, and grass.
+
 ### Mouse-facing player aim
 
 - Added continuous world-space mouse aiming that remains independent from player movement.

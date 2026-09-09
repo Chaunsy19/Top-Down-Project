@@ -18,7 +18,7 @@ No third-party plugins or dependencies are currently required.
 
 The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim with the mouse, hold left click for harvesting, use **R** to draw or holster weapons, **1–9** for assigned tools/weapons, **T** to rest, **I** for inventory/equipment, **C** for hand crafting, and **P** to pause. Left-click the campfire to open workstation crafting while holstered.
 
-The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the terrain palette and map-painting workflow.
+The test world is a small editable island using the Tilebase artwork, eight deterministic variations per terrain, and soft shoreline/terrain blending. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the palette, painting workflow, and reproducible atlas pipeline.
 
 ## Project structure
 
