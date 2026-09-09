@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/test/foundation_test.tscn" id="2_test"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="3_debug"]
 [ext_resource type="PackedScene" path="res://ui/inventory/inventory_ui.tscn" id="4_inventory"]
 [ext_resource type="PackedScene" path="res://ui/crafting/crafting_ui.tscn" id="5_crafting"]
+[ext_resource type="PackedScene" path="res://ui/survival/survival_hud.tscn" id="6_survival"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
@@ -16,3 +17,5 @@ script = ExtResource("1_main")
 [node name="InventoryUI" parent="." instance=ExtResource("4_inventory")]
 
 [node name="CraftingUI" parent="." instance=ExtResource("5_crafting")]
+
+[node name="SurvivalHUD" parent="." instance=ExtResource("6_survival")]

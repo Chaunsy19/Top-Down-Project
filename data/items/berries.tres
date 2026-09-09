@@ -9,4 +9,5 @@ display_name = "Berries"
 description = "A handful of edible wild berries."
 categories = Array[StringName]([&"consumable", &"food"])
 stack_limit = 30
+nutrition = 8.0
 world_color = Color(0.72, 0.2, 0.35, 1)

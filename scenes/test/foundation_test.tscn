@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -13,6 +13,7 @@
 [ext_resource type="Resource" path="res://data/items/stone.tres" id="11_stone"]
 [ext_resource type="PackedScene" path="res://scenes/world/crafting_workstation.tscn" id="12_workstation"]
 [ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="13_campfire"]
+[ext_resource type="Script" path="res://scripts/world/world_clock.gd" id="14_clock"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_horizontal"]
 size = Vector2(896, 32)
@@ -24,6 +25,11 @@ size = Vector2(32, 512)
 position = Vector2(192, 104)
 groups = ["grid_world"]
 script = ExtResource("1_world")
+
+[node name="AmbientModulate" type="CanvasModulate" parent="."]
+
+[node name="WorldClock" type="Node" parent="."]
+script = ExtResource("14_clock")
 
 [node name="RoomWalls" type="StaticBody2D" parent="."]
 

@@ -7,6 +7,7 @@ extends Resource
 @export var categories: Array[StringName] = []
 @export_range(1, 9999, 1) var stack_limit := 50
 @export_range(0.0, 1000.0, 0.01) var weight := 0.1
+@export_range(0.0, 100.0, 0.5) var nutrition := 0.0
 @export var world_color := Color.WHITE
 @export var icon: Texture2D
 @export var tool_profile: Resource

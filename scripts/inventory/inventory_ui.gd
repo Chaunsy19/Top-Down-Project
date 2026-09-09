@@ -24,6 +24,7 @@ func _ready() -> void:
 	player_panel.close_requested.connect(close_inventory)
 	container_panel.close_requested.connect(close_inventory)
 	player_panel.drop_requested.connect(drop_player_stack)
+	player_panel.consume_requested.connect(consume_player_stack)
 	player_panel.equip_requested.connect(equip_player_stack)
 	player_panel.unequip_requested.connect(unequip_player_tool)
 	notification_timer.timeout.connect(func() -> void: notification_label.visible = false)
@@ -113,6 +114,19 @@ func show_notification(message: String) -> void:
 	notification_label.text = message
 	notification_label.visible = true
 	notification_timer.start()
+
+
+func consume_player_stack(slot_index: int) -> bool:
+	if _player_inventory == null or not is_instance_valid(_player):
+		return false
+	var stack: Resource = _player_inventory.get_slot(slot_index)
+	if stack == null:
+		return false
+	var item_name: String = stack.item_definition.display_name
+	var needs := _player.get_node_or_null("Needs")
+	var succeeded: bool = needs != null and needs.consume_item(_player_inventory, slot_index)
+	show_notification("Ate %s" % item_name if succeeded else "That item cannot be eaten")
+	return succeeded
 
 
 func equip_player_stack(slot_index: int) -> bool:

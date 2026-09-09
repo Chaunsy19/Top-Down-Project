@@ -1,0 +1,146 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/survival_hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.055, 0.075, 0.07, 0.86)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.36, 0.42, 0.39, 0.9)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bar_background"]
+bg_color = Color(0.12, 0.15, 0.14, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hunger"]
+bg_color = Color(0.78, 0.55, 0.23, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fatigue"]
+bg_color = Color(0.35, 0.58, 0.78, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health"]
+bg_color = Color(0.36, 0.68, 0.4, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="SurvivalHUD" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_hud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+offset_left = 24.0
+offset_top = 526.0
+offset_right = 326.0
+offset_bottom = 696.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 9
+
+[node name="Layout" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TimeRow" type="HBoxContainer" parent="Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="Panel/Margin/Layout/TimeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.78, 0.48, 1)
+theme_override_font_sizes/font_size = 16
+text = "Day 1  08:00"
+
+[node name="PeriodLabel" type="Label" parent="Panel/Margin/Layout/TimeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
+text = "Daylight"
+
+[node name="HungerRow" type="HBoxContainer" parent="Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Margin/Layout/HungerRow"]
+custom_minimum_size = Vector2(66, 0)
+layout_mode = 2
+text = "Hunger"
+
+[node name="HungerBar" type="ProgressBar" parent="Panel/Margin/Layout/HungerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+theme_override_font_sizes/font_size = 10
+theme_override_styles/background = SubResource("StyleBoxFlat_bar_background")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hunger")
+
+[node name="FatigueRow" type="HBoxContainer" parent="Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Margin/Layout/FatigueRow"]
+custom_minimum_size = Vector2(66, 0)
+layout_mode = 2
+text = "Rest"
+
+[node name="FatigueBar" type="ProgressBar" parent="Panel/Margin/Layout/FatigueRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+theme_override_font_sizes/font_size = 10
+theme_override_styles/background = SubResource("StyleBoxFlat_bar_background")
+theme_override_styles/fill = SubResource("StyleBoxFlat_fatigue")
+
+[node name="HealthRow" type="HBoxContainer" parent="Panel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/Margin/Layout/HealthRow"]
+custom_minimum_size = Vector2(66, 0)
+layout_mode = 2
+text = "Health"
+
+[node name="HealthBar" type="ProgressBar" parent="Panel/Margin/Layout/HealthRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+show_percentage = false
+theme_override_font_sizes/font_size = 10
+theme_override_styles/background = SubResource("StyleBoxFlat_bar_background")
+theme_override_styles/fill = SubResource("StyleBoxFlat_health")
+
+[node name="ConditionLabel" type="Label" parent="Panel/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.68, 0.74, 0.71, 1)
+theme_override_font_sizes/font_size = 11
+text = "Stable  •  R: rest"

@@ -20,7 +20,7 @@ offset_top = 58.0
 offset_right = 700.0
 offset_bottom = 88.0
 theme_override_colors/font_color = Color(0.78, 0.84, 0.81, 1)
-text = "E interact  •  I inventory/equipment  •  C hand crafting  •  Esc close"
+text = "E interact  •  I inventory  •  C crafting  •  R rest  •  P pause  •  F4 time test"
 
 [node name="Panel" type="PanelContainer" parent="."]
 unique_name_in_owner = true

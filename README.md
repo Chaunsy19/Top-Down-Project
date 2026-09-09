@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, press **E** to interact or collect drops, **I** for inventory/equipment, and **C** for hand crafting. Interact with the campfire to open workstation crafting.
+The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
 
 ## Project structure
 
@@ -47,12 +47,14 @@ The current test scene contains a directly controlled player in a grid-backed, c
 | Interact | E |
 | Inventory | I |
 | Crafting | C |
+| Rest / wake | R |
 | Building | B |
 | Attack | Left mouse button |
 | Pause | P |
 | Camera zoom | Mouse wheel |
 | Camera reset | F |
 | Debug overlay | F3 |
+| Debug time jump | F4 |
 
 ## Content authoring
 
@@ -86,6 +88,7 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - With a container open, Shift-click or double-click a stack to transfer it.
 - Select a player stack and use **Drop selected** to place it in the world.
 - Select a tool and choose **Equip selected** to place it in the hand slot; choose **Unequip** to return it to inventory.
+- Select food and choose **Eat selected** to consume one item and restore hunger.
 - The player inventory footer reserves space for future currencies; currency state is not implemented yet.
 - Press **Escape** to close the topmost open modal UI. With no modal open, Escape intentionally does nothing until the pause menu is implemented.
 
@@ -96,6 +99,15 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - The recipe list shows whether each recipe is ready or locked; selecting one explains missing ingredients or workstation requirements.
 - Crafting consumes ingredients when started and completes after its data-defined duration.
 - Harvesting consumes one durability from the equipped tool. A tool at zero durability breaks and must be replaced.
+
+## Time, needs, and lighting
+
+- A full in-game day lasts 20 real-time minutes at one fixed speed. Pausing stops world time.
+- Ambient light transitions continuously through dawn, daylight, dusk, and near-black night.
+- Campfires use a soft radial falloff without hard-edged shadows and become more visually important as ambient light fades.
+- Hunger and fatigue decline with game time. Food restores hunger; pressing **R** rests in place and restores fatigue.
+- Critical hunger or fatigue damages health and reduces movement speed.
+- Press **F4** during development to jump forward six hours and inspect lighting phases without changing normal gameplay speed.
 
 ## Automated checks
 
@@ -110,4 +122,5 @@ godot --headless --path . --script res://tests/milestone_4_test.gd
 godot --headless --path . --script res://tests/tool_requirement_test.gd
 godot --headless --path . --script res://tests/milestone_5_test.gd
 godot --headless --path . --script res://tests/grid_occupancy_test.gd
+godot --headless --path . --script res://tests/milestone_6_test.gd
 ```

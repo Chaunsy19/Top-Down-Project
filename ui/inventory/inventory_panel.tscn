@@ -105,6 +105,12 @@ layout_mode = 2
 focus_mode = 0
 text = "Drop selected"
 
+[node name="ConsumeButton" type="Button" parent="Margin/Layout/Actions"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Eat selected"
+
 [node name="CurrencyFooter" type="VBoxContainer" parent="Margin/Layout"]
 unique_name_in_owner = true
 layout_mode = 2

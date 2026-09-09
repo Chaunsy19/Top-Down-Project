@@ -4,6 +4,7 @@ extends "res://scripts/interaction/interactable.gd"
 @export var definition: Resource
 
 @onready var name_label: Label = %NameLabel
+@onready var soft_light: SoftWorldLight = %SoftLight
 
 
 func _ready() -> void:
@@ -13,6 +14,7 @@ func _ready() -> void:
 	super()
 	add_to_group("crafting_workstation")
 	name_label.text = display_name
+	soft_light.configure_from_definition(definition)
 	queue_redraw()
 
 

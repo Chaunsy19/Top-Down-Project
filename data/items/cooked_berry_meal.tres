@@ -10,4 +10,5 @@ description = "Warm mashed berries cooked over a campfire."
 categories = Array[StringName]([&"consumable", &"food"])
 stack_limit = 20
 weight = 0.25
+nutrition = 32.0
 world_color = Color(0.78, 0.35, 0.28, 1)

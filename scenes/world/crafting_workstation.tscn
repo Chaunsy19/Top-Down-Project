@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/crafting_workstation.gd" id="1_workstation"]
+[ext_resource type="Script" path="res://scripts/world/soft_light.gd" id="2_light"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_workstation"]
 radius = 23.0
@@ -15,6 +16,11 @@ blocks_grid_cell = true
 shape = SubResource("CircleShape2D_workstation")
 
 [node name="InteractionPoint" type="Node2D" parent="."]
+
+[node name="SoftLight" type="PointLight2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -4)
+script = ExtResource("2_light")
 
 [node name="NameLabel" type="Label" parent="."]
 unique_name_in_owner = true

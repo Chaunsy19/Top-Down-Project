@@ -42,6 +42,7 @@ columns = 4
 slots_minimum_height = 215.0
 show_currency_footer = false
 show_drop_button = false
+show_consume_button = false
 
 [node name="PlayerPanel" parent="Overlay" instance=ExtResource("2_panel")]
 unique_name_in_owner = true

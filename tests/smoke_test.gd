@@ -8,6 +8,7 @@ const REQUIRED_ACTIONS := [
 	"interact",
 	"inventory",
 	"crafting",
+	"rest",
 	"building",
 	"attack",
 	"pause",
@@ -15,6 +16,7 @@ const REQUIRED_ACTIONS := [
 	"camera_zoom_out",
 	"camera_reset",
 	"debug_toggle",
+	"debug_cycle_time",
 	"ui_cancel",
 ]
 const REQUIRED_SCRIPTS := [
@@ -38,6 +40,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/data/workstations/workstation_definition.gd",
 	"res://scripts/data/workstations/workstation_catalog.gd",
 	"res://scripts/player/skill_tracker.gd",
+	"res://scripts/player/survival_needs.gd",
 	"res://scripts/world/resource_node.gd",
 	"res://scripts/world/world_item_drop.gd",
 	"res://scripts/inventory/inventory_component.gd",
@@ -49,6 +52,9 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/crafting/crafting_ui.gd",
 	"res://scripts/world/inventory_container.gd",
 	"res://scripts/world/crafting_workstation.gd",
+	"res://scripts/world/world_clock.gd",
+	"res://scripts/world/soft_light.gd",
+	"res://scripts/ui/survival_hud.gd",
 	"res://scripts/ui/ui_manager.gd",
 ]
 

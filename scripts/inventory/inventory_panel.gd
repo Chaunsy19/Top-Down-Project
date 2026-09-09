@@ -7,6 +7,7 @@ const InventorySlotScript = preload("res://scripts/inventory/inventory_slot_ui.g
 
 signal close_requested()
 signal drop_requested(slot_index: int)
+signal consume_requested(slot_index: int)
 signal equip_requested(slot_index: int)
 signal unequip_requested()
 
@@ -15,6 +16,7 @@ signal unequip_requested()
 @export_range(100.0, 600.0, 5.0) var slots_minimum_height := 300.0
 @export var show_currency_footer := true
 @export var show_drop_button := true
+@export var show_consume_button := true
 @export var show_equipment_controls := false
 
 var _inventory: InventoryComponentScript
@@ -30,6 +32,7 @@ var _equipment: Node
 @onready var weight_label: Label = %WeightLabel
 @onready var currency_footer: Control = %CurrencyFooter
 @onready var drop_button: Button = %DropButton
+@onready var consume_button: Button = %ConsumeButton
 @onready var equipment_row: Control = %EquipmentRow
 @onready var equipped_label: Label = %EquippedLabel
 @onready var equip_button: Button = %EquipButton
@@ -43,9 +46,11 @@ func _ready() -> void:
 	slots_scroll.custom_minimum_size.y = slots_minimum_height
 	currency_footer.visible = show_currency_footer
 	drop_button.visible = show_drop_button
+	consume_button.visible = show_consume_button
 	equipment_row.visible = show_equipment_controls
 	%CloseButton.pressed.connect(func() -> void: close_requested.emit())
 	drop_button.pressed.connect(_on_drop_pressed)
+	consume_button.pressed.connect(_on_consume_pressed)
 	equip_button.pressed.connect(_on_equip_pressed)
 	unequip_button.pressed.connect(func() -> void: unequip_requested.emit())
 
@@ -117,6 +122,7 @@ func _refresh() -> void:
 	var selected_stack := _inventory.get_slot(_selected_slot)
 	selection_label.text = selected_stack.item_definition.display_name if selected_stack else "Select a slot"
 	drop_button.disabled = selected_stack == null
+	consume_button.disabled = selected_stack == null or selected_stack.item_definition.nutrition <= 0.0
 	_refresh_equipment(selected_stack)
 
 
@@ -150,6 +156,13 @@ func _on_drop_pressed() -> void:
 func _on_equip_pressed() -> void:
 	if _selected_slot >= 0:
 		equip_requested.emit(_selected_slot)
+		_selected_slot = -1
+		_refresh()
+
+
+func _on_consume_pressed() -> void:
+	if _selected_slot >= 0:
+		consume_requested.emit(_selected_slot)
 		_selected_slot = -1
 		_refresh()
 

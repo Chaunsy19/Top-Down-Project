@@ -4,6 +4,16 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Milestone 6 — World clock, needs, and survival lighting
+
+- Added a centralized 20-minute real-time day/night clock with pause-compatible progression and a debug time-cycle action.
+- Added smooth multi-hour dawn and dusk ambient-light transitions and near-black unlit nights.
+- Added reusable data-driven soft lights with radial falloff, ambient-aware intensity, and subtle campfire flicker.
+- Added hunger, fatigue, resting, health damage from critical needs, recovery, and movement penalties.
+- Added nutrition data to food and an inventory action for eating selected items.
+- Added a compact always-visible clock and survival-needs HUD.
+- Added automated coverage for time progression, light curves, soft light, eating, resting, penalties, and health pressure.
+
 ### Tile-based world foundation
 
 - Added authoritative cell ownership so the grid can identify the blocking object occupying each tile and reject overlapping placement.
