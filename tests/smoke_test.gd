@@ -11,6 +11,15 @@ const REQUIRED_ACTIONS := [
 	"rest",
 	"building",
 	"attack",
+	"hotbar_slot_1",
+	"hotbar_slot_2",
+	"hotbar_slot_3",
+	"hotbar_slot_4",
+	"hotbar_slot_5",
+	"hotbar_slot_6",
+	"hotbar_slot_7",
+	"hotbar_slot_8",
+	"hotbar_slot_9",
 	"pause",
 	"camera_zoom_in",
 	"camera_zoom_out",
@@ -49,6 +58,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/inventory/inventory_panel.gd",
 	"res://scripts/inventory/inventory_ui.gd",
 	"res://scripts/equipment/equipment_component.gd",
+	"res://scripts/equipment/hotbar_component.gd",
 	"res://scripts/crafting/crafting_component.gd",
 	"res://scripts/crafting/crafting_ui.gd",
 	"res://scripts/world/inventory_container.gd",
@@ -58,6 +68,8 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/world/looping_sprite_animation.gd",
 	"res://scripts/ui/survival_hud.gd",
 	"res://scripts/ui/ui_manager.gd",
+	"res://scripts/ui/hotbar_slot.gd",
+	"res://scripts/ui/hotbar_ui.gd",
 ]
 
 

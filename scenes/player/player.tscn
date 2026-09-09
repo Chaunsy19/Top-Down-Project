@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://scripts/equipment/equipment_component.gd" id="7_equipment"]
 [ext_resource type="Script" path="res://scripts/crafting/crafting_component.gd" id="8_crafting"]
 [ext_resource type="Script" path="res://scripts/player/survival_needs.gd" id="9_needs"]
+[ext_resource type="Script" path="res://scripts/equipment/hotbar_component.gd" id="10_hotbar"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 11.0
@@ -45,6 +46,9 @@ maximum_weight = 40.0
 [node name="Equipment" type="Node" parent="."]
 script = ExtResource("7_equipment")
 
+[node name="Hotbar" type="Node" parent="."]
+script = ExtResource("10_hotbar")
+
 [node name="Crafting" type="Node" parent="."]
 script = ExtResource("8_crafting")
 
@@ -78,9 +82,9 @@ script = ExtResource("4_camera")
 
 [node name="InteractionPrompt" type="Label" parent="InteractionHUD"]
 offset_left = 490.0
-offset_top = 646.0
+offset_top = 582.0
 offset_right = 790.0
-offset_bottom = 686.0
+offset_bottom = 622.0
 theme_override_colors/font_color = Color(0.902, 0.765, 0.416, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 18

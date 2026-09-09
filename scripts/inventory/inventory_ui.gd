@@ -7,6 +7,7 @@ const InventoryPanelScript = preload("res://scripts/inventory/inventory_panel.gd
 var _player: Node2D
 var _player_inventory: InventoryComponentScript
 var _player_equipment: Node
+var _player_hotbar: HotbarComponent
 var _paused_by_inventory := false
 
 @onready var overlay: Control = %Overlay
@@ -40,6 +41,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			open_player_inventory()
 		get_viewport().set_input_as_handled()
+		return
+	if overlay.visible and _player_hotbar != null:
+		for index in HotbarComponent.SLOT_ACTIONS.size():
+			if event.is_action_pressed(HotbarComponent.SLOT_ACTIONS[index]):
+				assign_selected_to_hotbar(index)
+				get_viewport().set_input_as_handled()
+				return
 
 
 func open_player_inventory() -> void:
@@ -147,10 +155,26 @@ func unequip_player_tool() -> bool:
 	return succeeded
 
 
+func assign_selected_to_hotbar(hotbar_slot: int) -> bool:
+	if _player_hotbar == null:
+		return false
+	var inventory_slot := player_panel.get_selected_slot()
+	if inventory_slot < 0:
+		var cleared := _player_hotbar.clear_slot(hotbar_slot)
+		show_notification("Cleared hotbar %d" % (hotbar_slot + 1) if cleared else "Select a tool or weapon first")
+		return cleared
+	var stack := _player_inventory.get_slot(inventory_slot) if _player_inventory != null else null
+	var item_name: String = stack.item_definition.display_name if stack != null else "item"
+	var succeeded := _player_hotbar.assign_from_inventory(hotbar_slot, inventory_slot)
+	show_notification("Assigned %s to %d" % [item_name, hotbar_slot + 1] if succeeded else "Only tools and weapons can use the hotbar")
+	return succeeded
+
+
 func _find_player() -> void:
 	_player = get_tree().get_first_node_in_group("player") as Node2D
 	_player_inventory = _player.get_node_or_null("Inventory") as InventoryComponentScript if _player else null
 	_player_equipment = _player.get_node_or_null("Equipment") if _player else null
+	_player_hotbar = _player.get_node_or_null("Hotbar") as HotbarComponent if _player else null
 
 
 func _pause_for_inventory() -> void:

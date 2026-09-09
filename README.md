@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim by moving the mouse, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
+The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim by moving the mouse, use **1–9** for assigned tools/weapons, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
 
 The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the terrain palette and map-painting workflow.
 
@@ -47,6 +47,7 @@ The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_D
 | --- | --- |
 | Move | WASD or arrow keys |
 | Aim / face | Mouse |
+| Select hotbar slot | 1–9 |
 | Interact | E |
 | Inventory | I |
 | Crafting | C |
@@ -93,6 +94,7 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 ## Inventory controls
 
 - Click a populated slot, then another slot, to move, merge, or swap stacks.
+- Select a tool or weapon and press **1–9** to assign it to that hotbar slot; press a number with nothing selected to clear it.
 - Right-click a stack to split it into the first empty slot.
 - With a container open, Shift-click or double-click a stack to transfer it.
 - Select a player stack and use **Drop selected** to place it in the world.
@@ -135,4 +137,5 @@ godot --headless --path . --script res://tests/milestone_6_test.gd
 godot --headless --path . --script res://tests/player_aim_test.gd
 godot --headless --path . --script res://tests/terrain_map_test.gd
 godot --headless --path . --script res://tests/campfire_animation_test.gd
+godot --headless --path . --script res://tests/hotbar_test.gd
 ```

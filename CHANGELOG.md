@@ -4,6 +4,13 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Tool and weapon hotbar
+
+- Added an always-visible nine-slot HUD controlled by number keys 1–9.
+- Added inventory-to-hotbar assignment by item ID so shortcuts survive inventory moves and tool swapping.
+- Added automatic equipment swapping, empty-slot unequipping, missing-item feedback, durability display, and tool/weapon category filtering.
+- Added automated coverage for mappings, assignment, selection, swapping, and HUD structure.
+
 ### Animated campfire effects
 
 - Replaced the procedural flame with the supplied eight-frame fire and smoke sprite sheets.

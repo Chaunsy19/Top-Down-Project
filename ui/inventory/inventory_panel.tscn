@@ -87,7 +87,7 @@ text = "Unequip"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.62, 0.59, 1)
 theme_override_font_sizes/font_size = 11
-text = "Click: select/move  •  Select tool: equip  •  Right-click: split  •  Shift/double-click: transfer  •  Esc: close"
+text = "Click: select/move  •  Select tool/weapon + 1–9: assign hotbar  •  Right-click: split  •  Shift/double-click: transfer  •  Esc: close"
 autowrap_mode = 2
 
 [node name="Actions" type="HBoxContainer" parent="Margin/Layout"]

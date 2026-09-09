@@ -30,7 +30,7 @@ func equip_from_inventory(inventory: Node, slot_index: int) -> bool:
 	if inventory == null:
 		return false
 	var candidate: Resource = inventory.get_slot(slot_index)
-	if candidate == null or candidate.item_definition.tool_profile == null:
+	if candidate == null or not can_equip_definition(candidate.item_definition):
 		return false
 	var removed: Resource = inventory.remove_from_slot(slot_index, candidate.quantity)
 	if removed == null:
@@ -44,6 +44,13 @@ func equip_from_inventory(inventory: Node, slot_index: int) -> bool:
 	item_equipped.emit(_hand_stack)
 	changed.emit()
 	return true
+
+
+func can_equip_definition(item_definition: Resource) -> bool:
+	return (
+		item_definition != null
+		and (item_definition.has_category(&"tool") or item_definition.has_category(&"weapon"))
+	)
 
 
 func unequip_to_inventory(inventory: Node) -> bool:

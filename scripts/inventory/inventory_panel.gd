@@ -176,9 +176,12 @@ func _refresh_equipment(selected_stack: Resource) -> void:
 		unequip_button.disabled = true
 	else:
 		var profile: Resource = hand_stack.item_definition.tool_profile
-		equipped_label.text = "HAND  %s  %d/%d" % [hand_stack.item_definition.display_name, hand_stack.current_durability, profile.maximum_durability]
+		if profile != null:
+			equipped_label.text = "HAND  %s  %d/%d" % [hand_stack.item_definition.display_name, hand_stack.current_durability, profile.maximum_durability]
+		else:
+			equipped_label.text = "HAND  %s" % hand_stack.item_definition.display_name
 		unequip_button.disabled = false
-	equip_button.disabled = selected_stack == null or selected_stack.item_definition.tool_profile == null
+	equip_button.disabled = selected_stack == null or not _equipment.can_equip_definition(selected_stack.item_definition)
 
 
 func _apply_panel_style() -> void:
