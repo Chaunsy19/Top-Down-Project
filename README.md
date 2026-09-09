@@ -134,4 +134,5 @@ godot --headless --path . --script res://tests/grid_occupancy_test.gd
 godot --headless --path . --script res://tests/milestone_6_test.gd
 godot --headless --path . --script res://tests/player_aim_test.gd
 godot --headless --path . --script res://tests/terrain_map_test.gd
+godot --headless --path . --script res://tests/campfire_animation_test.gd
 ```

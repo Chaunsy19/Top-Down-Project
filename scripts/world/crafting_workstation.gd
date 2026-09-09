@@ -31,10 +31,9 @@ func _perform_interaction(actor: Node2D) -> void:
 
 
 func _draw() -> void:
-	var color: Color = definition.primary_color if definition != null else Color("#9a5b32")
 	draw_circle(Vector2.ZERO, 19.0, Color("#31231d"))
 	for angle in 8:
 		var point := Vector2.from_angle(float(angle) * TAU / 8.0) * 16.0
 		draw_circle(point, 5.0, Color("#7d817c"))
-	draw_colored_polygon(PackedVector2Array([Vector2(-8, 7), Vector2(0, -18), Vector2(8, 7)]), color)
-	draw_circle(Vector2(0, 2), 6.0, Color("#e6c36a"))
+	draw_line(Vector2(-11, 8), Vector2(11, -5), Color("#6d4128"), 5.0, true)
+	draw_line(Vector2(-11, -5), Vector2(11, 8), Color("#835034"), 5.0, true)

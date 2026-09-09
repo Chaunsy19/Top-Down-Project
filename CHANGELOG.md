@@ -4,6 +4,12 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Animated campfire effects
+
+- Replaced the procedural flame with the supplied eight-frame fire and smoke sprite sheets.
+- Added independently configurable looping fire and smoke animations while retaining the stone/log base, crafting interaction, and soft flickering light.
+- Added automated coverage for animation frames, effect layering, and light integration.
+
 ### Editable starter-island terrain
 
 - Added a reusable 32×32 terrain tileset with dirt, grass, walkable shallow water, and blocked deep water.

@@ -55,6 +55,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/world/crafting_workstation.gd",
 	"res://scripts/world/world_clock.gd",
 	"res://scripts/world/soft_light.gd",
+	"res://scripts/world/looping_sprite_animation.gd",
 	"res://scripts/ui/survival_hud.gd",
 	"res://scripts/ui/ui_manager.gd",
 ]
