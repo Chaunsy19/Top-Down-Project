@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" uid="uid://3nglwn8q5ovc" path="res://scripts/world/crafting_workstation.gd" id="1_workstation"]
 [ext_resource type="Script" uid="uid://cud0c5khfy1ai" path="res://scripts/world/soft_light.gd" id="2_light"]
-[ext_resource type="Texture2D" path="res://assets/Campfire/Fire 4 - 2/Group 4 - 2.png" id="3_fire"]
-[ext_resource type="Texture2D" path="res://assets/Campfire/Smoke Dark - 1/Smoke Dark - 1.png" id="4_smoke"]
-[ext_resource type="Script" path="res://scripts/world/looping_sprite_animation.gd" id="5_animation"]
+[ext_resource type="Texture2D" uid="uid://dkyvfrim2yjft" path="res://assets/Campfire/Fire 4 - 2/Group 4 - 2.png" id="3_fire"]
+[ext_resource type="Texture2D" uid="uid://bb6al5s7uphba" path="res://assets/Campfire/Smoke Dark - 1/Smoke Dark - 1.png" id="4_smoke"]
+[ext_resource type="Script" uid="uid://d35hepgf5g674" path="res://scripts/world/looping_sprite_animation.gd" id="5_animation"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_workstation"]
 radius = 23.0
@@ -20,23 +20,24 @@ shape = SubResource("CircleShape2D_workstation")
 
 [node name="InteractionPoint" type="Node2D" parent="." unique_id=446712450]
 
-[node name="SmokeAnimation" type="Sprite2D" parent="."]
+[node name="SmokeAnimation" type="Sprite2D" parent="." unique_id=377399412]
 unique_name_in_owner = true
+modulate = Color(0.72, 0.76, 0.82, 0.58)
 show_behind_parent = true
 texture_filter = 1
 position = Vector2(0, -42)
 scale = Vector2(0.5, 0.5)
-modulate = Color(0.72, 0.76, 0.82, 0.58)
 texture = ExtResource("4_smoke")
 hframes = 8
 script = ExtResource("5_animation")
 frames_per_second = 7.0
 start_offset_seconds = 0.37
 
-[node name="FireAnimation" type="Sprite2D" parent="."]
+[node name="FireAnimation" type="Sprite2D" parent="." unique_id=1935618128]
 unique_name_in_owner = true
 texture_filter = 1
-position = Vector2(0, -13)
+position = Vector2(0, -10.000001)
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("3_fire")
 hframes = 8
 script = ExtResource("5_animation")
@@ -46,15 +47,3 @@ frames_per_second = 11.0
 unique_name_in_owner = true
 position = Vector2(0, -4)
 script = ExtResource("2_light")
-
-[node name="NameLabel" type="Label" parent="." unique_id=767153815]
-unique_name_in_owner = true
-offset_left = -60.0
-offset_top = -48.0
-offset_right = 60.0
-offset_bottom = -25.0
-theme_override_colors/font_color = Color(0.82, 0.84, 0.8, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 13
-text = "Campfire"
-horizontal_alignment = 1

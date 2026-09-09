@@ -20,7 +20,6 @@ skill_id = &"mining"
 required_skill_level = 1
 required_tool_tags = Array[StringName]([&"pickaxe"])
 experience_reward = 7
-max_harvests = 4
 yields = Array[ExtResource("2_yield")]([SubResource("Yield_stone")])
 cancel_distance = 82.0
 visual_kind = "rock"

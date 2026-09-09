@@ -42,4 +42,3 @@ func _draw() -> void:
 	draw_rect(Rect2(-21.0, -15.0, 42.0, 8.0), Color("#92704b"))
 	draw_line(Vector2(-21.0, -6.0), Vector2(21.0, -6.0), Color("#2d2922"), 2.0)
 	draw_rect(Rect2(-3.0, -4.0, 6.0, 9.0), Color("#d0aa58"))
-
