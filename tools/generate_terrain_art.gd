@@ -5,7 +5,7 @@ const CROP_SIZE := 256
 const VARIATION_COUNT := 8
 const BLEND_DIRECTION_COUNT := 4
 const BLEND_WIDTH := 10.0
-const BLEND_ALPHA := 0.88
+const BLEND_ALPHA := 1.0
 
 const TERRAIN_SOURCES := [
 	"res://assets/TileBase/GrassyDirtTile.png",
@@ -58,22 +58,27 @@ func _initialize() -> void:
 
 
 func _make_blend_overlay(tile: Image, direction: int) -> Image:
-	var overlay := tile.duplicate()
+	var overlay := Image.create(TILE_SIZE, TILE_SIZE, false, Image.FORMAT_RGBA8)
 	for y in TILE_SIZE:
 		for x in TILE_SIZE:
 			var distance_from_edge := 0.0
+			var sample_position := Vector2i(x, y)
 			match direction:
 				0:
 					distance_from_edge = float(y)
+					sample_position.y = TILE_SIZE - 1 - y
 				1:
 					distance_from_edge = float(TILE_SIZE - 1 - x)
+					sample_position.x = TILE_SIZE - 1 - x
 				2:
 					distance_from_edge = float(TILE_SIZE - 1 - y)
+					sample_position.y = TILE_SIZE - 1 - y
 				_:
 					distance_from_edge = float(x)
+					sample_position.x = TILE_SIZE - 1 - x
 			var strength := clampf(1.0 - distance_from_edge / BLEND_WIDTH, 0.0, 1.0)
 			strength = strength * strength * (3.0 - 2.0 * strength)
-			var color: Color = overlay.get_pixel(x, y)
+			var color: Color = tile.get_pixelv(sample_position)
 			color.a = strength * BLEND_ALPHA
 			overlay.set_pixel(x, y, color)
 	return overlay

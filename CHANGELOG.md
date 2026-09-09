@@ -38,6 +38,12 @@ All notable project changes are recorded here by milestone.
 - Added deterministic runtime variation and reusable terrain-painting helpers.
 - Added soft priority-based transitions from deep water through shallow water, sand, grassy dirt, and grass.
 
+### Automatic seamless terrain edges
+
+- Made every direct TileMap change automatically refresh deterministic variations and edge blending in both editor-authored and generated maps.
+- Changed blend textures to sample the matching opposite edge of each neighbor at full boundary opacity.
+- Added equal crossfades between visual variations of the same terrain, removing the need for manually painted transition tiles.
+
 ### Mouse-facing player aim
 
 - Added continuous world-space mouse aiming that remains independent from player movement.

@@ -14,15 +14,15 @@ The Tilebase source textures are converted into a compact atlas with eight visua
 
 In the TileMap palette, each atlas column is one terrain and its eight rows are the variations. Gameplay reads the `terrain_id`, `walkable`, and `blend_priority` custom data attached to each tile; it never guesses behavior from the artwork or atlas position.
 
-`TerrainMap` selects a stable variation for every painted cell when the map starts. The variation is deterministic, so it will not shimmer or change between frames. Change `variation_seed` on the node for a different distribution, or disable `automatic_variations` if you want every hand-picked atlas row preserved.
+`TerrainMap` listens to its own change notifications and watches the compact tile-data fingerprint for raw TileMap edits. Every cell painted in the editor, placed through `set_cell`, or created by a future map generator automatically receives a stable variation and requests a blend redraw within `automatic_refresh_interval` (0.1 seconds by default). The variation is deterministic, so it will not shimmer or change between frames. Change `variation_seed` on the node for a different distribution, or disable `automatic_variations` if you want every hand-picked atlas row preserved.
 
 ## Soft terrain blending
 
-`TerrainBlendOverlay` adds a translucent ten-pixel transition wherever unlike cardinal neighbors meet. The natural layering order is:
+`TerrainBlendOverlay` adds a ten-pixel transition along every cardinal tile boundary. It samples the neighbor's matching opposite edge, so the pixels on both sides of a boundary meet before feathering inward. Variations of the same terrain crossfade equally; different terrains use this natural layering order:
 
 `deep water → shallow water → sand → grassy dirt → grass`
 
-For example, sand feathers into shallow water and grass feathers into grassy dirt. This is visual only: the underlying painted cell still controls walking, collision, future pathfinding, and building rules. Diagonal-only contacts do not receive a separate corner mask yet.
+For example, sand feathers into shallow water and grass feathers into grassy dirt. There is no transition tile to select and no cleanup pass after painting. This is visual only: the underlying painted cell still controls walking, collision, future pathfinding, and building rules. Diagonal-only contacts do not require a transition because they share no visible edge.
 
 ## Painting the map in Godot
 
@@ -31,7 +31,7 @@ For example, sand feathers into shallow water and grass feathers into grassy dir
 3. In the TileMap panel at the bottom, switch to tile painting.
 4. Choose the desired terrain column. Any row is valid; automatic variation will distribute all eight when the game runs.
 5. Use the pencil to paint, right-click to erase, and the rectangle or bucket tools for larger areas.
-6. Save with **Ctrl+S** and press **F5** to see automatic variation and blending.
+6. Variations and blends refresh automatically. Save with **Ctrl+S** and press **F5** to test walking and collision.
 
 Keep the painted map within the current 28×16 area. If the map size changes, update `grid_dimensions` on `FoundationTest` so building placement and logical walkability use the same bounds.
 

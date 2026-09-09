@@ -36,9 +36,15 @@ func _run_tests() -> void:
 	var atlas_source := terrain.tile_set.get_source(0) as TileSetAtlasSource
 	_assert(atlas_source != null and atlas_source.get_tiles_count() == 40, "Five terrains should each expose eight paintable tile variations.")
 	var temporary_cell := Vector2i(40, 40)
-	_assert(terrain.paint_terrain(temporary_cell, &"sand", 5), "The map API should paint a requested terrain variation.")
-	_assert(terrain.get_terrain_id(temporary_cell) == &"sand" and terrain.get_cell_atlas_coords(temporary_cell) == Vector2i(4, 5), "Painted terrain should retain its ID and requested atlas variation.")
+	var revision_before_paint := terrain.visual_revision
+	terrain.set_cell(temporary_cell, 0, Vector2i(4, 0), 0)
+	terrain._process(terrain.automatic_refresh_interval)
+	await process_frame
+	_assert(terrain.get_terrain_id(temporary_cell) == &"sand", "Directly placed tiles should retain their terrain metadata.")
+	_assert(terrain.get_cell_atlas_coords(temporary_cell).y == terrain.get_deterministic_variation(temporary_cell), "Direct editor or generator placement should automatically receive a stable variation.")
+	_assert(terrain.visual_revision > revision_before_paint, "Any TileMap change should automatically refresh variations and blends.")
 	terrain.erase_cell(temporary_cell)
+	_assert(_blend_edges_sample_neighbor_boundaries(), "Blend tiles should sample the matching opposite neighbor edge at full boundary opacity.")
 	_assert(world.is_cell_walkable(Vector2i(14, 8)), "GridWorld should expose walkable land.")
 	_assert(not world.is_cell_walkable(Vector2i.ZERO), "GridWorld should register deep water as blocked.")
 
@@ -55,7 +61,7 @@ func _run_tests() -> void:
 	main.queue_free()
 	await process_frame
 	if _failures.is_empty():
-		print("TERRAIN MAP TEST PASSED: five terrains, eight variations, blending, painting, walking rules, and deep-water collision are valid.")
+		print("TERRAIN MAP TEST PASSED: five terrains, automatic variations, seamless neighbor blending, painting, walking rules, and deep-water collision are valid.")
 		quit(0)
 	else:
 		for failure in _failures:
@@ -66,3 +72,20 @@ func _run_tests() -> void:
 func _assert(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _blend_edges_sample_neighbor_boundaries() -> bool:
+	var base_texture := load("res://art/terrain/generated_terrain_atlas.png") as Texture2D
+	var blend_texture := load("res://art/terrain/generated_terrain_blends.png") as Texture2D
+	if base_texture == null or blend_texture == null:
+		return false
+	var base_image := base_texture.get_image()
+	var blend_image := blend_texture.get_image()
+	var neighbor_left_edge := base_image.get_pixel(0, 16)
+	var east_overlay_boundary := blend_image.get_pixel(31, 32 + 16)
+	return (
+		is_equal_approx(neighbor_left_edge.r, east_overlay_boundary.r)
+		and is_equal_approx(neighbor_left_edge.g, east_overlay_boundary.g)
+		and is_equal_approx(neighbor_left_edge.b, east_overlay_boundary.b)
+		and east_overlay_boundary.a > 0.99
+	)
