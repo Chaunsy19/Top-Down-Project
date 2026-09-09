@@ -8,7 +8,7 @@ func _initialize() -> void:
 
 
 func _run_tests() -> void:
-	_assert_action_key(&"toggle_combat", KEY_R)
+	_assert(not InputMap.has_action(&"toggle_combat"), "R combat toggle should be removed; the hotbar now controls held items.")
 	_assert_action_key(&"rest", KEY_T)
 	var main := (load("res://scenes/main.tscn") as PackedScene).instantiate()
 	root.add_child(main)
@@ -20,6 +20,7 @@ func _run_tests() -> void:
 	var interactor := player.get_node("InteractionRange") as PlayerInteractor
 	var inventory := player.get_node("Inventory") as InventoryComponent
 	var equipment := player.get_node("Equipment") as EquipmentComponent
+	var hotbar := player.get_node("Hotbar") as HotbarComponent
 	var tree := world.find_child("Tree", true, false) as HarvestableResourceNode
 	var terminal := world.get_node("TestTerminal")
 	var combat_visual := player.get_node("AimPivot/CombatStanceVisual")
@@ -28,14 +29,17 @@ func _run_tests() -> void:
 	_assert(player.are_weapons_holstered(), "The player should begin with weapons holstered.")
 	_assert(not combat_visual.is_stance_visible(), "Raised fists or weapons should be hidden while holstered.")
 	inventory.add_item(registry.get_item(&"stone_axe"), 1)
-	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_axe"))
+	_assert(hotbar.assign_from_inventory(0, inventory.find_first_item(&"stone_axe")), "The axe should assign to hotbar slot 1.")
+	_assert(hotbar.select_slot(0), "Selecting hotbar slot 1 should draw the axe.")
+	_assert(player.is_combat_ready, "Selecting a weapon-capable hotbar item should enter the combat-ready state.")
+	_assert(combat_visual.is_stance_visible(), "A selected hotbar item should be visible in the player's hands.")
 	player.global_position = tree.global_position + Vector2.RIGHT * 48.0
 	player.velocity = Vector2.ZERO
 	await physics_frame
 	await physics_frame
 
 	var initial_harvests := tree.remaining_harvests
-	_assert(interactor.begin_primary_action_at(tree.get_interaction_point()), "Holstered left-click on a resource should begin a valid harvest.")
+	_assert(interactor.begin_primary_action_at(tree.get_interaction_point()), "Clicking a valid resource should use the selected hotbar tool.")
 	_assert(interactor.is_holding_primary_action() and tree.is_harvesting(), "Harvesting should enter the held-action state.")
 	tree._process(0.5)
 	_assert(is_zero_approx(tree.harvest_progress), "Harvest progress must not advance independently of the held action.")
@@ -51,10 +55,8 @@ func _run_tests() -> void:
 
 	var attacks: Array[Vector2] = []
 	player.attack_requested.connect(func(direction: Vector2) -> void: attacks.append(direction))
-	player.set_combat_ready(true)
-	_assert(player.is_combat_ready and not player.are_weapons_holstered(), "R combat mode should expose the combat-ready state.")
-	_assert(combat_visual.is_stance_visible(), "Combat-ready mode should raise fists or the equipped item.")
-	_assert(not interactor.begin_primary_action_on(tree), "Combat-ready mode must block harvesting and utility interaction.")
+	_assert(interactor.begin_primary_action_on(tree), "A weapon-capable tool should still route clicks on work targets to utility actions.")
+	interactor.end_primary_action()
 	var attack_event := InputEventAction.new()
 	attack_event.action = &"attack"
 	attack_event.pressed = true
@@ -62,7 +64,9 @@ func _run_tests() -> void:
 	_assert(attacks.size() == 1, "Combat-ready left click should emit one attack request.")
 	_assert(combat_visual.is_attack_animating(), "A combat click should play visible fist or weapon attack feedback.")
 
-	player.set_combat_ready(false)
+	_assert(hotbar.select_slot(0), "Selecting the active slot again should holster its item.")
+	_assert(player.are_weapons_holstered() and equipment.get_hand_stack() == null, "Hotbar holstering should clear combat readiness and the equipped hand.")
+	_assert(not combat_visual.is_stance_visible(), "Holstering from the hotbar should hide the held-item visual.")
 	player.global_position = terminal.global_position + Vector2.RIGHT * 40.0
 	await physics_frame
 	await physics_frame
@@ -78,7 +82,7 @@ func _run_tests() -> void:
 	main.queue_free()
 	await process_frame
 	if _failures.is_empty():
-		print("ACTION MODE TEST PASSED: held harvesting, release cancellation, holstered utility routing, combat attacks, stance visuals, and R/T mappings are valid.")
+		print("ACTION MODE TEST PASSED: held work, contextual attacks, hotbar draw/holster behavior, stance visuals, and the T mapping are valid.")
 		quit(0)
 	else:
 		for failure in _failures:

@@ -37,6 +37,7 @@ func _refresh() -> void:
 		var item_id := _hotbar.get_assignment(index) if _hotbar != null else &""
 		var stack := _hotbar.get_stack_for_slot(index) if _hotbar != null else null
 		_slots[index].configure(index, item_id, stack, _hotbar != null and index == _hotbar.selected_slot)
+	_refresh_mode()
 
 
 func _on_slot_pressed(index: int) -> void:
@@ -50,8 +51,11 @@ func _on_combat_mode_changed(_is_combat_ready: bool) -> void:
 
 func _refresh_mode() -> void:
 	if _player != null and _player.is_combat_ready:
-		mode_label.text = "COMBAT READY  •  LMB attack  •  R holster"
+		mode_label.text = "WEAPON READY  •  LMB use / attack  •  Select again to holster"
 		mode_label.add_theme_color_override("font_color", Color("#e27b62"))
+	elif _hotbar != null and _hotbar.selected_slot >= 0 and _hotbar.get_stack_for_slot(_hotbar.selected_slot) != null:
+		mode_label.text = "TOOL READY  •  Hold LMB use  •  Select again to put away"
+		mode_label.add_theme_color_override("font_color", Color("#d6b86a"))
 	else:
-		mode_label.text = "HOLSTERED  •  LMB interact  •  R draw"
+		mode_label.text = "HANDS FREE  •  LMB interact  •  Select a hotbar item"
 		mode_label.add_theme_color_override("font_color", Color("#a9c7b3"))

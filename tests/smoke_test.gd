@@ -9,7 +9,6 @@ const REQUIRED_ACTIONS := [
 	"inventory",
 	"crafting",
 	"rest",
-	"toggle_combat",
 	"building",
 	"attack",
 	"hotbar_slot_1",

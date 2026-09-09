@@ -71,6 +71,13 @@ func clear_slot(hotbar_slot: int) -> bool:
 func select_slot(hotbar_slot: int) -> bool:
 	if not is_valid_slot(hotbar_slot):
 		return false
+	if hotbar_slot == selected_slot and not get_assignment(hotbar_slot).is_empty():
+		var holstered := _unequip_hand_item()
+		if holstered:
+			selected_slot = -1
+			selected_slot_changed.emit(-1, &"")
+			changed.emit()
+		return holstered
 	selected_slot = hotbar_slot
 	var item_id := get_assignment(hotbar_slot)
 	var succeeded := _equip_assignment(item_id)

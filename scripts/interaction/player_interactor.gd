@@ -18,9 +18,6 @@ var _prompt_label: Label
 func _ready() -> void:
 	add_to_group("player_interactor")
 	_prompt_label = get_node_or_null(prompt_label_path) as Label
-	var player := get_parent() as PlayerController
-	if player != null:
-		player.combat_mode_changed.connect(_on_combat_mode_changed)
 	queue_redraw()
 	_update_prompt()
 
@@ -32,14 +29,14 @@ func _physics_process(_delta: float) -> void:
 func _process(delta: float) -> void:
 	if not _primary_held:
 		return
-	if not Input.is_action_pressed("attack") or not _can_use_utility_actions():
+	if not Input.is_action_pressed("attack"):
 		end_primary_action()
 		return
 	continue_primary_action(delta)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not _can_use_utility_actions() or get_tree().paused:
+	if get_tree().paused:
 		return
 	if event.is_action_pressed("attack"):
 		if begin_primary_action_at(get_global_mouse_position()):
@@ -83,7 +80,7 @@ func begin_primary_action_at(world_position: Vector2) -> bool:
 
 
 func begin_primary_action_on(target: InteractableScript) -> bool:
-	if not _can_use_utility_actions() or not is_target_in_range(target):
+	if not is_target_in_range(target):
 		return false
 	set_current_target(target)
 	var succeeded := target.interact(get_parent() as Node2D)
@@ -161,25 +158,12 @@ func _find_target_at(world_position: Vector2) -> InteractableScript:
 	return pointed_target
 
 
-func _can_use_utility_actions() -> bool:
-	var player := get_parent() as PlayerController
-	return player == null or not player.is_combat_ready
-
-
-func _on_combat_mode_changed(is_combat_ready: bool) -> void:
-	if is_combat_ready:
-		end_primary_action()
-	_update_prompt()
-
-
 func _update_prompt() -> void:
 	if not is_instance_valid(_prompt_label):
 		return
 	_prompt_label.visible = is_instance_valid(_current_target)
 	if is_instance_valid(_current_target):
-		if not _can_use_utility_actions():
-			_prompt_label.text = "[R] Holster to interact"
-		elif _current_target.uses_hold_interaction():
+		if _current_target.uses_hold_interaction():
 			_prompt_label.text = "[Hold LMB] %s" % _current_target.get_prompt_text()
 		else:
 			_prompt_label.text = "[LMB] %s" % _current_target.get_prompt_text()

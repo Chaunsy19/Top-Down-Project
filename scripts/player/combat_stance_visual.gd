@@ -6,12 +6,14 @@ const ATTACK_DURATION := 0.16
 
 var _player: PlayerController
 var _equipment: EquipmentComponent
+var _hotbar: HotbarComponent
 var _attack_remaining := 0.0
 
 
 func _ready() -> void:
 	_player = get_parent().get_parent() as PlayerController
 	_equipment = _player.get_node_or_null("Equipment") as EquipmentComponent if _player != null else null
+	_hotbar = _player.get_node_or_null("Hotbar") as HotbarComponent if _player != null else null
 	if _player != null:
 		_player.combat_mode_changed.connect(_on_visual_state_changed)
 		_player.attack_requested.connect(_on_attack_requested)
@@ -28,7 +30,7 @@ func _process(delta: float) -> void:
 
 
 func is_stance_visible() -> bool:
-	return _player != null and _player.is_combat_ready
+	return _hotbar != null and _hotbar.selected_slot >= 0 and _equipment != null and _equipment.get_hand_stack() != null
 
 
 func is_attack_animating() -> bool:

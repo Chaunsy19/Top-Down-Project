@@ -12,6 +12,9 @@ signal attack_requested(direction: Vector2)
 
 @onready var survival_needs: SurvivalNeeds = get_node_or_null("Needs") as SurvivalNeeds
 @onready var aim_pivot: Node2D = %AimPivot
+@onready var equipment: EquipmentComponent = get_node_or_null("Equipment") as EquipmentComponent
+@onready var hotbar: HotbarComponent = get_node_or_null("Hotbar") as HotbarComponent
+@onready var interactor: PlayerInteractor = get_node_or_null("InteractionRange") as PlayerInteractor
 
 var aim_direction := Vector2.DOWN
 var is_combat_ready := false
@@ -19,6 +22,11 @@ var is_combat_ready := false
 
 func _ready() -> void:
 	add_to_group("player")
+	if hotbar != null:
+		hotbar.selected_slot_changed.connect(_on_hotbar_selection_changed)
+	if equipment != null:
+		equipment.changed.connect(_sync_combat_readiness)
+	_sync_combat_readiness()
 	_update_aim_pivot()
 
 
@@ -42,14 +50,12 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("toggle_combat") and not get_tree().paused:
-		set_combat_ready(not is_combat_ready)
-		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("rest") and survival_needs != null and not get_tree().paused and not is_combat_ready:
+	if event.is_action_pressed("rest") and survival_needs != null and not get_tree().paused and not is_combat_ready:
 		survival_needs.toggle_resting()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("attack") and is_combat_ready and not get_tree().paused:
-		attack_requested.emit(aim_direction)
+		if interactor == null or not interactor.begin_primary_action_at(get_global_mouse_position()):
+			attack_requested.emit(aim_direction)
 		get_viewport().set_input_as_handled()
 
 
@@ -64,6 +70,17 @@ func set_combat_ready(value: bool) -> void:
 
 func are_weapons_holstered() -> bool:
 	return not is_combat_ready
+
+
+func _on_hotbar_selection_changed(_slot_index: int, _item_id: StringName) -> void:
+	_sync_combat_readiness()
+
+
+func _sync_combat_readiness() -> void:
+	var hand_stack := equipment.get_hand_stack() if equipment != null else null
+	var definition: Resource = hand_stack.item_definition if hand_stack != null else null
+	var selected_from_hotbar := hotbar != null and hotbar.selected_slot >= 0
+	set_combat_ready(selected_from_hotbar and definition != null and definition.has_category(&"weapon"))
 
 
 func update_aim_from_world_position(target_world_position: Vector2) -> void:

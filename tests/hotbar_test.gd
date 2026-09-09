@@ -36,8 +36,10 @@ func _run_tests() -> void:
 
 	_assert(hotbar.select_slot(0), "Selecting slot 1 should equip its axe.")
 	_assert(equipment.get_hand_stack().item_definition.item_id == &"stone_axe", "Slot 1 equipped the wrong item.")
+	_assert(player.is_combat_ready, "A weapon-capable hotbar item should become combat ready.")
 	_assert(hotbar.select_slot(1), "Selecting slot 2 should swap to its pickaxe.")
 	_assert(equipment.get_hand_stack().item_definition.item_id == &"stone_pickaxe", "Slot 2 equipped the wrong item.")
+	_assert(not player.is_combat_ready, "A tool-only hotbar item should remain in utility mode.")
 	_assert(inventory.find_first_item(&"stone_axe") >= 0, "Switching tools should return the previous tool to inventory.")
 	_assert(hotbar.select_slot(8), "Selecting an empty slot should unequip the current item.")
 	_assert(equipment.get_hand_stack() == null, "An empty selected slot should leave the hand empty.")
@@ -48,6 +50,9 @@ func _run_tests() -> void:
 	_assert(inventory_ui.assign_selected_to_hotbar(2), "Selecting an inventory tool and assigning it to a number should succeed.")
 	_assert(hotbar.get_assignment(2) == &"stone_axe", "Inventory assignment should update the requested hotbar slot.")
 	inventory_ui.close_inventory()
+	_assert(hotbar.select_slot(2), "The reassigned axe should be selectable.")
+	_assert(hotbar.select_slot(2), "Selecting the active occupied slot again should holster it.")
+	_assert(hotbar.selected_slot == -1 and equipment.get_hand_stack() == null, "Hotbar toggle-off should leave the player's hands free.")
 
 	_assert(hotbar_ui._slots.size() == 9, "The HUD should create exactly nine hotbar slots.")
 	_assert(hotbar.get_assignment(0).is_empty(), "Reassigning an item should clear its previous duplicate shortcut.")
@@ -57,7 +62,7 @@ func _run_tests() -> void:
 	main.queue_free()
 	await process_frame
 	if _failures.is_empty():
-		print("HOTBAR TEST PASSED: key actions, assignment, category filtering, tool swapping, empty selection, and nine-slot HUD are valid.")
+		print("HOTBAR TEST PASSED: key actions, assignment, category filtering, contextual readiness, toggle holstering, and nine-slot HUD are valid.")
 		quit(0)
 	else:
 		for failure in _failures:

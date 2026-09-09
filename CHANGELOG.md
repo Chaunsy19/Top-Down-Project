@@ -2,6 +2,12 @@
 
 All notable project changes are recorded here by milestone.
 
+### Hotbar-driven held-item mode
+
+- Removed the separate `R` combat-mode input.
+- Selecting a weapon-capable hotbar item now readies it; selecting the active slot again or an empty slot holsters it.
+- Tool clicks remain contextual: valid work targets use the equipped tool, while weapon clicks away from a work target attack.
+
 ### Optional world-object labels
 
 - Made resource name/status labels, container titles, and workstation name labels optional presentation nodes.
