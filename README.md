@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
+The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, aim by moving the mouse, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
 
 ## Project structure
 
@@ -44,6 +44,7 @@ The current test scene contains a directly controlled player in a grid-backed, c
 | Action | Default input |
 | --- | --- |
 | Move | WASD or arrow keys |
+| Aim / face | Mouse |
 | Interact | E |
 | Inventory | I |
 | Crafting | C |
@@ -80,6 +81,12 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - A cell can have only one blocking occupant, providing the placement rule future buildings, walls, doors, furniture, and blueprints will share.
 - Mineable stone is represented by full-cell blocks. Cardinally adjacent blocks connect visually but remain individually targetable and mineable.
 - Removing a stone block releases its grid cell and refreshes neighboring connections.
+
+## Player aiming
+
+- The player continuously faces the world position beneath the mouse, independently of movement direction.
+- `PlayerController` exposes a normalized aim direction and angle for combat and tool actions.
+- Attach held-item visuals and action origins to `AimPivot/ToolSocket` so they follow the same aim source.
 
 ## Inventory controls
 
@@ -123,4 +130,5 @@ godot --headless --path . --script res://tests/tool_requirement_test.gd
 godot --headless --path . --script res://tests/milestone_5_test.gd
 godot --headless --path . --script res://tests/grid_occupancy_test.gd
 godot --headless --path . --script res://tests/milestone_6_test.gd
+godot --headless --path . --script res://tests/player_aim_test.gd
 ```

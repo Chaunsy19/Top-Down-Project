@@ -1,15 +1,26 @@
 class_name PlayerController
 extends CharacterBody2D
 
+signal aim_direction_changed(direction: Vector2)
+
 @export_range(1.0, 1000.0, 1.0) var movement_speed := 220.0
 @export_range(1.0, 5000.0, 1.0) var acceleration := 1600.0
 @export_range(1.0, 5000.0, 1.0) var deceleration := 2000.0
+@export_range(0.0, 64.0, 0.5) var aim_deadzone := 4.0
 
 @onready var survival_needs: SurvivalNeeds = get_node_or_null("Needs") as SurvivalNeeds
+@onready var aim_pivot: Node2D = %AimPivot
+
+var aim_direction := Vector2.DOWN
 
 
 func _ready() -> void:
 	add_to_group("player")
+	_update_aim_pivot()
+
+
+func _process(_delta: float) -> void:
+	update_aim_from_world_position(get_global_mouse_position())
 
 
 func _physics_process(delta: float) -> void:
@@ -31,3 +42,36 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("rest") and survival_needs != null and not get_tree().paused:
 		survival_needs.toggle_resting()
 		get_viewport().set_input_as_handled()
+
+
+func update_aim_from_world_position(target_world_position: Vector2) -> void:
+	var aim_delta := target_world_position - global_position
+	if aim_delta.length_squared() <= aim_deadzone * aim_deadzone:
+		return
+	var next_direction := aim_delta.normalized()
+	if next_direction.is_equal_approx(aim_direction):
+		return
+	aim_direction = next_direction
+	_update_aim_pivot()
+	aim_direction_changed.emit(aim_direction)
+
+
+func get_aim_direction() -> Vector2:
+	return aim_direction
+
+
+func get_aim_angle() -> float:
+	return aim_direction.angle()
+
+
+func get_aim_origin() -> Vector2:
+	return global_position
+
+
+func get_tool_socket() -> Marker2D:
+	return %ToolSocket as Marker2D
+
+
+func _update_aim_pivot() -> void:
+	if is_instance_valid(aim_pivot):
+		aim_pivot.rotation = get_aim_angle()

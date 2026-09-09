@@ -4,6 +4,13 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Mouse-facing player aim
+
+- Added continuous world-space mouse aiming that remains independent from player movement.
+- Added a reusable aim direction, angle, pivot, and forward tool socket for future tools and weapons.
+- Updated the placeholder player to visibly face the aim direction.
+- Added automated coverage for cardinal and diagonal aim, deadzone behavior, pivot rotation, socket placement, and movement independence.
+
 ### Milestone 6 — World clock, needs, and survival lighting
 
 - Added a centralized 20-minute real-time day/night clock with pause-compatible progression and a debug time-cycle action.

@@ -51,6 +51,13 @@ script = ExtResource("8_crafting")
 [node name="Needs" type="Node" parent="."]
 script = ExtResource("9_needs")
 
+[node name="AimPivot" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="ToolSocket" type="Marker2D" parent="AimPivot"]
+unique_name_in_owner = true
+position = Vector2(18, 0)
+
 [node name="InteractionRange" type="Area2D" parent="."]
 z_index = -1
 collision_layer = 0
