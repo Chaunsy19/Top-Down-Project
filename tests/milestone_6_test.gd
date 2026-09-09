@@ -20,7 +20,8 @@ func _run_tests() -> void:
 	var player := world.get_node("Player")
 	var needs := player.get_node("Needs")
 	var inventory := player.get_node("Inventory")
-	var campfire_light := world.get_node("Campfire/SoftLight") as PointLight2D
+	var campfire := world.find_child("Campfire", true, false)
+	var campfire_light := campfire.get_node_or_null("SoftLight") as PointLight2D if campfire else null
 
 	_test_clock_and_ambient(clock, ambient)
 	_test_needs_and_eating(needs, inventory)

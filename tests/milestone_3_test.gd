@@ -30,9 +30,9 @@ func run_tests() -> void:
 	var skills := world.get_node_or_null("Player/Skills") as SkillTrackerScript if world else null
 	var inventory := world.get_node_or_null("Player/Inventory") if world else null
 	var equipment := world.get_node_or_null("Player/Equipment") if world else null
-	var tree := world.get_node_or_null("Tree") as ResourceNodeScript if world else null
-	var rock := world.get_node_or_null("Rock") as ResourceNodeScript if world else null
-	var bush := world.get_node_or_null("BerryBush") as ResourceNodeScript if world else null
+	var tree := world.find_child("Tree", true, false) as ResourceNodeScript if world else null
+	var rock := world.find_child("Rock", true, false) as ResourceNodeScript if world else null
+	var bush := world.find_child("BerryBush", true, false) as ResourceNodeScript if world else null
 	if world == null or player == null or interactor == null or skills == null or inventory == null or equipment == null or tree == null or rock == null or bush == null:
 		finish_with_failure("Milestone 3 world nodes are incomplete.")
 		return

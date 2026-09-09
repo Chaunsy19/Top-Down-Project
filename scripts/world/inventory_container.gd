@@ -6,7 +6,7 @@ const InventoryComponentScript = preload("res://scripts/inventory/inventory_comp
 @export var container_title := "SUPPLY CRATE"
 
 @onready var inventory: InventoryComponentScript = %Inventory
-@onready var title_label: Label = %TitleLabel
+@onready var title_label := get_node_or_null("TitleLabel") as Label
 
 
 func _ready() -> void:
@@ -14,7 +14,8 @@ func _ready() -> void:
 	interaction_verb = "Open"
 	super()
 	add_to_group("inventory_container")
-	title_label.text = container_title.capitalize()
+	if is_instance_valid(title_label):
+		title_label.text = container_title.capitalize()
 	queue_redraw()
 
 

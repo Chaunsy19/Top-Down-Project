@@ -20,7 +20,7 @@ func _run_tests() -> void:
 	var interactor := player.get_node("InteractionRange") as PlayerInteractor
 	var inventory := player.get_node("Inventory") as InventoryComponent
 	var equipment := player.get_node("Equipment") as EquipmentComponent
-	var tree := world.get_node("Tree") as HarvestableResourceNode
+	var tree := world.find_child("Tree", true, false) as HarvestableResourceNode
 	var terminal := world.get_node("TestTerminal")
 	var combat_visual := player.get_node("AimPivot/CombatStanceVisual")
 	var registry := root.get_node("ContentRegistry")

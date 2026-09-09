@@ -34,8 +34,8 @@ const CARDINAL_CONNECTIONS := {
 	CONNECT_WEST: Vector2i.LEFT,
 }
 
-@onready var name_label: Label = %NameLabel
-@onready var status_label: Label = %StatusLabel
+@onready var name_label := get_node_or_null("NameLabel") as Label
+@onready var status_label := get_node_or_null("StatusLabel") as Label
 
 
 func _ready() -> void:
@@ -305,15 +305,17 @@ func _set_collision_shapes_disabled(disabled: bool) -> void:
 
 
 func _update_presentation() -> void:
-	if definition == null or not is_instance_valid(name_label):
+	if definition == null:
 		return
-	name_label.text = display_name
-	if is_harvesting():
-		status_label.text = "%d%%" % roundi(get_harvest_ratio() * 100.0)
-	elif is_depleted():
-		status_label.text = "DEPLETED"
-	else:
-		status_label.text = "%d LEFT" % remaining_harvests
+	if is_instance_valid(name_label):
+		name_label.text = display_name
+	if is_instance_valid(status_label):
+		if is_harvesting():
+			status_label.text = "%d%%" % roundi(get_harvest_ratio() * 100.0)
+		elif is_depleted():
+			status_label.text = "DEPLETED"
+		else:
+			status_label.text = "%d LEFT" % remaining_harvests
 	queue_redraw()
 
 

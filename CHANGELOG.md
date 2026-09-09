@@ -2,6 +2,12 @@
 
 All notable project changes are recorded here by milestone.
 
+### Optional world-object labels
+
+- Made resource name/status labels, container titles, and workstation name labels optional presentation nodes.
+- Kept harvesting, connected stone rendering, storage, crafting, and campfire lighting functional when floating labels are removed.
+- Updated integration tests to tolerate resource nodes organized inside editor folders and custom map layouts.
+
 ## Unreleased
 
 ### Held utility actions and combat stance

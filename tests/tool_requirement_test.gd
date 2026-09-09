@@ -21,9 +21,9 @@ func run_tests() -> void:
 	var player := world.get_node("Player") as CharacterBody2D
 	var inventory := player.get_node("Inventory") as InventoryComponentScript
 	var equipment := player.get_node("Equipment")
-	var tree := world.get_node("Tree") as ResourceNodeScript
-	var rock := world.get_node("Rock") as ResourceNodeScript
-	var bush := world.get_node("BerryBush") as ResourceNodeScript
+	var tree := world.find_child("Tree", true, false) as ResourceNodeScript
+	var rock := world.find_child("Rock", true, false) as ResourceNodeScript
+	var bush := world.find_child("BerryBush", true, false) as ResourceNodeScript
 
 	if tree.has_required_tool(player):
 		_failures.append("Tree was harvestable without an axe.")

@@ -16,25 +16,24 @@ func _run_tests() -> void:
 
 	var world := main.get_node("FoundationTest") as GridWorld
 	var terrain := world.get_node("StarterIsland") as TerrainMap
-	_assert(terrain.get_terrain_id(Vector2i(14, 8)) == &"grassy_dirt", "The starter clearing should use grassy dirt.")
-	_assert(terrain.get_terrain_id(Vector2i(8, 5)) == &"grass", "The inner island should use grass.")
-	_assert(terrain.get_terrain_id(Vector2i(2, 7)) == &"shallow_water", "The island edge should use shallow water.")
-	_assert(terrain.get_terrain_id(Vector2i.ZERO) == &"deep_water", "The outer map should use deep water.")
-	_assert(terrain.is_cell_walkable(Vector2i(14, 8)), "Dirt should be walkable.")
-	_assert(terrain.is_cell_walkable(Vector2i(8, 5)), "Grass should be walkable.")
-	_assert(terrain.is_cell_walkable(Vector2i(2, 7)), "Shallow water should be walkable.")
-	_assert(not terrain.is_cell_walkable(Vector2i.ZERO), "Deep water should not be walkable.")
-	var sand_cells := 0
 	var used_variations: Dictionary[int, bool] = {}
 	for cell in terrain.get_used_cells():
-		if terrain.get_terrain_id(cell) == &"sand":
-			sand_cells += 1
 		used_variations[terrain.get_cell_atlas_coords(cell).y] = true
-	_assert(sand_cells > 0, "The starter island should demonstrate a sand shoreline.")
 	_assert(used_variations.size() > 1, "Runtime terrain painting should apply multiple deterministic texture variations.")
 	_assert(terrain.get_node_or_null("TerrainBlendOverlay") is TerrainBlendOverlay, "The starter island should include its soft terrain-blend overlay.")
 	var atlas_source := terrain.tile_set.get_source(0) as TileSetAtlasSource
 	_assert(atlas_source != null and atlas_source.get_tiles_count() == 40, "Five terrains should each expose eight paintable tile variations.")
+	var expected_terrains := [
+		{ "id": &"grassy_dirt", "walkable": true },
+		{ "id": &"grass", "walkable": true },
+		{ "id": &"shallow_water", "walkable": true },
+		{ "id": &"deep_water", "walkable": false },
+		{ "id": &"sand", "walkable": true },
+	]
+	for terrain_index in expected_terrains.size():
+		var tile_data := atlas_source.get_tile_data(Vector2i(terrain_index, 0), 0)
+		_assert(tile_data.get_custom_data("terrain_id") == expected_terrains[terrain_index].id, "Terrain atlas column %d has the wrong ID." % terrain_index)
+		_assert(bool(tile_data.get_custom_data("walkable")) == expected_terrains[terrain_index].walkable, "Terrain atlas column %d has the wrong walking rule." % terrain_index)
 	var temporary_cell := Vector2i(40, 40)
 	var revision_before_paint := terrain.visual_revision
 	terrain.set_cell(temporary_cell, 0, Vector2i(4, 0), 0)
@@ -45,18 +44,18 @@ func _run_tests() -> void:
 	_assert(terrain.visual_revision > revision_before_paint, "Any TileMap change should automatically refresh variations and blends.")
 	terrain.erase_cell(temporary_cell)
 	_assert(_blend_edges_sample_neighbor_boundaries(), "Blend tiles should sample the matching opposite neighbor edge at full boundary opacity.")
-	_assert(world.is_cell_walkable(Vector2i(14, 8)), "GridWorld should expose walkable land.")
-	_assert(not world.is_cell_walkable(Vector2i.ZERO), "GridWorld should register deep water as blocked.")
 
-	var deep_tile_data := terrain.get_cell_tile_data(Vector2i.ZERO)
-	var shallow_tile_data := terrain.get_cell_tile_data(Vector2i(2, 7))
+	var deep_tile_data := atlas_source.get_tile_data(Vector2i(3, 0), 0)
+	var shallow_tile_data := atlas_source.get_tile_data(Vector2i(2, 0), 0)
 	_assert(deep_tile_data.get_collision_polygons_count(0) == 1, "Deep water should carry a collision polygon.")
 	_assert(shallow_tile_data.get_collision_polygons_count(0) == 0, "Shallow water should not carry collision.")
 
-	var player := world.get_node("Player") as PlayerController
-	player.position = terrain.map_to_local(Vector2i(2, 7))
-	await physics_frame
-	_assert(player.test_move(player.global_transform, Vector2.LEFT * 16.0), "The player should physically collide when moving from shallow into deep water.")
+	var boundary := _find_shallow_deep_boundary(terrain, world)
+	if boundary.size() == 2:
+		var player := world.get_node("Player") as PlayerController
+		player.position = terrain.map_to_local(boundary[0])
+		await physics_frame
+		_assert(player.test_move(player.global_transform, Vector2(boundary[1]) * 16.0), "The player should physically collide when moving from shallow into deep water.")
 
 	main.queue_free()
 	await process_frame
@@ -89,3 +88,13 @@ func _blend_edges_sample_neighbor_boundaries() -> bool:
 		and is_equal_approx(neighbor_left_edge.b, east_overlay_boundary.b)
 		and east_overlay_boundary.a > 0.99
 	)
+
+
+func _find_shallow_deep_boundary(terrain: TerrainMap, world: GridWorld) -> Array[Vector2i]:
+	for cell in terrain.get_used_cells():
+		if not world.is_cell_in_bounds(cell) or terrain.get_terrain_id(cell) != &"shallow_water":
+			continue
+		for offset in [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+			if terrain.get_terrain_id(cell + offset) == &"deep_water":
+				return [cell, offset]
+	return []

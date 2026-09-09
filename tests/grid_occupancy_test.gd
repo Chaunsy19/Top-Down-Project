@@ -15,17 +15,26 @@ func _run_tests() -> void:
 	await physics_frame
 
 	var world := main.get_node("FoundationTest")
-	var rock := world.get_node("Rock")
-	var rock_east := world.get_node("RockEast")
-	var rock_south := world.get_node("RockSouth")
+	var rock_scene := load("res://scenes/world/resource_node.tscn") as PackedScene
+	var rock_definition: Resource = root.get_node("ContentRegistry").get_resource_node(&"rock")
+	var cluster_cells := _find_open_cluster(world)
+	_assert(cluster_cells.size() == 3, "The test map needs one open L-shaped cluster for occupancy coverage.")
+	if cluster_cells.size() != 3:
+		main.queue_free()
+		await process_frame
+		quit(1)
+		return
+	var rock := _spawn_rock(world, rock_scene, rock_definition, cluster_cells[0], "TestRock")
+	var rock_east := _spawn_rock(world, rock_scene, rock_definition, cluster_cells[1], "TestRockEast")
+	var rock_south := _spawn_rock(world, rock_scene, rock_definition, cluster_cells[2], "TestRockSouth")
+	await physics_frame
+	await physics_frame
 
 	_assert(rock.global_position == world.to_global(world.cell_to_world(rock.get_occupied_cell())), "Blocking objects should snap to cell centers.")
 	_assert(world.get_cell_occupant(rock.get_occupied_cell()) == rock, "The grid should identify the object occupying a cell.")
 	_assert(rock.get_connection_mask() == 6, "The corner stone should connect east and south; got %d." % rock.get_connection_mask())
 	_assert(rock_east.get_connection_mask() == 8, "The east stone should connect west; got %d." % rock_east.get_connection_mask())
 	_assert(rock_south.get_connection_mask() == 1, "The south stone should connect north; got %d." % rock_south.get_connection_mask())
-	_assert(rock.get_node("NameLabel").visible, "A connected stone mass should keep one cluster label.")
-	_assert(not rock_east.get_node("NameLabel").visible, "Connected stone tiles should suppress duplicate labels.")
 
 	var duplicate := Node2D.new()
 	world.add_child(duplicate)
@@ -55,3 +64,23 @@ func _run_tests() -> void:
 func _assert(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _find_open_cluster(world: GridWorld) -> Array[Vector2i]:
+	for y in range(1, world.grid_dimensions.y - 1):
+		for x in range(1, world.grid_dimensions.x - 1):
+			var center := Vector2i(x, y)
+			var east := center + Vector2i.RIGHT
+			var south := center + Vector2i.DOWN
+			if world.is_cell_walkable(center) and world.is_cell_walkable(east) and world.is_cell_walkable(south):
+				return [center, east, south]
+	return []
+
+
+func _spawn_rock(world: GridWorld, rock_scene: PackedScene, definition: Resource, cell: Vector2i, node_name: String) -> HarvestableResourceNode:
+	var rock := rock_scene.instantiate() as HarvestableResourceNode
+	rock.name = node_name
+	rock.definition = definition
+	rock.position = world.cell_to_world(cell)
+	world.add_child(rock)
+	return rock

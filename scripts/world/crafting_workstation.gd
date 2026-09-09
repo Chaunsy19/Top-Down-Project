@@ -3,8 +3,8 @@ extends "res://scripts/interaction/interactable.gd"
 
 @export var definition: Resource
 
-@onready var name_label: Label = %NameLabel
-@onready var soft_light: SoftWorldLight = %SoftLight
+@onready var name_label := get_node_or_null("NameLabel") as Label
+@onready var soft_light := get_node_or_null("SoftLight") as SoftWorldLight
 
 
 func _ready() -> void:
@@ -13,8 +13,10 @@ func _ready() -> void:
 	interaction_verb = "Craft at"
 	super()
 	add_to_group("crafting_workstation")
-	name_label.text = display_name
-	soft_light.configure_from_definition(definition)
+	if is_instance_valid(name_label):
+		name_label.text = display_name
+	if is_instance_valid(soft_light):
+		soft_light.configure_from_definition(definition)
 	queue_redraw()
 
 
