@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/grid_world.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -13,9 +13,6 @@
 [ext_resource type="Resource" path="res://data/items/stone.tres" id="11_stone"]
 [ext_resource type="PackedScene" path="res://scenes/world/crafting_workstation.tscn" id="12_workstation"]
 [ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="13_campfire"]
-[ext_resource type="PackedScene" path="res://scenes/world/brick_storehouse.tscn" id="14_storehouse"]
-[ext_resource type="Texture2D" path="res://assets/iso farm/Isometric/hayBalesStacked_S.png" id="15_hay"]
-[ext_resource type="Texture2D" path="res://assets/iso farm/Isometric/sacksCrate_S.png" id="16_sacks"]
 
 [node name="FoundationTest" type="Node2D"]
 position = Vector2(192, 104)
@@ -34,7 +31,7 @@ position = Vector2(416, 136)
 definition = ExtResource("5_tree")
 
 [node name="Rock" parent="." instance=ExtResource("4_resource")]
-position = Vector2(704, 248)
+position = Vector2(640, 216)
 definition = ExtResource("6_rock")
 
 [node name="BerryBush" parent="." instance=ExtResource("4_resource")]
@@ -57,20 +54,3 @@ starting_quantity = 6
 [node name="Campfire" parent="." instance=ExtResource("12_workstation")]
 position = Vector2(544, 296)
 definition = ExtResource("13_campfire")
-
-[node name="BrickStorehouse" parent="." instance=ExtResource("14_storehouse")]
-position = Vector2(608, 232)
-
-[node name="HayBales" type="Sprite2D" parent="." groups=["building_prop"]]
-texture_filter = 1
-position = Vector2(640, 248)
-scale = Vector2(0.42, 0.42)
-texture = ExtResource("15_hay")
-offset = Vector2(0, -72)
-
-[node name="SackCrate" type="Sprite2D" parent="." groups=["building_prop"]]
-texture_filter = 1
-position = Vector2(544, 200)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("16_sacks")
-offset = Vector2(0, -66)

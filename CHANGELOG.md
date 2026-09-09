@@ -4,14 +4,6 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
-### Test-scene brick storehouse
-
-- Added a reusable two-by-two-cell brick storehouse assembled from the isometric building and roof packs.
-- Added chroma-key rendering support for the building pack's teal-backed sprite sheets.
-- Added physical collision and reusable multi-cell grid-footprint registration for buildings.
-- Dressed the storehouse with matching hay-bale and sack-crate props from the farm pack.
-- Added an automated test covering the building art, props, collision, and occupied cells.
-
 ### Milestone 0 — Project foundation
 
 - Created the Godot 4 project and baseline directory structure.
