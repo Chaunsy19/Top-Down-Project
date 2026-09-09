@@ -1,6 +1,8 @@
 class_name GridWorld
 extends Node2D
 
+signal cell_occupant_changed(cell: Vector2i, occupant: Node2D)
+
 @export_range(8, 128, 1) var grid_size := 32
 @export var grid_dimensions := Vector2i(28, 16)
 @export var show_blocked_cells := true
@@ -11,6 +13,7 @@ const WALL_COLOR := Color("#9b7859")
 const BLOCKED_COLOR := Color(0.78, 0.25, 0.20, 0.12)
 
 var _blocked_cell_counts: Dictionary[Vector2i, int] = {}
+var _cell_occupants: Dictionary[Vector2i, Node2D] = {}
 
 
 func _ready() -> void:
@@ -34,6 +37,47 @@ func is_cell_in_bounds(cell: Vector2i) -> bool:
 
 func is_cell_walkable(cell: Vector2i) -> bool:
 	return is_cell_in_bounds(cell) and _blocked_cell_counts.get(cell, 0) == 0
+
+
+func try_register_cell_occupant(cell: Vector2i, occupant: Node2D) -> bool:
+	if not is_cell_in_bounds(cell) or not is_instance_valid(occupant):
+		return false
+	var existing_occupant := get_cell_occupant(cell)
+	if existing_occupant != null and existing_occupant != occupant:
+		return false
+	if existing_occupant == null and _blocked_cell_counts.get(cell, 0) > 0:
+		return false
+	if existing_occupant == occupant:
+		return true
+	_cell_occupants[cell] = occupant
+	set_cell_blocked(cell, true)
+	cell_occupant_changed.emit(cell, occupant)
+	_notify_connection_neighbors(cell)
+	return true
+
+
+func unregister_cell_occupant(cell: Vector2i, occupant: Node2D) -> void:
+	if get_cell_occupant(cell) != occupant:
+		return
+	_cell_occupants.erase(cell)
+	set_cell_blocked(cell, false)
+	cell_occupant_changed.emit(cell, null)
+	_notify_connection_neighbors(cell)
+
+
+func get_cell_occupant(cell: Vector2i) -> Node2D:
+	var occupant: Node2D = _cell_occupants.get(cell)
+	if occupant != null and not is_instance_valid(occupant):
+		_cell_occupants.erase(cell)
+		return null
+	return occupant
+
+
+func _notify_connection_neighbors(changed_cell: Vector2i) -> void:
+	for offset in [Vector2i.ZERO, Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+		var occupant: Node2D = get_cell_occupant(changed_cell + offset)
+		if occupant != null and occupant.has_method("refresh_grid_connections"):
+			occupant.call_deferred("refresh_grid_connections")
 
 
 func set_cell_blocked(cell: Vector2i, is_blocked: bool) -> void:

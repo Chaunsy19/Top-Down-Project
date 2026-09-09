@@ -21,6 +21,18 @@ var recovery_remaining := 0.0
 var _harvesting_actor: Node2D
 var _active_tool_stack: Resource
 var _random := RandomNumberGenerator.new()
+var _connection_mask := 0
+
+const CONNECT_NORTH := 1
+const CONNECT_EAST := 2
+const CONNECT_SOUTH := 4
+const CONNECT_WEST := 8
+const CARDINAL_CONNECTIONS := {
+	CONNECT_NORTH: Vector2i.UP,
+	CONNECT_EAST: Vector2i.RIGHT,
+	CONNECT_SOUTH: Vector2i.DOWN,
+	CONNECT_WEST: Vector2i.LEFT,
+}
 
 @onready var name_label: Label = %NameLabel
 @onready var status_label: Label = %StatusLabel
@@ -33,10 +45,13 @@ func _ready() -> void:
 		push_error("ResourceNode '%s' has no definition." % name)
 		set_available(false)
 		return
-	display_name = definition.display_name
+	display_name = "Stone Block" if definition.visual_kind == "rock" else definition.display_name
 	interaction_verb = "Harvest"
 	remaining_harvests = definition.max_harvests
 	_random.seed = hash("%s:%s:%s" % [definition.node_id, global_position.x, global_position.y])
+	if definition.visual_kind == "rock":
+		call_deferred("refresh_grid_connections")
+		_configure_full_cell_collision()
 	_update_presentation()
 
 
@@ -235,6 +250,10 @@ func _begin_depletion() -> void:
 		visible = false
 		set_grid_occupancy_enabled(false)
 		_set_collision_shapes_disabled(true)
+	elif definition.visual_kind == "rock":
+		visible = false
+		set_grid_occupancy_enabled(false)
+		_set_collision_shapes_disabled(true)
 
 
 func _recover() -> void:
@@ -257,7 +276,7 @@ func _set_collision_shapes_disabled(disabled: bool) -> void:
 func _update_presentation() -> void:
 	if definition == null or not is_instance_valid(name_label):
 		return
-	name_label.text = definition.display_name
+	name_label.text = display_name
 	if is_harvesting():
 		status_label.text = "%d%%" % roundi(get_harvest_ratio() * 100.0)
 	elif is_depleted():
@@ -279,12 +298,7 @@ func _draw() -> void:
 		draw_circle(Vector2(8.0, -6.0), 17.0, definition.primary_color)
 		draw_circle(Vector2(0.0, -15.0), 16.0, definition.primary_color.lightened(0.08))
 	elif definition.visual_kind == "rock":
-		var rock_points := PackedVector2Array([
-			Vector2(-18.0, 10.0), Vector2(-13.0, -10.0), Vector2(0.0, -18.0),
-			Vector2(16.0, -9.0), Vector2(19.0, 10.0), Vector2(5.0, 17.0), Vector2(-9.0, 16.0),
-		])
-		draw_colored_polygon(rock_points, definition.primary_color)
-		draw_polyline(PackedVector2Array([rock_points[0], rock_points[1], rock_points[2], rock_points[3]]), definition.secondary_color, 3.0)
+		_draw_connected_stone_tile()
 	else:
 		draw_circle(Vector2(-9.0, 2.0), 13.0, definition.primary_color)
 		draw_circle(Vector2(9.0, 1.0), 14.0, definition.primary_color.lightened(0.06))
@@ -302,3 +316,60 @@ func _get_tool_requirement_name() -> String:
 	for required_tag in definition.required_tool_tags:
 		names.append(String(required_tag).replace("_", " ").capitalize())
 	return " + ".join(names)
+
+
+func get_connection_mask() -> int:
+	return _connection_mask
+
+
+func refresh_grid_connections() -> void:
+	if definition == null or definition.visual_kind != "rock" or not _is_grid_occupancy_registered:
+		return
+	var new_mask := 0
+	for direction_flag in CARDINAL_CONNECTIONS:
+		var neighbor_cell: Vector2i = get_occupied_cell() + CARDINAL_CONNECTIONS[direction_flag]
+		var neighbor: Node2D = _grid_world.get_cell_occupant(neighbor_cell)
+		if neighbor is HarvestableResourceNode and neighbor.definition != null and neighbor.definition.node_id == definition.node_id:
+			new_mask |= direction_flag
+	if new_mask != _connection_mask:
+		_connection_mask = new_mask
+		queue_redraw()
+	_update_connected_tile_labels()
+
+
+func _configure_full_cell_collision() -> void:
+	var body_shape := get_node_or_null("Body/CollisionShape2D") as CollisionShape2D
+	if body_shape == null:
+		return
+	var tile_shape := RectangleShape2D.new()
+	tile_shape.size = Vector2(30.0, 30.0)
+	body_shape.shape = tile_shape
+
+
+func _update_connected_tile_labels() -> void:
+	if not is_instance_valid(name_label) or not is_instance_valid(status_label):
+		return
+	var is_cluster_label := (_connection_mask & (CONNECT_NORTH | CONNECT_WEST)) == 0
+	name_label.visible = is_cluster_label
+	status_label.visible = is_cluster_label
+
+
+func _draw_connected_stone_tile() -> void:
+	var half_size := 16.0
+	draw_rect(Rect2(-half_size, -half_size, half_size * 2.0, half_size * 2.0), definition.primary_color)
+	draw_rect(Rect2(-half_size + 3.0, -half_size + 3.0, half_size * 2.0 - 6.0, 7.0), definition.primary_color.lightened(0.1))
+	var edge_color: Color = definition.secondary_color.darkened(0.12)
+	if (_connection_mask & CONNECT_NORTH) == 0:
+		draw_line(Vector2(-half_size, -half_size), Vector2(half_size, -half_size), edge_color, 2.0)
+	if (_connection_mask & CONNECT_EAST) == 0:
+		draw_line(Vector2(half_size, -half_size), Vector2(half_size, half_size), edge_color, 2.0)
+	if (_connection_mask & CONNECT_SOUTH) == 0:
+		draw_line(Vector2(half_size, half_size), Vector2(-half_size, half_size), edge_color, 2.0)
+	if (_connection_mask & CONNECT_WEST) == 0:
+		draw_line(Vector2(-half_size, half_size), Vector2(-half_size, -half_size), edge_color, 2.0)
+	var crack_offset := float(posmod(hash(get_occupied_cell()), 7) - 3)
+	draw_polyline(PackedVector2Array([
+		Vector2(-5.0 + crack_offset, -4.0),
+		Vector2(1.0 + crack_offset, 1.0),
+		Vector2(-2.0 + crack_offset, 7.0),
+	]), definition.secondary_color, 1.5)

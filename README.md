@@ -72,6 +72,13 @@ Tool requirements use capability tags rather than specific item IDs. A resource 
 
 Add a definition file, reference it from the matching catalog, then instantiate the generic scene. New resource types should not require a new behavior script unless they truly behave differently.
 
+## Tile-based world objects
+
+- Blocking interactables snap to the center of a 32×32 world cell and register themselves as that cell's occupant.
+- A cell can have only one blocking occupant, providing the placement rule future buildings, walls, doors, furniture, and blueprints will share.
+- Mineable stone is represented by full-cell blocks. Cardinally adjacent blocks connect visually but remain individually targetable and mineable.
+- Removing a stone block releases its grid cell and refreshes neighboring connections.
+
 ## Inventory controls
 
 - Click a populated slot, then another slot, to move, merge, or swap stacks.
@@ -102,4 +109,5 @@ godot --headless --path . --script res://tests/milestone_3_test.gd
 godot --headless --path . --script res://tests/milestone_4_test.gd
 godot --headless --path . --script res://tests/tool_requirement_test.gd
 godot --headless --path . --script res://tests/milestone_5_test.gd
+godot --headless --path . --script res://tests/grid_occupancy_test.gd
 ```

@@ -57,6 +57,14 @@ definition = ExtResource("5_tree")
 position = Vector2(592, 176)
 definition = ExtResource("6_rock")
 
+[node name="RockEast" parent="." instance=ExtResource("4_resource")]
+position = Vector2(624, 176)
+definition = ExtResource("6_rock")
+
+[node name="RockSouth" parent="." instance=ExtResource("4_resource")]
+position = Vector2(592, 208)
+definition = ExtResource("6_rock")
+
 [node name="BerryBush" parent="." instance=ExtResource("4_resource")]
 position = Vector2(592, 368)
 definition = ExtResource("7_bush")

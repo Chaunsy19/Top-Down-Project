@@ -8,6 +8,7 @@ signal availability_changed(is_available: bool)
 @export var interaction_verb := "Use"
 @export var is_available := true
 @export var blocks_grid_cell := false
+@export var snap_to_grid_when_blocking := true
 
 var _grid_world: Node2D
 var _occupied_cell := Vector2i(-1, -1)
@@ -63,7 +64,7 @@ func set_grid_occupancy_enabled(enabled: bool) -> void:
 		_register_grid_occupancy()
 	elif not enabled and _is_grid_occupancy_registered:
 		if is_instance_valid(_grid_world):
-			_grid_world.set_cell_blocked(_occupied_cell, false)
+			_grid_world.unregister_cell_occupant(_occupied_cell, self)
 		_is_grid_occupancy_registered = false
 
 
@@ -79,5 +80,13 @@ func _register_grid_occupancy() -> void:
 		push_warning("%s could not find a GridWorld for occupancy registration." % name)
 		return
 	_occupied_cell = _grid_world.world_to_cell(global_position)
-	_grid_world.set_cell_blocked(_occupied_cell, true)
+	if snap_to_grid_when_blocking:
+		global_position = _grid_world.to_global(_grid_world.cell_to_world(_occupied_cell))
+	if not _grid_world.try_register_cell_occupant(_occupied_cell, self):
+		push_warning("%s could not occupy grid cell %s because it is already occupied." % [name, _occupied_cell])
+		return
 	_is_grid_occupancy_registered = true
+
+
+func get_occupied_cell() -> Vector2i:
+	return _occupied_cell

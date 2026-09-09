@@ -4,6 +4,14 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Tile-based world foundation
+
+- Added authoritative cell ownership so the grid can identify the blocking object occupying each tile and reject overlapping placement.
+- Made blocking interactables snap to the center of their claimed grid cell.
+- Reworked mineable rock into full-cell stone blocks with cardinal neighbor connections, full-tile collision, and cluster-aware labels.
+- Added a connected three-tile stone formation to the test scene.
+- Added automated coverage for snapping, occupancy ownership, exclusive placement, and tile connections.
+
 ### Milestone 0 — Project foundation
 
 - Created the Godot 4 project and baseline directory structure.
