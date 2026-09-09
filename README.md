@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim by moving the mouse, use **1–9** for assigned tools/weapons, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
+The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim with the mouse, hold left click for harvesting, use **R** to draw or holster weapons, **1–9** for assigned tools/weapons, **T** to rest, **I** for inventory/equipment, **C** for hand crafting, and **P** to pause. Left-click the campfire to open workstation crafting while holstered.
 
 The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the terrain palette and map-painting workflow.
 
@@ -48,10 +48,11 @@ The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_D
 | Move | WASD or arrow keys |
 | Aim / face | Mouse |
 | Select hotbar slot | 1–9 |
-| Interact | E |
+| Utility action / interact | Left mouse button; hold for timed work |
+| Draw or holster weapon | R |
 | Inventory | I |
 | Crafting | C |
-| Rest / wake | R |
+| Rest / wake | T |
 | Building | B |
 | Attack | Left mouse button |
 | Pause | P |
@@ -138,4 +139,5 @@ godot --headless --path . --script res://tests/player_aim_test.gd
 godot --headless --path . --script res://tests/terrain_map_test.gd
 godot --headless --path . --script res://tests/campfire_animation_test.gd
 godot --headless --path . --script res://tests/hotbar_test.gd
+godot --headless --path . --script res://tests/action_mode_test.gd
 ```

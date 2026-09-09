@@ -36,7 +36,7 @@ func _refresh() -> void:
 	hunger_bar.value = _needs.hunger
 	fatigue_bar.value = _needs.fatigue
 	health_bar.value = _needs.health
-	condition_label.text = "%s  •  R: %s" % [
+	condition_label.text = "%s  •  T: %s" % [
 		_needs.get_condition_text(),
 		"wake" if _needs.is_resting else "rest",
 	]

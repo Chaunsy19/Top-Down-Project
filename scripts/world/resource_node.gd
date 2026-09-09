@@ -56,7 +56,10 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	advance_simulation(delta)
+	if is_harvesting():
+		_validate_harvest_actor()
+	elif is_depleted() and recovery_remaining > 0.0:
+		advance_simulation(delta)
 
 
 func can_interact(actor: Node2D) -> bool:
@@ -115,6 +118,26 @@ func get_harvest_ratio() -> float:
 	return clampf(harvest_progress / effective_time, 0.0, 1.0)
 
 
+func uses_hold_interaction() -> bool:
+	return true
+
+
+func continue_hold_interaction(actor: Node2D, delta: float) -> bool:
+	if actor != _harvesting_actor:
+		return false
+	advance_simulation(delta)
+	return is_harvesting()
+
+
+func cancel_hold_interaction(actor: Node2D) -> void:
+	if actor == _harvesting_actor:
+		cancel_harvest()
+
+
+func is_hold_interaction_active(actor: Node2D) -> bool:
+	return actor == _harvesting_actor and is_harvesting()
+
+
 func get_actor_skill_level(actor: Node2D) -> int:
 	if not is_instance_valid(actor) or definition == null or definition.skill_id.is_empty():
 		return 0
@@ -153,11 +176,7 @@ func advance_simulation(delta: float) -> void:
 	if definition == null:
 		return
 	if is_harvesting():
-		if not definition.required_tool_tags.is_empty() and find_compatible_tool(_harvesting_actor) != _active_tool_stack:
-			cancel_harvest()
-			return
-		if global_position.distance_to(_harvesting_actor.global_position) > definition.cancel_distance:
-			cancel_harvest()
+		if not _validate_harvest_actor():
 			return
 		harvest_progress += delta
 		if harvest_progress >= get_effective_harvest_time():
@@ -170,6 +189,18 @@ func advance_simulation(delta: float) -> void:
 			_recover()
 		else:
 			_update_presentation()
+
+
+func _validate_harvest_actor() -> bool:
+	if not is_harvesting():
+		return false
+	if not definition.required_tool_tags.is_empty() and find_compatible_tool(_harvesting_actor) != _active_tool_stack:
+		cancel_harvest()
+		return false
+	if global_position.distance_to(_harvesting_actor.global_position) > definition.cancel_distance:
+		cancel_harvest()
+		return false
+	return true
 
 
 func cancel_harvest() -> void:

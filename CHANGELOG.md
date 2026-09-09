@@ -4,6 +4,13 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Held utility actions and combat stance
+
+- Added holstered and combat-ready player modes toggled with R, with an on-screen state readout and raised fists/equipped-tool attack feedback.
+- Routed left click to utility interactions while holstered and to a reusable attack signal while combat-ready.
+- Changed harvesting to advance only while left click remains held; releasing, leaving range, losing the required tool, or drawing a weapon cancels progress.
+- Added a shared continuous-interaction contract for future construction and repair actions, and moved rest/wake to T.
+
 ### Tool and weapon hotbar
 
 - Added an always-visible nine-slot HUD controlled by number keys 1–9.

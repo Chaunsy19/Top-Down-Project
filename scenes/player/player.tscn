@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_controller"]
 [ext_resource type="Script" path="res://scripts/player/placeholder_player_visual.gd" id="2_visual"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/crafting/crafting_component.gd" id="8_crafting"]
 [ext_resource type="Script" path="res://scripts/player/survival_needs.gd" id="9_needs"]
 [ext_resource type="Script" path="res://scripts/equipment/hotbar_component.gd" id="10_hotbar"]
+[ext_resource type="Script" path="res://scripts/player/combat_stance_visual.gd" id="11_combat_visual"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_player"]
 radius = 11.0
@@ -62,6 +63,10 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 position = Vector2(18, 0)
 
+[node name="CombatStanceVisual" type="Node2D" parent="AimPivot"]
+unique_name_in_owner = true
+script = ExtResource("11_combat_visual")
+
 [node name="InteractionRange" type="Area2D" parent="."]
 z_index = -1
 collision_layer = 0
@@ -82,9 +87,9 @@ script = ExtResource("4_camera")
 
 [node name="InteractionPrompt" type="Label" parent="InteractionHUD"]
 offset_left = 490.0
-offset_top = 582.0
+offset_top = 526.0
 offset_right = 790.0
-offset_bottom = 622.0
+offset_bottom = 566.0
 theme_override_colors/font_color = Color(0.902, 0.765, 0.416, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 18

@@ -2,6 +2,8 @@ class_name PlayerController
 extends CharacterBody2D
 
 signal aim_direction_changed(direction: Vector2)
+signal combat_mode_changed(is_combat_ready: bool)
+signal attack_requested(direction: Vector2)
 
 @export_range(1.0, 1000.0, 1.0) var movement_speed := 220.0
 @export_range(1.0, 5000.0, 1.0) var acceleration := 1600.0
@@ -12,6 +14,7 @@ signal aim_direction_changed(direction: Vector2)
 @onready var aim_pivot: Node2D = %AimPivot
 
 var aim_direction := Vector2.DOWN
+var is_combat_ready := false
 
 
 func _ready() -> void:
@@ -39,9 +42,28 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("rest") and survival_needs != null and not get_tree().paused:
+	if event.is_action_pressed("toggle_combat") and not get_tree().paused:
+		set_combat_ready(not is_combat_ready)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("rest") and survival_needs != null and not get_tree().paused and not is_combat_ready:
 		survival_needs.toggle_resting()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("attack") and is_combat_ready and not get_tree().paused:
+		attack_requested.emit(aim_direction)
+		get_viewport().set_input_as_handled()
+
+
+func set_combat_ready(value: bool) -> void:
+	if is_combat_ready == value:
+		return
+	is_combat_ready = value
+	if is_combat_ready and survival_needs != null and survival_needs.is_resting:
+		survival_needs.set_resting(false)
+	combat_mode_changed.emit(is_combat_ready)
+
+
+func are_weapons_holstered() -> bool:
+	return not is_combat_ready
 
 
 func update_aim_from_world_position(target_world_position: Vector2) -> void:

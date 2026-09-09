@@ -9,6 +9,7 @@ signal availability_changed(is_available: bool)
 @export var is_available := true
 @export var blocks_grid_cell := false
 @export var snap_to_grid_when_blocking := true
+@export_range(1.0, 128.0, 1.0) var pointer_selection_radius := 28.0
 
 var _grid_world: Node2D
 var _occupied_cell := Vector2i(-1, -1)
@@ -40,6 +41,26 @@ func interact(actor: Node2D) -> bool:
 	_perform_interaction(actor)
 	interacted.emit(actor)
 	return true
+
+
+func uses_hold_interaction() -> bool:
+	return false
+
+
+func continue_hold_interaction(_actor: Node2D, _delta: float) -> bool:
+	return false
+
+
+func cancel_hold_interaction(_actor: Node2D) -> void:
+	pass
+
+
+func is_hold_interaction_active(_actor: Node2D) -> bool:
+	return false
+
+
+func is_pointer_near(world_position: Vector2) -> bool:
+	return get_interaction_point().distance_to(world_position) <= pointer_selection_radius
 
 
 func set_available(value: bool) -> void:

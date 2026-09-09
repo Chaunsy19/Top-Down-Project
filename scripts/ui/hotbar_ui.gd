@@ -4,9 +4,11 @@ extends CanvasLayer
 const HotbarSlotScene := preload("res://ui/hotbar/hotbar_slot.tscn")
 
 var _hotbar: HotbarComponent
+var _player: PlayerController
 var _slots: Array[HotbarSlotUI] = []
 
 @onready var slot_row: HBoxContainer = %SlotRow
+@onready var mode_label: Label = %ModeLabel
 
 
 func _ready() -> void:
@@ -23,7 +25,11 @@ func _bind_player_hotbar() -> void:
 	_hotbar = get_tree().get_first_node_in_group("player_hotbar") as HotbarComponent
 	if _hotbar != null:
 		_hotbar.changed.connect(_refresh)
+		_player = _hotbar.get_parent() as PlayerController
+		if _player != null:
+			_player.combat_mode_changed.connect(_on_combat_mode_changed)
 	_refresh()
+	_refresh_mode()
 
 
 func _refresh() -> void:
@@ -36,3 +42,16 @@ func _refresh() -> void:
 func _on_slot_pressed(index: int) -> void:
 	if _hotbar != null and not get_tree().paused:
 		_hotbar.select_slot(index)
+
+
+func _on_combat_mode_changed(_is_combat_ready: bool) -> void:
+	_refresh_mode()
+
+
+func _refresh_mode() -> void:
+	if _player != null and _player.is_combat_ready:
+		mode_label.text = "COMBAT READY  •  LMB attack  •  R holster"
+		mode_label.add_theme_color_override("font_color", Color("#e27b62"))
+	else:
+		mode_label.text = "HOLSTERED  •  LMB interact  •  R draw"
+		mode_label.add_theme_color_override("font_color", Color("#a9c7b3"))

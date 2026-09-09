@@ -143,4 +143,4 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.68, 0.74, 0.71, 1)
 theme_override_font_sizes/font_size = 11
-text = "Stable  •  R: rest"
+text = "Stable  •  T: rest"
