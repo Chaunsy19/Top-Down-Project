@@ -272,23 +272,19 @@ func _draw() -> void:
 		return
 	var depleted_color: Color = definition.depleted_color
 	if is_depleted():
-		draw_colored_polygon(PackedVector2Array([Vector2(0, -6), Vector2(14, 0), Vector2(0, 6), Vector2(-14, 0)]), depleted_color)
+		draw_rect(Rect2(-10.0, -5.0, 20.0, 10.0), depleted_color)
 	elif definition.visual_kind == "tree":
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.4))
-		draw_circle(Vector2(4.0, 48.0), 22.0, Color(0.04, 0.07, 0.05, 0.3))
-		draw_set_transform(Vector2.ZERO)
-		draw_colored_polygon(PackedVector2Array([Vector2(-6, -7), Vector2(6, -7), Vector2(8, 25), Vector2(-8, 25)]), definition.depleted_color)
-		draw_circle(Vector2(-10.0, -15.0), 17.0, definition.secondary_color)
-		draw_circle(Vector2(10.0, -18.0), 19.0, definition.primary_color)
-		draw_circle(Vector2(0.0, -32.0), 18.0, definition.primary_color.lightened(0.08))
+		draw_rect(Rect2(-5.0, 2.0, 10.0, 24.0), definition.depleted_color)
+		draw_circle(Vector2(-7.0, -4.0), 15.0, definition.secondary_color)
+		draw_circle(Vector2(8.0, -6.0), 17.0, definition.primary_color)
+		draw_circle(Vector2(0.0, -15.0), 16.0, definition.primary_color.lightened(0.08))
 	elif definition.visual_kind == "rock":
 		var rock_points := PackedVector2Array([
-			Vector2(-21.0, 8.0), Vector2(-13.0, -10.0), Vector2(0.0, -20.0),
-			Vector2(18.0, -8.0), Vector2(22.0, 8.0), Vector2(5.0, 18.0), Vector2(-11.0, 16.0),
+			Vector2(-18.0, 10.0), Vector2(-13.0, -10.0), Vector2(0.0, -18.0),
+			Vector2(16.0, -9.0), Vector2(19.0, 10.0), Vector2(5.0, 17.0), Vector2(-9.0, 16.0),
 		])
 		draw_colored_polygon(rock_points, definition.primary_color)
-		draw_colored_polygon(PackedVector2Array([Vector2(-13, -10), Vector2(0, -20), Vector2(5, 3), Vector2(-12, 6)]), definition.primary_color.lightened(0.12))
-		draw_polyline(PackedVector2Array([rock_points[0], rock_points[1], rock_points[2], rock_points[3]]), definition.secondary_color, 2.0)
+		draw_polyline(PackedVector2Array([rock_points[0], rock_points[1], rock_points[2], rock_points[3]]), definition.secondary_color, 3.0)
 	else:
 		draw_circle(Vector2(-9.0, 2.0), 13.0, definition.primary_color)
 		draw_circle(Vector2(9.0, 1.0), 14.0, definition.primary_color.lightened(0.06))

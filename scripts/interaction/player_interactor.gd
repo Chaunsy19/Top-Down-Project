@@ -6,7 +6,7 @@ const InteractableScript = preload("res://scripts/interaction/interactable.gd")
 signal target_changed(target: InteractableScript)
 signal interaction_attempted(target: InteractableScript, succeeded: bool)
 
-@export_range(0.25, 5.0, 0.05) var radius := 1.6
+@export_range(1.0, 256.0, 1.0) var radius := 56.0
 @export var prompt_label_path: NodePath
 
 var _current_target: InteractableScript
@@ -63,14 +63,10 @@ func get_current_target() -> InteractableScript:
 
 
 func is_target_in_range(target: InteractableScript) -> bool:
-	if not is_instance_valid(target):
-		return false
-	var grid_world := get_tree().get_first_node_in_group("grid_world")
-	if grid_world != null:
-		var actor_grid_position: Vector2 = grid_world.world_to_grid_position(global_position)
-		var target_grid_position: Vector2 = grid_world.world_to_grid_position(target.get_interaction_point())
-		return actor_grid_position.distance_to(target_grid_position) <= radius
-	return global_position.distance_to(target.get_interaction_point()) <= radius * 32.0
+	return (
+		is_instance_valid(target)
+		and global_position.distance_to(target.get_interaction_point()) <= radius
+	)
 
 
 func set_current_target(target: InteractableScript) -> void:
@@ -90,14 +86,5 @@ func _update_prompt() -> void:
 
 
 func _draw() -> void:
-	var grid_world := get_tree().get_first_node_in_group("grid_world")
-	if grid_world == null:
-		draw_circle(Vector2.ZERO, radius * 32.0, Color(0.902, 0.765, 0.416, 0.035))
-		return
-	var points := PackedVector2Array()
-	for index in 64:
-		var angle := float(index) * TAU / 64.0
-		points.append(grid_world.grid_delta_to_local(Vector2.from_angle(angle) * radius))
-	draw_colored_polygon(points, Color(0.902, 0.765, 0.416, 0.035))
-	points.append(points[0])
-	draw_polyline(points, Color(0.902, 0.765, 0.416, 0.42), 1.5, true)
+	draw_circle(Vector2.ZERO, radius, Color(0.902, 0.765, 0.416, 0.035))
+	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 64, Color(0.902, 0.765, 0.416, 0.42), 1.5, true)

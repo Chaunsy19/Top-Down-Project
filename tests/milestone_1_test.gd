@@ -1,6 +1,6 @@
 extends SceneTree
 
-const START_POSITION := Vector2(448.0, 248.0)
+const START_POSITION := Vector2(448.0, 256.0)
 const MOVEMENT_FRAMES := 30
 const COLLISION_FRAMES := 90
 
@@ -66,15 +66,13 @@ func test_diagonal_normalization(player: CharacterBody2D) -> void:
 
 func test_wall_collision(player: CharacterBody2D) -> void:
 	reset_player(player)
-	player.position = Vector2(590.0, 136.0)
+	player.position = Vector2(820.0, START_POSITION.y)
 	Input.action_press("move_right")
 	await wait_physics_frames(COLLISION_FRAMES)
 	Input.action_release("move_right")
 
-	var world := player.get_parent()
-	var final_cell: Vector2i = world.world_to_cell(player.global_position)
-	if final_cell.x <= 0 or final_cell.y <= 0 or final_cell.x >= world.grid_dimensions.x - 1 or final_cell.y >= world.grid_dimensions.y - 1:
-		_failures.append("Player passed through the isometric room boundary.")
+	if player.position.x > 854.5:
+		_failures.append("Player passed through the right wall collision.")
 
 
 func reset_player(player: CharacterBody2D) -> void:
@@ -103,3 +101,4 @@ func finish() -> void:
 		for failure in _failures:
 			push_error(failure)
 		quit(1)
+

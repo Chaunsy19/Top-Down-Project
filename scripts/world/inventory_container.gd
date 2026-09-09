@@ -37,14 +37,8 @@ func _perform_interaction(actor: Node2D) -> void:
 
 
 func _draw() -> void:
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(-24.0, -7.0), Vector2(0.0, -19.0), Vector2(24.0, -7.0), Vector2(0.0, 5.0),
-	]), Color("#92704b"))
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(-24.0, -7.0), Vector2(0.0, 5.0), Vector2(0.0, 23.0), Vector2(-24.0, 11.0),
-	]), Color("#66472f"))
-	draw_colored_polygon(PackedVector2Array([
-		Vector2(0.0, 5.0), Vector2(24.0, -7.0), Vector2(24.0, 11.0), Vector2(0.0, 23.0),
-	]), Color("#765438"))
-	draw_polyline(PackedVector2Array([Vector2(-24, -7), Vector2(0, 5), Vector2(24, -7)]), Color("#2d2922"), 2.0)
-	draw_rect(Rect2(-3.0, 3.0, 6.0, 9.0), Color("#d0aa58"))
+	draw_rect(Rect2(-21.0, -15.0, 42.0, 30.0), Color("#6e4f34"))
+	draw_rect(Rect2(-21.0, -15.0, 42.0, 8.0), Color("#92704b"))
+	draw_line(Vector2(-21.0, -6.0), Vector2(21.0, -6.0), Color("#2d2922"), 2.0)
+	draw_rect(Rect2(-3.0, -4.0, 6.0, 9.0), Color("#d0aa58"))
+

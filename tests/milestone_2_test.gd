@@ -38,7 +38,6 @@ func run_tests() -> void:
 		_failures.append("Player was not discoverable through its runtime group.")
 
 	test_coordinate_conversion(world)
-	test_isometric_projection(world)
 	test_walkability(world)
 	test_interaction_reach_symmetry(player, terminal, interactor)
 	test_interaction(player, terminal, interactor)
@@ -55,24 +54,12 @@ func test_coordinate_conversion(world: GridWorldScript) -> void:
 		_failures.append("Grid world/cell coordinate conversion did not round-trip.")
 
 
-func test_isometric_projection(world: GridWorldScript) -> void:
-	var origin := world.cell_to_world(Vector2i.ZERO)
-	var x_step := world.cell_to_world(Vector2i.RIGHT) - origin
-	var y_step := world.cell_to_world(Vector2i.DOWN) - origin
-	if not x_step.is_equal_approx(Vector2(32.0, 16.0)):
-		_failures.append("Isometric X axis does not project to the expected down-right diamond edge.")
-	if not y_step.is_equal_approx(Vector2(-32.0, 16.0)):
-		_failures.append("Isometric Y axis does not project to the expected down-left diamond edge.")
-	if not world.y_sort_enabled:
-		_failures.append("Isometric world does not have Y-sorting enabled.")
-
-
 func test_walkability(world: GridWorldScript) -> void:
 	if world.is_cell_walkable(Vector2i(0, 0)):
 		_failures.append("Boundary cell should be blocked.")
 	if not world.is_cell_walkable(Vector2i(5, 5)):
 		_failures.append("Open interior cell should be walkable.")
-	if world.is_cell_walkable(Vector2i(6, 7)):
+	if world.is_cell_walkable(Vector2i(12, 8)):
 		_failures.append("The test terminal's occupied cell should be blocked.")
 	if world.is_cell_walkable(Vector2i(-1, 4)):
 		_failures.append("Out-of-bounds cells should not be walkable.")
@@ -102,18 +89,17 @@ func test_interaction_reach_symmetry(
 	terminal: InteractableScript,
 	interactor: PlayerInteractorScript
 ) -> void:
-	var world := player.get_parent() as GridWorldScript
 	var directions := [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]
 	for direction in directions:
-		player.global_position = terminal.global_position + world.grid_delta_to_local(direction * 1.5)
+		player.global_position = terminal.global_position + direction * 52.0
 		if not interactor.is_target_in_range(terminal):
-			_failures.append("Terminal was unreachable from logical grid direction %s at equal distance." % direction)
+			_failures.append("Terminal was unreachable from direction %s at equal distance." % direction)
 
-	player.global_position = terminal.global_position + world.grid_delta_to_local(Vector2.RIGHT * 1.75)
+	player.global_position = terminal.global_position + Vector2.RIGHT * 60.0
 	if interactor.is_target_in_range(terminal):
 		_failures.append("Terminal remained reachable beyond the configured interaction radius.")
 
-	player.position = Vector2(448.0, 248.0)
+	player.position = Vector2(448.0, 256.0)
 	player.velocity = Vector2.ZERO
 
 
