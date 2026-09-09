@@ -2,6 +2,12 @@
 
 All notable project changes are recorded here by milestone.
 
+## Milestone 7 — First base-building vertical slice
+
+- Added a validated, data-driven catalog for wood floors, wood walls, doors, storage, campfires, and sleeping spots.
+- Added a `B` build palette, grid-snapped green/red placement preview, material checks, per-site cost deduction, and continuous placement.
+- Added held construction with visible progress and functional completed structures: collision, opening doors, container storage, campfire crafting/light, and resting.
+
 ### Drag-and-drop inventory
 
 - Added direct inventory slot dragging for moves, merges, swaps, and player/container transfers.

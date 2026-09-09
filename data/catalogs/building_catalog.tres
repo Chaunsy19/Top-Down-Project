@@ -1,0 +1,111 @@
+[gd_resource type="Resource" script_class="BuildingCatalog" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/building/building_catalog.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/building/building_definition.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/data/building/build_cost.gd" id="3"]
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="4"]
+[ext_resource type="Resource" path="res://data/items/stone.tres" id="5"]
+[ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="6"]
+
+[sub_resource type="Resource" id="CostFloor"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 2
+
+[sub_resource type="Resource" id="Floor"]
+script = ExtResource("2")
+building_id = &"wood_floor"
+display_name = "Wood Floor"
+description = "A simple wooden floor tile."
+behavior = "floor"
+costs = Array[Resource]([SubResource("CostFloor")])
+construction_time = 0.6
+blocks_movement = false
+primary_color = Color(0.43, 0.28, 0.16, 1)
+
+[sub_resource type="Resource" id="CostWall"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 5
+
+[sub_resource type="Resource" id="Wall"]
+script = ExtResource("2")
+building_id = &"wood_wall"
+display_name = "Wood Wall"
+description = "A solid wooden wall tile."
+behavior = "wall"
+costs = Array[Resource]([SubResource("CostWall")])
+construction_time = 1.5
+primary_color = Color(0.38, 0.23, 0.13, 1)
+
+[sub_resource type="Resource" id="CostDoor"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 6
+
+[sub_resource type="Resource" id="Door"]
+script = ExtResource("2")
+building_id = &"wood_door"
+display_name = "Wood Door"
+description = "A door that opens to allow passage."
+behavior = "door"
+costs = Array[Resource]([SubResource("CostDoor")])
+construction_time = 1.5
+primary_color = Color(0.52, 0.32, 0.17, 1)
+
+[sub_resource type="Resource" id="CostStorage"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 8
+
+[sub_resource type="Resource" id="Storage"]
+script = ExtResource("2")
+building_id = &"storage_chest"
+display_name = "Storage Chest"
+description = "A container for settlement supplies."
+behavior = "storage"
+costs = Array[Resource]([SubResource("CostStorage")])
+construction_time = 2.0
+primary_color = Color(0.45, 0.3, 0.18, 1)
+storage_slots = 20
+
+[sub_resource type="Resource" id="CostFireWood"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 2
+
+[sub_resource type="Resource" id="CostFireStone"]
+script = ExtResource("3")
+item_definition = ExtResource("5")
+quantity = 4
+
+[sub_resource type="Resource" id="Campfire"]
+script = ExtResource("2")
+building_id = &"campfire"
+display_name = "Campfire"
+description = "A lit cooking fire."
+behavior = "workstation"
+costs = Array[Resource]([SubResource("CostFireWood"), SubResource("CostFireStone")])
+construction_time = 2.0
+primary_color = Color(0.82, 0.34, 0.12, 1)
+workstation_definition = ExtResource("6")
+
+[sub_resource type="Resource" id="CostBed"]
+script = ExtResource("3")
+item_definition = ExtResource("4")
+quantity = 4
+
+[sub_resource type="Resource" id="Bed"]
+script = ExtResource("2")
+building_id = &"sleeping_spot"
+display_name = "Sleeping Spot"
+description = "A basic place to rest."
+behavior = "sleeping_spot"
+costs = Array[Resource]([SubResource("CostBed")])
+construction_time = 1.0
+blocks_movement = false
+primary_color = Color(0.32, 0.43, 0.38, 1)
+
+[resource]
+script = ExtResource("1")
+buildings = Array[Resource]([SubResource("Floor"), SubResource("Wall"), SubResource("Door"), SubResource("Storage"), SubResource("Campfire"), SubResource("Bed")])

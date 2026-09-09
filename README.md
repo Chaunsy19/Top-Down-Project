@@ -103,6 +103,15 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - The player inventory footer reserves space for future currencies; currency state is not implemented yet.
 - Press **Escape** to close the topmost open modal UI. With no modal open, Escape intentionally does nothing until the pause menu is implemented.
 
+## Building controls
+
+- Press **B** to open or close the build catalog.
+- Choose a floor, wall, door, storage chest, campfire, or sleeping spot.
+- Move the mouse to preview the grid-snapped tile. Green is valid; red explains why placement is blocked.
+- Left-click to place a material-paid construction site. Stand nearby and hold left-click on it to build.
+- Continue placing the selected building, or press **right-click**/**Escape** to leave placement mode.
+- Doors open and close with left-click; storage, campfires, and sleeping spots reuse their normal interaction controls.
+
 ## Crafting controls
 
 - Press **C** to open hand crafting for the stone axe and stone pickaxe recipes.

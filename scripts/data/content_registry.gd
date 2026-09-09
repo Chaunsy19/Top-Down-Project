@@ -5,12 +5,14 @@ const ITEM_CATEGORY_CATALOG_PATH := "res://data/catalogs/item_category_catalog.t
 const RESOURCE_NODE_CATALOG_PATH := "res://data/catalogs/resource_node_catalog.tres"
 const RECIPE_CATALOG_PATH := "res://data/catalogs/recipe_catalog.tres"
 const WORKSTATION_CATALOG_PATH := "res://data/catalogs/workstation_catalog.tres"
+const BUILDING_CATALOG_PATH := "res://data/catalogs/building_catalog.tres"
 
 var item_catalog: Resource
 var item_category_catalog: Resource
 var resource_node_catalog: Resource
 var recipe_catalog: Resource
 var workstation_catalog: Resource
+var building_catalog: Resource
 
 
 func _ready() -> void:
@@ -19,6 +21,7 @@ func _ready() -> void:
 	resource_node_catalog = load(RESOURCE_NODE_CATALOG_PATH)
 	recipe_catalog = load(RECIPE_CATALOG_PATH)
 	workstation_catalog = load(WORKSTATION_CATALOG_PATH)
+	building_catalog = load(BUILDING_CATALOG_PATH)
 	for error in validate_catalogs():
 		push_error("Content catalog: %s" % error)
 
@@ -47,6 +50,14 @@ func get_workstation(workstation_id: StringName) -> Resource:
 	return workstation_catalog.get_workstation(workstation_id) if workstation_catalog else null
 
 
+func get_building(building_id: StringName) -> Resource:
+	return building_catalog.get_building(building_id) if building_catalog else null
+
+
+func get_buildings() -> Array[Resource]:
+	return building_catalog.buildings.duplicate() if building_catalog else []
+
+
 func validate_catalogs() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if item_catalog == null:
@@ -69,6 +80,10 @@ func validate_catalogs() -> PackedStringArray:
 		errors.append("Workstation catalog could not be loaded.")
 	else:
 		errors.append_array(workstation_catalog.validate())
+	if building_catalog == null:
+		errors.append("Building catalog could not be loaded.")
+	else:
+		errors.append_array(building_catalog.validate())
 
 	if item_catalog != null and item_category_catalog != null:
 		for item in item_catalog.items:
@@ -102,4 +117,11 @@ func validate_catalogs() -> PackedStringArray:
 			for required_tag in recipe.required_workstation_tags:
 				if not workstation_catalog.provides_tag(required_tag):
 					errors.append("Recipe '%s' requires unavailable workstation tag '%s'." % [recipe.recipe_id, required_tag])
+	if item_catalog != null and building_catalog != null:
+		for building in building_catalog.buildings:
+			if building == null:
+				continue
+			for cost in building.costs:
+				if cost != null and cost.item_definition != null and item_catalog.get_item(cost.item_definition.item_id) == null:
+					errors.append("Building '%s' costs uncatalogued item '%s'." % [building.building_id, cost.item_definition.item_id])
 	return errors
