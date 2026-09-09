@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://dafehetoc20ck"]
 
-[ext_resource type="Script" path="res://scripts/world/crafting_workstation.gd" id="1_workstation"]
-[ext_resource type="Script" path="res://scripts/world/soft_light.gd" id="2_light"]
+[ext_resource type="Script" uid="uid://3nglwn8q5ovc" path="res://scripts/world/crafting_workstation.gd" id="1_workstation"]
+[ext_resource type="Script" uid="uid://cud0c5khfy1ai" path="res://scripts/world/soft_light.gd" id="2_light"]
 [ext_resource type="Texture2D" path="res://assets/Campfire/Fire 4 - 2/Group 4 - 2.png" id="3_fire"]
 [ext_resource type="Texture2D" path="res://assets/Campfire/Smoke Dark - 1/Smoke Dark - 1.png" id="4_smoke"]
 [ext_resource type="Script" path="res://scripts/world/looping_sprite_animation.gd" id="5_animation"]
@@ -9,16 +9,16 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_workstation"]
 radius = 23.0
 
-[node name="CraftingWorkstation" type="Area2D"]
+[node name="CraftingWorkstation" type="Area2D" unique_id=2090684183]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_workstation")
 blocks_grid_cell = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1771640049]
 shape = SubResource("CircleShape2D_workstation")
 
-[node name="InteractionPoint" type="Node2D" parent="."]
+[node name="InteractionPoint" type="Node2D" parent="." unique_id=446712450]
 
 [node name="SmokeAnimation" type="Sprite2D" parent="."]
 unique_name_in_owner = true
@@ -42,12 +42,12 @@ hframes = 8
 script = ExtResource("5_animation")
 frames_per_second = 11.0
 
-[node name="SoftLight" type="PointLight2D" parent="."]
+[node name="SoftLight" type="PointLight2D" parent="." unique_id=746555335]
 unique_name_in_owner = true
 position = Vector2(0, -4)
 script = ExtResource("2_light")
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="." unique_id=767153815]
 unique_name_in_owner = true
 offset_left = -60.0
 offset_top = -48.0
