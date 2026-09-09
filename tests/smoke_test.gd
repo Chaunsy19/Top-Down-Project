@@ -26,6 +26,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/interaction/interactable.gd",
 	"res://scripts/interaction/player_interactor.gd",
 	"res://scripts/world/grid_world.gd",
+	"res://scripts/world/terrain_map.gd",
 	"res://scripts/world/test_terminal.gd",
 	"res://scripts/debug/debug_overlay.gd",
 	"res://scripts/data/content_registry.gd",

@@ -4,6 +4,13 @@ All notable project changes are recorded here by milestone.
 
 ## Unreleased
 
+### Editable starter-island terrain
+
+- Added a reusable 32×32 terrain tileset with dirt, grass, walkable shallow water, and blocked deep water.
+- Replaced the procedural test-room floor with an editable starter-island `TileMapLayer`.
+- Connected terrain walkability to both physics collision and the shared `GridWorld` blocked-cell API.
+- Added a map-design guide and automated terrain integration coverage.
+
 ### Mouse-facing player aim
 
 - Added continuous world-space mouse aiming that remains independent from player movement.

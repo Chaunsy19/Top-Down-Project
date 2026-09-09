@@ -6,10 +6,9 @@ signal cell_occupant_changed(cell: Vector2i, occupant: Node2D)
 @export_range(8, 128, 1) var grid_size := 32
 @export var grid_dimensions := Vector2i(28, 16)
 @export var show_blocked_cells := true
+@export_node_path("TileMapLayer") var terrain_map_path: NodePath
 
-const FLOOR_COLOR := Color("#25352f")
 const GRID_COLOR := Color("#385047")
-const WALL_COLOR := Color("#9b7859")
 const BLOCKED_COLOR := Color(0.78, 0.25, 0.20, 0.12)
 
 var _blocked_cell_counts: Dictionary[Vector2i, int] = {}
@@ -18,7 +17,7 @@ var _cell_occupants: Dictionary[Vector2i, Node2D] = {}
 
 func _ready() -> void:
 	add_to_group("grid_world")
-	_register_boundary_cells()
+	_register_blocked_terrain_cells()
 	queue_redraw()
 
 
@@ -100,19 +99,20 @@ func get_cell_debug_state(cell: Vector2i) -> String:
 	return "Walkable" if is_cell_walkable(cell) else "Blocked"
 
 
-func _register_boundary_cells() -> void:
-	for x in grid_dimensions.x:
-		set_cell_blocked(Vector2i(x, 0), true)
-		set_cell_blocked(Vector2i(x, grid_dimensions.y - 1), true)
-	for y in range(1, grid_dimensions.y - 1):
-		set_cell_blocked(Vector2i(0, y), true)
-		set_cell_blocked(Vector2i(grid_dimensions.x - 1, y), true)
+func _register_blocked_terrain_cells() -> void:
+	if terrain_map_path.is_empty():
+		return
+	var terrain_map := get_node_or_null(terrain_map_path) as TileMapLayer
+	if terrain_map == null or not terrain_map.has_method("is_cell_walkable"):
+		push_warning("GridWorld terrain map is missing or does not expose is_cell_walkable().")
+		return
+	for cell in terrain_map.get_used_cells():
+		if not terrain_map.call("is_cell_walkable", cell):
+			set_cell_blocked(cell, true)
 
 
 func _draw() -> void:
 	var room_size := Vector2(grid_dimensions * grid_size)
-	var room_rect := Rect2(Vector2.ZERO, room_size)
-	draw_rect(room_rect, FLOOR_COLOR)
 
 	for x in range(grid_dimensions.x + 1):
 		var x_position := float(x * grid_size)
@@ -121,12 +121,6 @@ func _draw() -> void:
 	for y in range(grid_dimensions.y + 1):
 		var y_position := float(y * grid_size)
 		draw_line(Vector2(0.0, y_position), Vector2(room_size.x, y_position), GRID_COLOR)
-
-	var wall_thickness := float(grid_size)
-	draw_rect(Rect2(0.0, 0.0, room_size.x, wall_thickness), WALL_COLOR)
-	draw_rect(Rect2(0.0, room_size.y - wall_thickness, room_size.x, wall_thickness), WALL_COLOR)
-	draw_rect(Rect2(0.0, 0.0, wall_thickness, room_size.y), WALL_COLOR)
-	draw_rect(Rect2(room_size.x - wall_thickness, 0.0, wall_thickness, room_size.y), WALL_COLOR)
 
 	if show_blocked_cells:
 		for cell in _blocked_cell_counts:

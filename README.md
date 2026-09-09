@@ -16,7 +16,9 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player in a grid-backed, collision-backed room. Move with **WASD** or the arrow keys, aim by moving the mouse, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
+The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim by moving the mouse, press **E** to interact or collect drops, **I** for inventory/equipment, **C** for hand crafting, **R** to rest or wake, and **P** to pause. Interact with the campfire to open workstation crafting.
+
+The test world is a small editable island. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the terrain palette and map-painting workflow.
 
 ## Project structure
 
@@ -131,4 +133,5 @@ godot --headless --path . --script res://tests/milestone_5_test.gd
 godot --headless --path . --script res://tests/grid_occupancy_test.gd
 godot --headless --path . --script res://tests/milestone_6_test.gd
 godot --headless --path . --script res://tests/player_aim_test.gd
+godot --headless --path . --script res://tests/terrain_map_test.gd
 ```
