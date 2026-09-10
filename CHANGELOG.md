@@ -243,3 +243,10 @@ All notable project changes are recorded here by milestone.
 - Reset ocean fade gain to zero and clamp runtime gain to 0–1, preventing out-of-range gain from extending the fade-out.
 - Verified startup silence, walking beyond the ten-tile radius, and full fade-out within the configured duration, including an invalid gain of 15.5.
 
+
+### Sideways tool chop
+
+- Tucked the axe and pickaxe grip beside the body at rest, with the tool angled back across the player.
+- Added a short windup, outward reach toward mouse aim, follow-through, and recovery over 0.32 seconds.
+- Tool visual and action-mode suites pass for the tucked pose, outward chop, recovery, aiming, and holstering.
+

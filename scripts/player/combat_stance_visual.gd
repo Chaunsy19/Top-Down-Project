@@ -2,7 +2,10 @@ extends Node2D
 
 const FIST_COLOR := Color("#d6a957")
 const HANDLE_COLOR := Color("#65402a")
-const ATTACK_DURATION := 0.24
+const ATTACK_DURATION := 0.32
+const REST_ANGLE := -105.0
+const REST_HAND := Vector2(3.0, 10.0)
+const EXTENDED_HAND := Vector2(16.0, 2.0)
 
 var _player: PlayerController
 var _equipment: EquipmentComponent
@@ -13,6 +16,8 @@ var _attack_remaining := 0.0
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	rotation = deg_to_rad(REST_ANGLE)
+	position = REST_HAND
 	_player = get_parent().get_parent() as PlayerController
 	_equipment = _player.get_node_or_null("Equipment") as EquipmentComponent if _player != null else null
 	_hotbar = _player.get_node_or_null("Hotbar") as HotbarComponent if _player != null else null
@@ -29,6 +34,7 @@ func _process(delta: float) -> void:
 		return
 	_attack_remaining = maxf(_attack_remaining - delta, 0.0)
 	rotation = get_swing_angle()
+	position = get_hand_position()
 	queue_redraw()
 
 
@@ -42,7 +48,8 @@ func is_attack_animating() -> bool:
 
 func _on_visual_state_changed(_is_combat_ready: bool) -> void:
 	_attack_remaining = 0.0
-	rotation = 0.0
+	rotation = deg_to_rad(REST_ANGLE)
+	position = REST_HAND
 	queue_redraw()
 
 
@@ -53,6 +60,7 @@ func _on_equipment_changed() -> void:
 func _on_attack_requested(_direction: Vector2) -> void:
 	_attack_remaining = ATTACK_DURATION
 	rotation = get_swing_angle()
+	position = get_hand_position()
 	queue_redraw()
 
 
@@ -70,8 +78,8 @@ func _draw() -> void:
 	if definition.icon != null:
 		var texture_size: Vector2 = definition.icon.get_size()
 		var draw_size := texture_size * (34.0 / maxf(texture_size.x, 1.0))
-		draw_texture_rect(definition.icon, Rect2(Vector2(9.0, 0.0) - definition.held_grip * draw_size, draw_size), false)
-		draw_circle(Vector2(10.0, 0.0), 2.5, FIST_COLOR)
+		draw_texture_rect(definition.icon, Rect2(-definition.held_grip * draw_size, draw_size), false)
+		draw_circle(Vector2.ZERO, 2.5, FIST_COLOR)
 		return
 	var item_color: Color = definition.world_color
 	draw_line(Vector2(7, 0), Vector2(25 + extension, 0), HANDLE_COLOR, 4.0, true)
@@ -79,8 +87,18 @@ func _draw() -> void:
 
 func get_swing_angle() -> float:
 	if not is_attack_animating():
-		return 0.0
+		return deg_to_rad(REST_ANGLE)
 	var progress := 1.0 - _attack_remaining / ATTACK_DURATION
-	if progress < 0.7:
-		return lerpf(deg_to_rad(-65.0), deg_to_rad(50.0), smoothstep(0.0, 0.7, progress))
-	return lerpf(deg_to_rad(50.0), 0.0, smoothstep(0.7, 1.0, progress))
+	if progress < 0.15:
+		return deg_to_rad(lerpf(REST_ANGLE, -125.0, smoothstep(0.0, 0.15, progress)))
+	if progress < 0.65:
+		return deg_to_rad(lerpf(-125.0, 15.0, smoothstep(0.15, 0.65, progress)))
+	return deg_to_rad(lerpf(15.0, REST_ANGLE, smoothstep(0.65, 1.0, progress)))
+
+
+func get_hand_position() -> Vector2:
+	if not is_attack_animating():
+		return REST_HAND
+	var progress := 1.0 - _attack_remaining / ATTACK_DURATION
+	var reach := smoothstep(0.15, 0.6, progress) if progress < 0.65 else 1.0 - smoothstep(0.65, 1.0, progress)
+	return REST_HAND.lerp(EXTENDED_HAND, reach)
