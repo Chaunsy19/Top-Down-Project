@@ -18,7 +18,7 @@ In the TileMap palette, each atlas column is one terrain and its eight rows are 
 
 ## Soft terrain blending
 
-`TerrainBlendOverlay` adds a ten-pixel transition along every cardinal tile boundary. It samples the neighbor's matching opposite edge, so the pixels on both sides of a boundary meet before feathering inward. Variations of the same terrain crossfade equally; different terrains use this natural layering order:
+`TerrainBlendOverlay` adds a ten-pixel transition along every cardinal tile boundary. It samples the neighbor's matching opposite edge, so the pixels on both sides of a boundary meet before feathering inward. Variations of the same terrain crossfade first, then actual terrain boundaries are composited on top so those side blends cannot cut square notches into shoreline corners. When several terrain types meet, higher-priority terrain is drawn last. Different terrains use this natural layering order:
 
 `deep water → shallow water → sand → grassy dirt → grass`
 

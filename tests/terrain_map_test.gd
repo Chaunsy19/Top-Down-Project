@@ -20,7 +20,9 @@ func _run_tests() -> void:
 	for cell in terrain.get_used_cells():
 		used_variations[terrain.get_cell_atlas_coords(cell).y] = true
 	_assert(used_variations.size() > 1, "Runtime terrain painting should apply multiple deterministic texture variations.")
-	_assert(terrain.get_node_or_null("TerrainBlendOverlay") is TerrainBlendOverlay, "The starter island should include its soft terrain-blend overlay.")
+	var blend_overlay := terrain.get_node_or_null("TerrainBlendOverlay") as TerrainBlendOverlay
+	_assert(blend_overlay != null, "The starter island should include its soft terrain-blend overlay.")
+	_assert(_blend_layers_keep_boundaries_on_top(terrain, blend_overlay), "Terrain boundaries should render after same-terrain variation blends so tile corners remain continuous.")
 	var atlas_source := terrain.tile_set.get_source(0) as TileSetAtlasSource
 	_assert(atlas_source != null and atlas_source.get_tiles_count() == 40, "Five terrains should each expose eight paintable tile variations.")
 	var expected_terrains := [
@@ -88,6 +90,30 @@ func _blend_edges_sample_neighbor_boundaries() -> bool:
 		and is_equal_approx(neighbor_left_edge.b, east_overlay_boundary.b)
 		and east_overlay_boundary.a > 0.99
 	)
+
+
+func _blend_layers_keep_boundaries_on_top(terrain: TerrainMap, overlay: TerrainBlendOverlay) -> bool:
+	if overlay == null:
+		return false
+	var found_mixed_cell := false
+	for cell in terrain.get_used_cells():
+		var found_same := false
+		var found_boundary := false
+		var boundary_started := false
+		var valid_order := true
+		for layer in overlay.get_blend_layers(cell):
+			if layer.is_same_terrain:
+				found_same = true
+				if boundary_started:
+					valid_order = false
+			else:
+				found_boundary = true
+				boundary_started = true
+		if found_same and found_boundary:
+			found_mixed_cell = true
+			if not valid_order:
+				return false
+	return found_mixed_cell
 
 
 func _find_shallow_deep_boundary(terrain: TerrainMap, world: GridWorld) -> Array[Vector2i]:

@@ -2,6 +2,11 @@
 
 All notable project changes are recorded here by milestone.
 
+### Smoother terrain-blend corners
+
+- Changed terrain overlay compositing so same-terrain variation blends render beneath actual terrain transitions instead of cutting notches into their corners.
+- Ordered multi-terrain corners by blend priority for consistent, continuous shoreline edges.
+
 ### Click-per-strike harvesting
 
 - Changed resource harvesting from held progress to one damage strike per left-click.

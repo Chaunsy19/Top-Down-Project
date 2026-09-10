@@ -25,21 +25,45 @@ func _draw() -> void:
 		return
 	var half_tile := Vector2.ONE * TILE_SIZE * 0.5
 	for cell in _terrain_map.get_used_cells():
-		var current_priority := _terrain_map.get_blend_priority(cell)
-		var current_terrain := _terrain_map.get_terrain_id(cell)
-		for neighbor_definition in NEIGHBORS:
-			var neighbor_cell: Vector2i = cell + neighbor_definition.offset
-			var neighbor_priority := _terrain_map.get_blend_priority(neighbor_cell)
-			if neighbor_priority < 0:
-				continue
-			var is_same_terrain := _terrain_map.get_terrain_id(neighbor_cell) == current_terrain
-			if not is_same_terrain and neighbor_priority <= current_priority:
-				continue
-			var neighbor_atlas := _terrain_map.get_cell_atlas_coords(neighbor_cell)
-			if neighbor_atlas.x < 0 or neighbor_atlas.y < 0:
-				continue
-			var direction: int = neighbor_definition.direction
+		for layer in get_blend_layers(cell):
+			var neighbor_atlas: Vector2i = layer.atlas
+			var direction: int = layer.direction
 			var source_position := Vector2(neighbor_atlas.x * TILE_SIZE, (neighbor_atlas.y * BLEND_DIRECTION_COUNT + direction) * TILE_SIZE)
 			var destination := Rect2(_terrain_map.map_to_local(cell) - half_tile, Vector2.ONE * TILE_SIZE)
-			var modulation := Color(1.0, 1.0, 1.0, 0.5) if is_same_terrain else Color.WHITE
+			var modulation := Color(1.0, 1.0, 1.0, 0.5) if layer.is_same_terrain else Color.WHITE
 			draw_texture_rect_region(BLEND_TEXTURE, destination, Rect2(source_position, Vector2.ONE * TILE_SIZE), modulation)
+
+
+func get_blend_layers(cell: Vector2i) -> Array[Dictionary]:
+	var layers: Array[Dictionary] = []
+	if _terrain_map == null:
+		return layers
+	var current_priority := _terrain_map.get_blend_priority(cell)
+	var current_terrain := _terrain_map.get_terrain_id(cell)
+	for neighbor_definition in NEIGHBORS:
+		var neighbor_cell: Vector2i = cell + neighbor_definition.offset
+		var neighbor_priority := _terrain_map.get_blend_priority(neighbor_cell)
+		if neighbor_priority < 0:
+			continue
+		var is_same_terrain := _terrain_map.get_terrain_id(neighbor_cell) == current_terrain
+		if not is_same_terrain and neighbor_priority <= current_priority:
+			continue
+		var neighbor_atlas := _terrain_map.get_cell_atlas_coords(neighbor_cell)
+		if neighbor_atlas.x < 0 or neighbor_atlas.y < 0:
+			continue
+		layers.append({
+			"atlas": neighbor_atlas,
+			"direction": int(neighbor_definition.direction),
+			"is_same_terrain": is_same_terrain,
+			"priority": neighbor_priority,
+		})
+	layers.sort_custom(_sort_blend_layers)
+	return layers
+
+
+func _sort_blend_layers(left: Dictionary, right: Dictionary) -> bool:
+	if left.is_same_terrain != right.is_same_terrain:
+		return left.is_same_terrain
+	if left.priority != right.priority:
+		return left.priority < right.priority
+	return left.direction < right.direction
