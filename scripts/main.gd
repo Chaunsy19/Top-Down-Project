@@ -4,6 +4,9 @@ extends Node
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	GameState.set_state(GameState.State.FOUNDATION_TEST)
+	var ocean := preload("res://scripts/world/ocean_ambience.gd").new()
+	ocean.name = "OceanAmbience"
+	add_child(ocean)
 
 
 func _unhandled_input(event: InputEvent) -> void:

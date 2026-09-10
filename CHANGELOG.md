@@ -230,3 +230,10 @@ All notable project changes are recorded here by milestone.
 - Cropped transparent padding through AtlasTexture resources without modifying the source images; added item-defined grip positioning.
 - Replaced the placeholder held-tool motion with a 0.24-second angular sweep, followed by a return to the mouse-aimed idle pose. Explicit pause freezes the animation.
 - Verified tool visuals, contextual action mode, hotbar, and inventory suites. Existing Godot startup/shutdown warnings remain.
+
+### Deep-water ocean ambience
+
+- Added the supplied looping ocean MP3 within a 10-tile circular radius of deep-water tiles.
+- Added 2.5-second fade-in/out, smooth fade reversal, and one shared ambience voice at -16 dB maximum.
+- Queries nearby terrain every 0.2 seconds and respects live menus and explicit pause.
+- Ocean ambience and smoke suites pass, including distance boundary, shallow-water exclusion, looping, fade reversal, silent stop, and main-scene integration.

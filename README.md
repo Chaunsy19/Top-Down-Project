@@ -179,3 +179,9 @@ Automated check: `godot --headless --path . --script res://tests/armor_slots_tes
 The axe and pickaxe use the supplied pixel art in inventory, hotbar, dropped items, and the player's hand. Select the assigned hotbar slot to draw the tool; it follows mouse aim continuously. Each strike sweeps the tool through a short arc and returns it to its aimed pose. Selecting the active slot again holsters it. The swing is visual feedback; damage remains one strike per click.
 
 Manual check: equip each tool, aim around the player, click to swing or harvest, and toggle the active hotbar slot to hide it. Drop and pick up the tool to inspect its world icon. Automated check: `godot --headless --path . --script res://tests/tool_visual_test.gd`.
+
+## Ocean ambience
+
+The supplied ocean track loops when the player is within 10 tiles (center-to-center, circular distance) of deep water. It fades in and out over 2.5 seconds at a maximum of -16 dB. Shallow water alone does not trigger it, and nearby water tiles share one audio player. Menus remain live; explicit pause freezes ambience playback and fading. Radius, fade time, and volume are exported on `OceanAmbience`.
+
+Manual check: walk toward deep water, listen for the fade-in, then move more than 10 tiles away and listen for the fade-out. Reverse direction mid-fade to check the smooth transition. Automated check: `godot --headless --path . --script res://tests/ocean_ambience_test.gd`.
