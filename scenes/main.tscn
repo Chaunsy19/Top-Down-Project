@@ -1,34 +1,34 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene format=3 uid="uid://b4apd0jckqaed"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://scenes/test/foundation_test.tscn" id="2_test"]
+[ext_resource type="Script" uid="uid://b17psjpm4sa7g" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://cprqrxydgaasq" path="res://scenes/test/foundation_test.tscn" id="2_test"]
 [ext_resource type="PackedScene" path="res://ui/debug/debug_overlay.tscn" id="3_debug"]
 [ext_resource type="PackedScene" path="res://ui/inventory/inventory_ui.tscn" id="4_inventory"]
 [ext_resource type="PackedScene" path="res://ui/crafting/crafting_ui.tscn" id="5_crafting"]
-[ext_resource type="PackedScene" path="res://ui/survival/survival_hud.tscn" id="6_survival"]
+[ext_resource type="PackedScene" uid="uid://cecsg2vgpx5k1" path="res://ui/survival/survival_hud.tscn" id="6_survival"]
 [ext_resource type="PackedScene" path="res://ui/hotbar/hotbar_ui.tscn" id="7_hotbar"]
-[ext_resource type="Script" path="res://scripts/building/building_system.gd" id="8_building"]
+[ext_resource type="Script" uid="uid://bx0wevb5w38r0" path="res://scripts/building/building_system.gd" id="8_building"]
 [ext_resource type="PackedScene" path="res://ui/building/build_ui.tscn" id="9_build_ui"]
 [ext_resource type="PackedScene" path="res://ui/character/character_ui.tscn" id="10_character_ui"]
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=117440596]
 script = ExtResource("1_main")
 
-[node name="FoundationTest" parent="." instance=ExtResource("2_test")]
+[node name="FoundationTest" parent="." unique_id=1411015978 instance=ExtResource("2_test")]
 
-[node name="DebugOverlay" parent="." instance=ExtResource("3_debug")]
+[node name="DebugOverlay" parent="." unique_id=1608896930 instance=ExtResource("3_debug")]
 
-[node name="InventoryUI" parent="." instance=ExtResource("4_inventory")]
+[node name="InventoryUI" parent="." unique_id=95429150 instance=ExtResource("4_inventory")]
 
-[node name="CraftingUI" parent="." instance=ExtResource("5_crafting")]
+[node name="CraftingUI" parent="." unique_id=691951618 instance=ExtResource("5_crafting")]
 
-[node name="SurvivalHUD" parent="." instance=ExtResource("6_survival")]
+[node name="SurvivalHUD" parent="." unique_id=1260471358 instance=ExtResource("6_survival")]
 
-[node name="CharacterUI" parent="." instance=ExtResource("10_character_ui")]
+[node name="CharacterUI" parent="." unique_id=1507101784 instance=ExtResource("10_character_ui")]
 
-[node name="HotbarUI" parent="." instance=ExtResource("7_hotbar")]
+[node name="HotbarUI" parent="." unique_id=1303470530 instance=ExtResource("7_hotbar")]
 
-[node name="BuildingSystem" type="Node2D" parent="."]
+[node name="BuildingSystem" type="Node2D" parent="." unique_id=216467696]
 script = ExtResource("8_building")
 
-[node name="BuildUI" parent="." instance=ExtResource("9_build_ui")]
+[node name="BuildUI" parent="." unique_id=485731187 instance=ExtResource("9_build_ui")]

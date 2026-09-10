@@ -3,7 +3,7 @@ extends Node2D
 const FIST_COLOR := Color("#d6a957")
 const HANDLE_COLOR := Color("#65402a")
 const ATTACK_DURATION := 0.32
-const REST_ANGLE := -105.0
+const REST_ANGLE := -85.0
 const REST_HAND := Vector2(3.0, 10.0)
 const EXTENDED_HAND := Vector2(16.0, 2.0)
 

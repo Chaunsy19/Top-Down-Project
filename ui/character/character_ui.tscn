@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://odjq47id4uvj"]
 
-[ext_resource type="Script" path="res://scripts/ui/character_ui.gd" id="1_ui"]
-[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
+[ext_resource type="Script" uid="uid://cf2ghx16tyu3p" path="res://scripts/ui/character_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://cwc8itmee1w3q" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
 bg_color = Color(0.075, 0.095, 0.09, 0.97)
@@ -38,11 +38,11 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
-[node name="CharacterUI" type="CanvasLayer"]
+[node name="CharacterUI" type="CanvasLayer" unique_id=529306665]
 layer = 22
 script = ExtResource("1_ui")
 
-[node name="Root" type="Control" parent="."]
+[node name="Root" type="Control" parent="." unique_id=277505244]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -51,194 +51,195 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="HealthPanel" type="PanelContainer" parent="Root"]
+[node name="HealthPanel" type="PanelContainer" parent="Root" unique_id=131336330]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(380, 330)
-offset_left = 420.0
-offset_top = 40.0
-offset_right = 800.0
-offset_bottom = 450.0
-mouse_filter = 0
+layout_mode = 0
+offset_left = 679.0
+offset_top = 134.0
+offset_right = 1059.0
+offset_bottom = 544.0
+scale = Vector2(0.8, 0.8)
 theme_override_styles/panel = SubResource("StylePanel")
 
-[node name="Margin" type="MarginContainer" parent="Root/HealthPanel"]
+[node name="Margin" type="MarginContainer" parent="Root/HealthPanel" unique_id=692662629]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 14
 
-[node name="Layout" type="VBoxContainer" parent="Root/HealthPanel/Margin"]
+[node name="Layout" type="VBoxContainer" parent="Root/HealthPanel/Margin" unique_id=803802610]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Header" type="HBoxContainer" parent="Root/HealthPanel/Margin/Layout"]
+[node name="Header" type="HBoxContainer" parent="Root/HealthPanel/Margin/Layout" unique_id=2053769046]
 layout_mode = 2
 mouse_filter = 0
 script = ExtResource("2_drag")
 drag_target_path = NodePath("../../..")
 
-[node name="Title" type="Label" parent="Root/HealthPanel/Margin/Layout/Header"]
+[node name="Title" type="Label" parent="Root/HealthPanel/Margin/Layout/Header" unique_id=1124191300]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 20
 text = "BLOOD & INJURIES"
 
-[node name="HealthCloseButton" type="Button" parent="Root/HealthPanel/Margin/Layout/Header"]
+[node name="HealthCloseButton" type="Button" parent="Root/HealthPanel/Margin/Layout/Header" unique_id=176287851]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 focus_mode = 0
 text = "×"
 
-[node name="Line" type="HSeparator" parent="Root/HealthPanel/Margin/Layout"]
+[node name="Line" type="HSeparator" parent="Root/HealthPanel/Margin/Layout" unique_id=1661715457]
 layout_mode = 2
 
-[node name="HealthLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+[node name="HealthLabel" type="Label" parent="Root/HealthPanel/Margin/Layout" unique_id=1870309750]
 layout_mode = 2
 text = "BLOOD"
 
-[node name="BloodBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+[node name="BloodBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout" unique_id=1274783911]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
-value = 100.0
-show_percentage = false
 theme_override_styles/background = SubResource("StyleBarBackground")
 theme_override_styles/fill = SubResource("StyleHealth")
+value = 100.0
+show_percentage = false
 
-[node name="HungerLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+[node name="HungerLabel" type="Label" parent="Root/HealthPanel/Margin/Layout" unique_id=180784996]
 layout_mode = 2
 text = "HUNGER"
 
-[node name="HungerBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+[node name="HungerBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout" unique_id=653734301]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
-value = 100.0
-show_percentage = false
 theme_override_styles/background = SubResource("StyleBarBackground")
 theme_override_styles/fill = SubResource("StyleNeed")
+value = 100.0
+show_percentage = false
 
-[node name="RestLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+[node name="RestLabel" type="Label" parent="Root/HealthPanel/Margin/Layout" unique_id=845620959]
 layout_mode = 2
 text = "REST"
 
-[node name="RestBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+[node name="RestBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout" unique_id=787872805]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
-value = 100.0
-show_percentage = false
 theme_override_styles/background = SubResource("StyleBarBackground")
 theme_override_styles/fill = SubResource("StyleNeed")
+value = 100.0
+show_percentage = false
 
-[node name="ConditionLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+[node name="ConditionLabel" type="Label" parent="Root/HealthPanel/Margin/Layout" unique_id=1589066682]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
 text = "Stable"
 
-[node name="EquipmentPanel" type="PanelContainer" parent="Root"]
+[node name="EquipmentPanel" type="PanelContainer" parent="Root" unique_id=240261462]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(400, 320)
-offset_left = 700.0
-offset_top = 145.0
-offset_right = 1100.0
-offset_bottom = 465.0
-mouse_filter = 0
+layout_mode = 0
+offset_left = 107.0
+offset_top = 125.0
+offset_right = 507.0
+offset_bottom = 445.0
 theme_override_styles/panel = SubResource("StylePanel")
 
-[node name="Margin" type="MarginContainer" parent="Root/EquipmentPanel"]
+[node name="Margin" type="MarginContainer" parent="Root/EquipmentPanel" unique_id=227703048]
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 14
 
-[node name="Layout" type="VBoxContainer" parent="Root/EquipmentPanel/Margin"]
+[node name="Layout" type="VBoxContainer" parent="Root/EquipmentPanel/Margin" unique_id=708735229]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Header" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="Header" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout" unique_id=744170021]
 layout_mode = 2
 mouse_filter = 0
 script = ExtResource("2_drag")
 drag_target_path = NodePath("../../..")
 
-[node name="Title" type="Label" parent="Root/EquipmentPanel/Margin/Layout/Header"]
+[node name="Title" type="Label" parent="Root/EquipmentPanel/Margin/Layout/Header" unique_id=519551595]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 20
 text = "EQUIPMENT"
 
-[node name="EquipmentCloseButton" type="Button" parent="Root/EquipmentPanel/Margin/Layout/Header"]
+[node name="EquipmentCloseButton" type="Button" parent="Root/EquipmentPanel/Margin/Layout/Header" unique_id=1581358130]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 focus_mode = 0
 text = "×"
 
-[node name="Line" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="Line" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout" unique_id=981719146]
 layout_mode = 2
 
-[node name="HeadRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="HeadRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout" unique_id=1099437462]
 layout_mode = 2
 
-[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow"]
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow" unique_id=1548047878]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "HEAD"
 
-[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow"]
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow" unique_id=1035514182]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
 text = "Empty — reserved"
 
-[node name="BodyRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="BodyRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout" unique_id=1721562508]
 layout_mode = 2
 
-[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow"]
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow" unique_id=1099786910]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "BODY"
 
-[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow"]
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow" unique_id=1821551836]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
 text = "Empty — reserved"
 
-[node name="LegsRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="LegsRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout" unique_id=1696782579]
 layout_mode = 2
 
-[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow"]
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow" unique_id=1034287778]
 custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
 text = "LEGS"
 
-[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow"]
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow" unique_id=1472587771]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
 text = "Empty — reserved"
 
-[node name="HandLine" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="HandLine" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout" unique_id=1380097216]
 layout_mode = 2
 
-[node name="HandTitle" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="HandTitle" type="Label" parent="Root/EquipmentPanel/Margin/Layout" unique_id=198847965]
 layout_mode = 2
 text = "HELD ITEM"
 
-[node name="HandItemLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="HandItemLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout" unique_id=2061904299]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
 theme_override_font_sizes/font_size = 18
 text = "Empty"
 
-[node name="HandDetailLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+[node name="HandDetailLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout" unique_id=127394342]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3

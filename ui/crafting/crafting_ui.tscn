@@ -1,16 +1,16 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://b4v3jdm17u05b"]
 
-[ext_resource type="Script" path="res://scripts/crafting/crafting_ui.gd" id="1_ui"]
-[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
+[ext_resource type="Script" uid="uid://dd84b2gqixjec" path="res://scripts/crafting/crafting_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://cwc8itmee1w3q" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_backdrop"]
 bg_color = Color(0.02, 0.025, 0.024, 0.72)
 
-[node name="CraftingUI" type="CanvasLayer"]
+[node name="CraftingUI" type="CanvasLayer" unique_id=127709173]
 layer = 20
 script = ExtResource("1_ui")
 
-[node name="Overlay" type="Control" parent="."]
+[node name="Overlay" type="Control" parent="." unique_id=2067305284]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Backdrop" type="Panel" parent="Overlay"]
+[node name="Backdrop" type="Panel" parent="Overlay" unique_id=297554432]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,39 +29,40 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_backdrop")
 
-[node name="Panel" type="PanelContainer" parent="Overlay"]
+[node name="Panel" type="PanelContainer" parent="Overlay" unique_id=215866980]
 custom_minimum_size = Vector2(830, 540)
 layout_mode = 0
-offset_left = 225.0
-offset_top = 90.0
-offset_right = 1055.0
-offset_bottom = 630.0
+offset_left = 291.0
+offset_top = 104.0
+offset_right = 1121.0
+offset_bottom = 644.0
+scale = Vector2(0.8, 0.8)
 
-[node name="Margin" type="MarginContainer" parent="Overlay/Panel"]
+[node name="Margin" type="MarginContainer" parent="Overlay/Panel" unique_id=790951913]
 layout_mode = 2
 theme_override_constants/margin_left = 18
 theme_override_constants/margin_top = 14
 theme_override_constants/margin_right = 18
 theme_override_constants/margin_bottom = 14
 
-[node name="Layout" type="VBoxContainer" parent="Overlay/Panel/Margin"]
+[node name="Layout" type="VBoxContainer" parent="Overlay/Panel/Margin" unique_id=1192722141]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Header" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout"]
+[node name="Header" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout" unique_id=595664657]
 layout_mode = 2
 mouse_filter = 0
 script = ExtResource("2_drag")
 drag_target_path = NodePath("../../..")
 
-[node name="Title" type="Label" parent="Overlay/Panel/Margin/Layout/Header"]
+[node name="Title" type="Label" parent="Overlay/Panel/Margin/Layout/Header" unique_id=1616145027]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
 theme_override_font_sizes/font_size = 22
 text = "CRAFTING"
 
-[node name="ContextLabel" type="Label" parent="Overlay/Panel/Margin/Layout/Header"]
+[node name="ContextLabel" type="Label" parent="Overlay/Panel/Margin/Layout/Header" unique_id=2053271512]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -69,100 +70,100 @@ theme_override_colors/font_color = Color(0.61, 0.7, 0.65, 1)
 text = "HAND CRAFTING"
 horizontal_alignment = 2
 
-[node name="CloseButton" type="Button" parent="Overlay/Panel/Margin/Layout/Header"]
+[node name="CloseButton" type="Button" parent="Overlay/Panel/Margin/Layout/Header" unique_id=673883078]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 focus_mode = 0
 text = "×"
 
-[node name="HeaderLine" type="HSeparator" parent="Overlay/Panel/Margin/Layout"]
+[node name="HeaderLine" type="HSeparator" parent="Overlay/Panel/Margin/Layout" unique_id=319488207]
 layout_mode = 2
 
-[node name="Columns" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout"]
+[node name="Columns" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout" unique_id=2025156500]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="RecipeScroll" type="ScrollContainer" parent="Overlay/Panel/Margin/Layout/Columns"]
+[node name="RecipeScroll" type="ScrollContainer" parent="Overlay/Panel/Margin/Layout/Columns" unique_id=1270055482]
 custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 horizontal_scroll_mode = 0
 
-[node name="RecipeList" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns/RecipeScroll"]
+[node name="RecipeList" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns/RecipeScroll" unique_id=535790339]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="Divider" type="VSeparator" parent="Overlay/Panel/Margin/Layout/Columns"]
+[node name="Divider" type="VSeparator" parent="Overlay/Panel/Margin/Layout/Columns" unique_id=891630171]
 layout_mode = 2
 
-[node name="Details" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns"]
+[node name="Details" type="VBoxContainer" parent="Overlay/Panel/Margin/Layout/Columns" unique_id=1012536549]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 9
 
-[node name="RecipeName" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="RecipeName" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=1774264442]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
 theme_override_font_sizes/font_size = 20
 text = "Select a recipe"
 
-[node name="Description" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Description" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=805274205]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
 text = "Recipe details"
 autowrap_mode = 2
 
-[node name="Ingredients" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Ingredients" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=1011588790]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.78, 0.72, 1)
 text = "INGREDIENTS"
 
-[node name="Requirement" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Requirement" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=2144663171]
 unique_name_in_owner = true
 layout_mode = 2
 text = "WORKSTATION"
 
-[node name="Result" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Result" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=1366926219]
 unique_name_in_owner = true
 layout_mode = 2
 text = "RESULT"
 
-[node name="CraftTime" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="CraftTime" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=587771390]
 unique_name_in_owner = true
 layout_mode = 2
 text = "CRAFT TIME"
 
-[node name="Spacer" type="Control" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Spacer" type="Control" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=1014206805]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Status" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="Status" type="Label" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=727200511]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
 text = "Select a recipe."
 autowrap_mode = 2
 
-[node name="ProgressBar" type="ProgressBar" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="ProgressBar" type="ProgressBar" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=277625959]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 show_percentage = false
 
-[node name="CraftButton" type="Button" parent="Overlay/Panel/Margin/Layout/Columns/Details"]
+[node name="CraftButton" type="Button" parent="Overlay/Panel/Margin/Layout/Columns/Details" unique_id=780404708]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 focus_mode = 0
 text = "CRAFT"
 
-[node name="Help" type="Label" parent="Overlay/Panel/Margin/Layout"]
+[node name="Help" type="Label" parent="Overlay/Panel/Margin/Layout" unique_id=118891975]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.62, 0.59, 1)
 theme_override_font_sizes/font_size = 11

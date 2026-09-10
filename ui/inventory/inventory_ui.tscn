@@ -1,16 +1,13 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://csvnod722ly2c"]
 
-[ext_resource type="Script" path="res://scripts/inventory/inventory_ui.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://bco5fnf6rdxvp" path="res://scripts/inventory/inventory_ui.gd" id="1_ui"]
 [ext_resource type="PackedScene" path="res://ui/inventory/inventory_panel.tscn" id="2_panel"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_backdrop"]
-bg_color = Color(0.04, 0.055, 0.05, 0.72)
-
-[node name="InventoryUI" type="CanvasLayer"]
+[node name="InventoryUI" type="CanvasLayer" unique_id=1494511104]
 layer = 20
 script = ExtResource("1_ui")
 
-[node name="Overlay" type="Control" parent="."]
+[node name="Overlay" type="Control" parent="." unique_id=375539331]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -20,23 +17,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="Backdrop" type="Panel" parent="Overlay"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_backdrop")
-
-[node name="ContainerPanel" parent="Overlay" instance=ExtResource("2_panel")]
+[node name="ContainerPanel" parent="Overlay" unique_id=730596957 instance=ExtResource("2_panel")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 410)
 layout_mode = 0
-offset_left = 86.0
-offset_top = 155.0
-offset_right = 458.0
-offset_bottom = 565.0
+offset_left = 195.0
+offset_top = 153.0
+offset_right = 567.0
+offset_bottom = 678.0
+scale = Vector2(0.8, 0.8)
 panel_title = "SUPPLY CRATE"
 columns = 4
 slots_minimum_height = 215.0
@@ -44,19 +33,18 @@ show_currency_footer = false
 show_drop_button = false
 show_consume_button = false
 
-[node name="PlayerPanel" parent="Overlay" instance=ExtResource("2_panel")]
+[node name="PlayerPanel" parent="Overlay" unique_id=1033866770 instance=ExtResource("2_panel")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(540, 580)
 layout_mode = 0
-offset_left = 536.0
-offset_top = 70.0
-offset_right = 1094.0
-offset_bottom = 650.0
-panel_title = "INVENTORY"
-columns = 6
+offset_left = 560.0
+offset_top = 108.0
+offset_right = 1118.0
+offset_bottom = 688.0
+scale = Vector2(0.8, 0.8)
 slots_minimum_height = 360.0
 
-[node name="NotificationLabel" type="Label" parent="."]
+[node name="NotificationLabel" type="Label" parent="." unique_id=1024215610]
 unique_name_in_owner = true
 offset_left = 440.0
 offset_top = 26.0
@@ -68,7 +56,7 @@ theme_override_font_sizes/font_size = 18
 text = "Item collected"
 horizontal_alignment = 1
 
-[node name="NotificationTimer" type="Timer" parent="."]
+[node name="NotificationTimer" type="Timer" parent="." unique_id=361225065]
 unique_name_in_owner = true
 wait_time = 2.0
 one_shot = true

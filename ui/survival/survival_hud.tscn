@@ -1,11 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://cecsg2vgpx5k1"]
 
-[ext_resource type="Script" path="res://scripts/ui/survival_hud.gd" id="1_hud"]
-[ext_resource type="Texture2D" path="res://assets/Icons/backpack.png" id="2_backpack"]
-[ext_resource type="Texture2D" path="res://assets/Icons/blood.png" id="3_health"]
-[ext_resource type="Texture2D" path="res://assets/Icons/warrior-helmet-lv3.png" id="4_equipment"]
-[ext_resource type="Texture2D" path="res://assets/Icons/ham.png" id="5_hunger"]
-[ext_resource type="Texture2D" path="res://assets/Icons/bed.png" id="6_rest"]
+[ext_resource type="Script" uid="uid://ctcthkxngg324" path="res://scripts/ui/survival_hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://cuv37m1m7ednu" path="res://assets/Icons/backpack.png" id="2_backpack"]
+[ext_resource type="Texture2D" uid="uid://7nj1gmvderod" path="res://assets/Icons/health.png" id="3_health"]
+[ext_resource type="Texture2D" uid="uid://qxq5rogmjgi2" path="res://assets/Icons/warrior-helmet-lv3.png" id="4_equipment"]
+[ext_resource type="Texture2D" uid="uid://cq6ikc2f7c3d7" path="res://assets/Icons/ham.png" id="5_hunger"]
+[ext_resource type="Texture2D" uid="uid://duy4gkbl7pdvk" path="res://assets/Icons/bed.png" id="6_rest"]
 
 [sub_resource type="StyleBoxFlat" id="StylePanel"]
 bg_color = Color(0.055, 0.075, 0.07, 0.9)
@@ -21,39 +21,40 @@ corner_radius_bottom_left = 6
 shadow_color = Color(0, 0, 0, 0.45)
 shadow_size = 8
 
-[node name="SurvivalHUD" type="CanvasLayer"]
+[node name="SurvivalHUD" type="CanvasLayer" unique_id=251735707]
 layer = 30
 script = ExtResource("1_hud")
 
-[node name="Dock" type="PanelContainer" parent="."]
-anchors_preset = 8
+[node name="Dock" type="PanelContainer" parent="." unique_id=2033208997]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -356.0
-offset_top = -116.0
-offset_right = -18.0
-offset_bottom = -18.0
+offset_left = -283.0
+offset_top = -95.0
+offset_right = 55.0
+offset_bottom = 9.0
 grow_horizontal = 0
 grow_vertical = 0
+scale = Vector2(0.8, 0.8)
 theme_override_styles/panel = SubResource("StylePanel")
 
-[node name="Margin" type="MarginContainer" parent="Dock"]
+[node name="Margin" type="MarginContainer" parent="Dock" unique_id=161065664]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 9
 
-[node name="Layout" type="VBoxContainer" parent="Dock/Margin"]
+[node name="Layout" type="VBoxContainer" parent="Dock/Margin" unique_id=1061631324]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TimeRow" type="HBoxContainer" parent="Dock/Margin/Layout"]
+[node name="TimeRow" type="HBoxContainer" parent="Dock/Margin/Layout" unique_id=813265352]
 layout_mode = 2
 
-[node name="TimeLabel" type="Label" parent="Dock/Margin/Layout/TimeRow"]
+[node name="TimeLabel" type="Label" parent="Dock/Margin/Layout/TimeRow" unique_id=902276930]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -61,58 +62,53 @@ theme_override_colors/font_color = Color(0.9, 0.78, 0.48, 1)
 theme_override_font_sizes/font_size = 15
 text = "Day 1  08:00"
 
-[node name="PeriodLabel" type="Label" parent="Dock/Margin/Layout/TimeRow"]
+[node name="PeriodLabel" type="Label" parent="Dock/Margin/Layout/TimeRow" unique_id=628797496]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
 text = "Daylight"
 
-[node name="ButtonRow" type="HBoxContainer" parent="Dock/Margin/Layout"]
+[node name="ButtonRow" type="HBoxContainer" parent="Dock/Margin/Layout" unique_id=1274852962]
 layout_mode = 2
-alignment = 2
 theme_override_constants/separation = 6
+alignment = 2
 
-[node name="InventoryButton" type="Button" parent="Dock/Margin/Layout/ButtonRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(54, 54)
-layout_mode = 2
-focus_mode = 0
-icon = ExtResource("2_backpack")
-icon_max_width = 38
-expand_icon = true
-
-[node name="HealthButton" type="Button" parent="Dock/Margin/Layout/ButtonRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(54, 54)
-layout_mode = 2
-focus_mode = 0
-icon = ExtResource("3_health")
-icon_max_width = 38
-expand_icon = true
-
-[node name="EquipmentButton" type="Button" parent="Dock/Margin/Layout/ButtonRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(54, 54)
-layout_mode = 2
-focus_mode = 0
-icon = ExtResource("4_equipment")
-icon_max_width = 38
-expand_icon = true
-
-[node name="HungerButton" type="Button" parent="Dock/Margin/Layout/ButtonRow"]
+[node name="HungerButton" type="Button" parent="Dock/Margin/Layout/ButtonRow" unique_id=882776314]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(54, 54)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("5_hunger")
-icon_max_width = 38
 expand_icon = true
 
-[node name="RestButton" type="Button" parent="Dock/Margin/Layout/ButtonRow"]
+[node name="RestButton" type="Button" parent="Dock/Margin/Layout/ButtonRow" unique_id=626588398]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(54, 54)
 layout_mode = 2
 focus_mode = 0
 icon = ExtResource("6_rest")
-icon_max_width = 38
+expand_icon = true
+
+[node name="HealthButton" type="Button" parent="Dock/Margin/Layout/ButtonRow" unique_id=1740148571]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("3_health")
+expand_icon = true
+
+[node name="EquipmentButton" type="Button" parent="Dock/Margin/Layout/ButtonRow" unique_id=764194764]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("4_equipment")
+expand_icon = true
+
+[node name="InventoryButton" type="Button" parent="Dock/Margin/Layout/ButtonRow" unique_id=695488119]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(54, 54)
+layout_mode = 2
+focus_mode = 0
+icon = ExtResource("2_backpack")
 expand_icon = true

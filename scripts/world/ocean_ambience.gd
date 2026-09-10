@@ -4,7 +4,7 @@ extends Node
 @export var stream: AudioStream = preload("res://assets/Sounds/Environment/TileProximity/ocean.mp3")
 @export_range(1.0, 50.0, 0.5) var proximity_tiles := 10.0
 @export_range(0.1, 10.0, 0.1) var fade_seconds := 2.5
-@export_range(-40.0, 0.0, 1.0) var maximum_volume_db := -16.0
+@export_range(-40.0, 0.0, 1.0) var maximum_volume_db := -1.0
 var audio: AudioStreamPlayer
 var terrain_maps: Array[TerrainMap] = []
 var player: Node2D
