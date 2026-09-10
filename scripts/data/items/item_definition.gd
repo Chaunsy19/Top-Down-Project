@@ -12,6 +12,11 @@ extends Resource
 @export var icon: Texture2D
 @export var tool_profile: Resource
 
+@export_group("Damage")
+@export_range(0.0, 10000.0, 0.5) var melee_damage := 5.0
+@export_range(0.0, 10000.0, 0.5) var tool_damage := 0.0
+@export var tool_damage_tags: Array[StringName] = []
+
 
 func has_category(category_id: StringName) -> bool:
 	return category_id in categories
@@ -33,4 +38,6 @@ func validate() -> PackedStringArray:
 		errors.append("Durable tool item '%s' must have a stack limit of one." % item_id)
 	if tool_profile != null:
 		errors.append_array(tool_profile.validate(item_id))
+	if tool_damage > 0.0 and tool_damage_tags.is_empty():
+		errors.append("Item '%s' has tool damage but no effective material tags." % item_id)
 	return errors

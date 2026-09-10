@@ -3,6 +3,7 @@ extends "res://scripts/interaction/interactable.gd"
 
 const WorldItemDropScene = preload("res://scenes/world/world_item_drop.tscn")
 const WorldItemDropScript = preload("res://scripts/world/world_item_drop.gd")
+const HealthComponentScript = preload("res://scripts/combat/health_component.gd")
 const DEPLETION_PERMANENT := 0
 const DEPLETION_RESPAWN := 1
 const DEPLETION_REGROW := 2
@@ -15,9 +16,9 @@ signal recovered()
 
 @export var definition: Resource
 
-var remaining_harvests := 0
 var harvest_progress := 0.0
 var recovery_remaining := 0.0
+var health: HealthComponentScript
 var _harvesting_actor: Node2D
 var _active_tool_stack: Resource
 var _random := RandomNumberGenerator.new()
@@ -47,7 +48,10 @@ func _ready() -> void:
 		return
 	display_name = "Stone Block" if definition.visual_kind == "rock" else definition.display_name
 	interaction_verb = "Harvest"
-	remaining_harvests = definition.max_harvests
+	health = HealthComponentScript.new()
+	add_child(health)
+	health.configure(definition.maximum_health, definition.damage_material_tags)
+	add_to_group("damageable")
 	_random.seed = hash("%s:%s:%s" % [definition.node_id, global_position.x, global_position.y])
 	if definition.visual_kind == "rock":
 		call_deferred("refresh_grid_connections")
@@ -89,14 +93,15 @@ func get_debug_state() -> String:
 	if definition == null:
 		return "Invalid definition"
 	if is_harvesting():
-		return "Harvesting %d%% | %d remaining" % [roundi(get_harvest_ratio() * 100.0), remaining_harvests]
+		return "Working %d%% | %.0f/%.0f HP" % [roundi(get_harvest_ratio() * 100.0), health.current_health, health.maximum_health]
 	if is_depleted():
 		if recovery_remaining > 0.0:
 			return "Depleted | recovers in %.1fs" % recovery_remaining
 		return "Depleted"
 	var tool_text := "Hands" if definition.required_tool_tags.is_empty() else _get_tool_requirement_name()
-	return "Ready | %d harvests | %s %d+ | %s" % [
-		remaining_harvests,
+	return "Ready | %.0f/%.0f HP | %s %d+ | %s" % [
+		health.current_health,
+		health.maximum_health,
 		String(definition.skill_id).capitalize(),
 		definition.required_skill_level,
 		tool_text,
@@ -108,7 +113,22 @@ func is_harvesting() -> bool:
 
 
 func is_depleted() -> bool:
-	return remaining_harvests <= 0
+	return health != null and health.is_depleted()
+
+
+func get_health_ratio() -> float:
+	return health.get_ratio() if health != null else 0.0
+
+
+func take_damage(amount: float, damage_kind: StringName = &"melee", effective_tags: Array = [], source: Node2D = null) -> float:
+	if health == null or is_depleted():
+		return 0.0
+	var applied := health.apply_damage(amount, damage_kind, effective_tags)
+	if applied > 0.0 and health.is_depleted():
+		_finish_depletion(source)
+	else:
+		_update_presentation()
+	return applied
 
 
 func get_harvest_ratio() -> float:
@@ -119,6 +139,10 @@ func get_harvest_ratio() -> float:
 
 
 func uses_hold_interaction() -> bool:
+	return true
+
+
+func prefers_utility_when_armed() -> bool:
 	return true
 
 
@@ -152,7 +176,7 @@ func has_required_tool(actor: Node2D) -> bool:
 
 
 func find_compatible_tool(actor: Node2D) -> Resource:
-	if not is_instance_valid(actor) or definition == null:
+	if not is_instance_valid(actor) or definition == null or definition.required_tool_tags.is_empty():
 		return null
 	var equipment := actor.get_node_or_null("Equipment")
 	if equipment == null:
@@ -180,7 +204,7 @@ func advance_simulation(delta: float) -> void:
 			return
 		harvest_progress += delta
 		if harvest_progress >= get_effective_harvest_time():
-			_complete_harvest()
+			_complete_work_strike()
 		else:
 			_update_presentation()
 	elif is_depleted() and recovery_remaining > 0.0:
@@ -222,19 +246,28 @@ func _perform_interaction(actor: Node2D) -> void:
 	_update_presentation()
 
 
-func _complete_harvest() -> void:
+func _complete_work_strike() -> void:
 	var actor := _harvesting_actor
 	var used_tool := _active_tool_stack
 	_harvesting_actor = null
 	_active_tool_stack = null
 	harvest_progress = 0.0
-	remaining_harvests = maxi(remaining_harvests - 1, 0)
+	var damage: float = definition.unarmed_work_damage
+	var damage_tags: Array[StringName] = definition.damage_material_tags
+	if used_tool != null and used_tool.item_definition != null:
+		damage = used_tool.item_definition.tool_damage
+		damage_tags = used_tool.item_definition.tool_damage_tags
+	var applied := take_damage(damage, &"tool", damage_tags, actor)
+	if applied > 0.0:
+		_wear_used_tool(actor, used_tool)
+	_update_presentation()
+
+
+func _finish_depletion(actor: Node2D) -> void:
 	var drops := _spawn_yields()
 	_award_experience(actor)
-	_wear_used_tool(actor, used_tool)
 	harvest_completed.emit(actor, drops, definition.experience_reward)
-	if is_depleted():
-		_begin_depletion()
+	_begin_depletion()
 	_update_presentation()
 
 
@@ -288,7 +321,7 @@ func _begin_depletion() -> void:
 
 
 func _recover() -> void:
-	remaining_harvests = definition.max_harvests
+	health.restore_full()
 	recovery_remaining = 0.0
 	visible = true
 	set_available(true)
@@ -315,7 +348,7 @@ func _update_presentation() -> void:
 		elif is_depleted():
 			status_label.text = "DEPLETED"
 		else:
-			status_label.text = "%d LEFT" % remaining_harvests
+			status_label.text = "%.0f / %.0f HP" % [health.current_health, health.maximum_health]
 	queue_redraw()
 
 
@@ -339,7 +372,10 @@ func _draw() -> void:
 		for berry_position in [Vector2(-9.0, -3.0), Vector2(7.0, -7.0), Vector2(10.0, 7.0)]:
 			draw_circle(berry_position, 3.0, definition.secondary_color)
 
-	if is_harvesting():
+	if not is_depleted() and health != null and health.current_health < health.maximum_health:
+		draw_rect(Rect2(-20.0, 28.0, 40.0, 5.0), Color("#16201c"))
+		draw_rect(Rect2(-19.0, 29.0, 38.0 * get_health_ratio(), 3.0), Color("#d86155"))
+	elif is_harvesting():
 		draw_rect(Rect2(-20.0, 28.0, 40.0, 5.0), Color("#16201c"))
 		draw_rect(Rect2(-19.0, 29.0, 38.0 * get_harvest_ratio(), 3.0), Color("#e6c36a"))
 

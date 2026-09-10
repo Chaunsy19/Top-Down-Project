@@ -22,7 +22,8 @@ func _run_tests() -> void:
 	var equipment := player.get_node("Equipment") as EquipmentComponent
 	var hotbar := player.get_node("Hotbar") as HotbarComponent
 	var tree := world.find_child("Tree", true, false) as HarvestableResourceNode
-	var terminal := world.get_node("TestTerminal")
+	var terminal := (load("res://scenes/world/test_terminal.tscn") as PackedScene).instantiate()
+	world.add_child(terminal)
 	var combat_visual := player.get_node("AimPivot/CombatStanceVisual")
 	var registry := root.get_node("ContentRegistry")
 
@@ -38,19 +39,19 @@ func _run_tests() -> void:
 	await physics_frame
 	await physics_frame
 
-	var initial_harvests := tree.remaining_harvests
+	var initial_health: float = tree.health.current_health
 	_assert(interactor.begin_primary_action_at(tree.get_interaction_point()), "Clicking a valid resource should use the selected hotbar tool.")
 	_assert(interactor.is_holding_primary_action() and tree.is_harvesting(), "Harvesting should enter the held-action state.")
 	tree._process(0.5)
 	_assert(is_zero_approx(tree.harvest_progress), "Harvest progress must not advance independently of the held action.")
 	interactor.continue_primary_action(tree.get_effective_harvest_time(player) * 0.5)
-	_assert(tree.harvest_progress > 0.0 and tree.remaining_harvests == initial_harvests, "A partial hold should advance without completing.")
+	_assert(tree.harvest_progress > 0.0 and tree.health.current_health == initial_health, "A partial hold should advance without applying a strike.")
 	interactor.end_primary_action()
 	_assert(not tree.is_harvesting() and is_zero_approx(tree.harvest_progress), "Releasing left click should cancel and reset partial work.")
 
 	_assert(interactor.begin_primary_action_on(tree), "A harvest should restart after cancellation.")
 	interactor.continue_primary_action(tree.get_effective_harvest_time(player) + 0.01)
-	_assert(tree.remaining_harvests == initial_harvests - 1, "Holding for the full duration should complete one harvest.")
+	_assert(tree.health.current_health == initial_health - 30.0, "Holding for the full duration should apply one axe work strike.")
 	interactor.end_primary_action()
 
 	var attacks: Array[Vector2] = []
@@ -67,6 +68,7 @@ func _run_tests() -> void:
 	_assert(hotbar.select_slot(0), "Selecting the active slot again should holster its item.")
 	_assert(player.are_weapons_holstered() and equipment.get_hand_stack() == null, "Hotbar holstering should clear combat readiness and the equipped hand.")
 	_assert(not combat_visual.is_stance_visible(), "Holstering from the hotbar should hide the held-item visual.")
+	terminal.global_position = player.global_position + Vector2.LEFT * 40.0
 	player.global_position = terminal.global_position + Vector2.RIGHT * 40.0
 	await physics_frame
 	await physics_frame

@@ -2,6 +2,13 @@
 
 All notable project changes are recorded here by milestone.
 
+### Health and typed damage foundation
+
+- Replaced resource harvest counts with reusable health, damage, depletion, and recovery state.
+- Added exported melee damage, tool damage, and effective material tags to item definitions; the stone axe starts at 30 wood tool damage and the pickaxe at 60 stone tool damage.
+- Set trees to 150 HP, stone nodes to 300 HP, and current wood buildables to 200 HP.
+- Added material-aware tool attacks, universal tool melee fallback, visible damage bars, destructible structures, and health restoration for regrowing resources.
+
 ## Milestone 7 — First base-building vertical slice
 
 - Added a validated, data-driven catalog for wood floors, wood walls, doors, storage, campfires, and sleeping spots.

@@ -79,6 +79,13 @@ func begin_primary_action_at(world_position: Vector2) -> bool:
 	return begin_primary_action_on(target)
 
 
+func begin_armed_primary_action_at(world_position: Vector2) -> bool:
+	var target := _find_target_at(world_position)
+	if target == null or not target.prefers_utility_when_armed():
+		return false
+	return begin_primary_action_on(target)
+
+
 func begin_primary_action_on(target: InteractableScript) -> bool:
 	if not is_target_in_range(target):
 		return false

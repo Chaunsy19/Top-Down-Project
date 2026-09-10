@@ -1,9 +1,12 @@
 class_name BuiltStructure
 extends "res://scripts/interaction/interactable.gd"
 
+const HealthComponentScript := preload("res://scripts/combat/health_component.gd")
+
 var definition: Resource
 var is_open := false
 var container_title := "STORAGE"
+var health: HealthComponentScript
 
 @onready var blocker_shape: CollisionShape2D = %BlockerShape
 @onready var interaction_shape: CollisionShape2D = %InteractionShape
@@ -26,6 +29,10 @@ func _ready() -> void:
 	container_title = definition.display_name.to_upper()
 	pointer_selection_radius = 23.0
 	interaction_shape.disabled = definition.behavior not in ["door", "storage", "workstation", "sleeping_spot"]
+	health = HealthComponentScript.new()
+	add_child(health)
+	health.configure(definition.maximum_health, definition.damage_material_tags)
+	health.health_changed.connect(func(_current: float, _maximum: float) -> void: queue_redraw())
 	inventory.slot_count = definition.storage_slots
 	inventory.initialize_slots()
 	blocker_shape.disabled = not definition.blocks_movement
@@ -36,11 +43,30 @@ func _ready() -> void:
 	super()
 	add_to_group("built_structure")
 	add_to_group("built_%s" % definition.behavior)
+	add_to_group("damageable")
 	queue_redraw()
 
 
 func register_grid_occupancy() -> void:
 	set_grid_occupancy_enabled(definition != null and definition.blocks_movement and not is_open)
+
+
+func take_damage(amount: float, damage_kind: StringName = &"melee", effective_tags: Array = [], _source: Node2D = null) -> float:
+	if health == null:
+		return 0.0
+	var applied := health.apply_damage(amount, damage_kind, effective_tags)
+	if health.is_depleted():
+		set_grid_occupancy_enabled(false)
+		queue_free()
+	return applied
+
+
+func get_health_ratio() -> float:
+	return health.get_ratio() if health != null else 0.0
+
+
+func get_debug_state() -> String:
+	return "%.0f / %.0f HP | %s" % [health.current_health, health.maximum_health, str(definition.damage_material_tags)] if health != null else "No health"
 
 
 func can_interact(actor: Node2D) -> bool:
@@ -109,3 +135,6 @@ func _draw() -> void:
 		"sleeping_spot":
 			draw_rect(Rect2(-13, -15, 26, 30), color)
 			draw_rect(Rect2(-10, -12, 20, 8), color.lightened(0.25))
+	if health != null and health.current_health < health.maximum_health:
+		draw_rect(Rect2(-15, 18, 30, 4), Color("#171b19"))
+		draw_rect(Rect2(-14, 19, 28 * get_health_ratio(), 2), Color("#d86155"))

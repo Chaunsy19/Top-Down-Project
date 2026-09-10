@@ -47,6 +47,10 @@ func uses_hold_interaction() -> bool:
 	return false
 
 
+func prefers_utility_when_armed() -> bool:
+	return false
+
+
 func continue_hold_interaction(_actor: Node2D, _delta: float) -> bool:
 	return false
 

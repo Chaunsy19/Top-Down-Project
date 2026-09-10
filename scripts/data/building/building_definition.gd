@@ -8,6 +8,8 @@ extends Resource
 @export var costs: Array[Resource] = []
 @export_range(0.1, 30.0, 0.1) var construction_time := 1.0
 @export var blocks_movement := true
+@export_range(1.0, 100000.0, 1.0) var maximum_health := 200.0
+@export var damage_material_tags: Array[StringName] = [&"wood"]
 @export var primary_color := Color("#7b5637")
 @export var workstation_definition: Resource
 @export_range(1, 100, 1) var storage_slots := 16
@@ -24,6 +26,8 @@ func validate() -> PackedStringArray:
 			errors.append_array(cost.validate(building_id))
 	if behavior == "workstation" and workstation_definition == null:
 		errors.append("Workstation building '%s' has no workstation definition." % building_id)
+	if damage_material_tags.is_empty():
+		errors.append("Building '%s' has no damage material tags." % building_id)
 	return errors
 
 

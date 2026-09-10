@@ -9,6 +9,7 @@ signal attack_requested(direction: Vector2)
 @export_range(1.0, 5000.0, 1.0) var acceleration := 1600.0
 @export_range(1.0, 5000.0, 1.0) var deceleration := 2000.0
 @export_range(0.0, 64.0, 0.5) var aim_deadzone := 4.0
+@export_range(0.0, 1000.0, 0.5) var unarmed_melee_damage := 5.0
 
 @onready var survival_needs: SurvivalNeeds = get_node_or_null("Needs") as SurvivalNeeds
 @onready var aim_pivot: Node2D = %AimPivot
@@ -54,8 +55,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		survival_needs.toggle_resting()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("attack") and is_combat_ready and not get_tree().paused:
-		if interactor == null or not interactor.begin_primary_action_at(get_global_mouse_position()):
-			attack_requested.emit(aim_direction)
+		if interactor == null or not interactor.begin_armed_primary_action_at(get_global_mouse_position()):
+			perform_melee_attack_at(get_global_mouse_position())
 		get_viewport().set_input_as_handled()
 
 
@@ -80,7 +81,37 @@ func _sync_combat_readiness() -> void:
 	var hand_stack := equipment.get_hand_stack() if equipment != null else null
 	var definition: Resource = hand_stack.item_definition if hand_stack != null else null
 	var selected_from_hotbar := hotbar != null and hotbar.selected_slot >= 0
-	set_combat_ready(selected_from_hotbar and definition != null and definition.has_category(&"weapon"))
+	set_combat_ready(selected_from_hotbar and definition != null and (definition.has_category(&"weapon") or definition.has_category(&"tool")))
+
+
+func perform_melee_attack_at(world_position: Vector2) -> Node2D:
+	var hand_stack := equipment.get_hand_stack() if equipment != null else null
+	var damage: float = unarmed_melee_damage
+	if hand_stack != null and hand_stack.item_definition != null:
+		damage = hand_stack.item_definition.melee_damage
+	var target: Node2D
+	var closest := INF
+	var reach := interactor.radius if interactor != null else 56.0
+	for candidate in get_tree().get_nodes_in_group("damageable"):
+		if candidate is not Node2D or not candidate.has_method("take_damage"):
+			continue
+		var damageable := candidate as Node2D
+		if global_position.distance_to(damageable.global_position) > reach:
+			continue
+		var pointer_distance := world_position.distance_squared_to(damageable.global_position)
+		if pointer_distance <= 28.0 * 28.0 and pointer_distance < closest:
+			target = damageable
+			closest = pointer_distance
+	if target != null:
+		var applied: float = 0.0
+		if hand_stack != null and hand_stack.item_definition.tool_damage > 0.0:
+			applied = target.call("take_damage", hand_stack.item_definition.tool_damage, &"tool", hand_stack.item_definition.tool_damage_tags, self)
+		if applied <= 0.0:
+			target.call("take_damage", damage, &"melee", [], self)
+		if hand_stack != null:
+			equipment.damage_hand_item(1)
+	attack_requested.emit(aim_direction)
+	return target
 
 
 func update_aim_from_world_position(target_world_position: Vector2) -> void:

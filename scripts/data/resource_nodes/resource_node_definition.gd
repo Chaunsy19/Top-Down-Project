@@ -15,13 +15,15 @@ enum DepletionBehavior {
 @export var resource_tags: Array[StringName] = []
 
 @export_group("Harvesting")
+@export_range(1.0, 100000.0, 1.0) var maximum_health := 100.0
+@export var damage_material_tags: Array[StringName] = []
+@export_range(0.0, 10000.0, 0.5) var unarmed_work_damage := 25.0
 @export_range(0.05, 120.0, 0.05) var harvest_time_seconds := 1.0
 @export var skill_id: StringName
 @export_range(0, 100, 1) var required_skill_level := 0
 @export var required_tool_tags: Array[StringName] = []
 @export_range(1, 100, 1) var minimum_tool_tier := 1
 @export_range(0, 10000, 1) var experience_reward := 0
-@export_range(1, 1000, 1) var max_harvests := 1
 @export var yields: Array[HarvestYieldScript] = []
 @export_range(16.0, 512.0, 1.0) var cancel_distance := 96.0
 
@@ -46,6 +48,8 @@ func validate() -> PackedStringArray:
 		errors.append("Resource node '%s' has no harvest yields." % node_id)
 	if required_tool_tags.is_empty() and minimum_tool_tier > 1:
 		errors.append("Resource node '%s' sets a tool tier without requiring a tool tag." % node_id)
+	if damage_material_tags.is_empty():
+		errors.append("Resource node '%s' has no damage material tags." % node_id)
 	for harvest_yield in yields:
 		if harvest_yield == null:
 			errors.append("Resource node '%s' has an empty yield entry." % node_id)

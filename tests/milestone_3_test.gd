@@ -98,7 +98,7 @@ func test_timed_harvest(
 	if interactor.get_current_target() != tree:
 		_failures.append("Tree was not selected in interaction range.")
 		return
-	var initial_harvests: int = tree.remaining_harvests
+	var initial_health: float = tree.health.current_health
 	if not interactor.try_interact():
 		_failures.append("Tree harvesting could not be started.")
 		return
@@ -107,14 +107,19 @@ func test_timed_harvest(
 		return
 	var effective_harvest_time := tree.get_effective_harvest_time(player)
 	tree.advance_simulation(effective_harvest_time * 0.5)
-	if tree.remaining_harvests != initial_harvests or not tree.is_harvesting():
+	if tree.health.current_health != initial_health or not tree.is_harvesting():
 		_failures.append("Tree harvest completed before its configured duration.")
 		return
 	tree.advance_simulation(effective_harvest_time * 0.5 + 0.01)
-	if tree.remaining_harvests != initial_harvests - 1:
-		_failures.append("Tree did not consume one harvest after its duration.")
+	if tree.health.current_health != initial_health - 30.0:
+		_failures.append("A stone axe work strike did not apply its configured 30 tool damage.")
+	while not tree.is_depleted():
+		if not tree.interact(player):
+			_failures.append("Tree could not continue health-based harvesting.")
+			return
+		tree.advance_simulation(tree.get_effective_harvest_time(player) + 0.01)
 	if skills.get_experience(&"forestry") != tree.definition.experience_reward:
-		_failures.append("Tree did not award configured forestry experience.")
+		_failures.append("Tree did not award configured forestry experience on depletion.")
 	var wood_drops := get_nodes_in_group("world_item_drop").filter(
 		func(drop: Node) -> bool:
 			return drop.item_stack.item_definition.item_id == &"wood"
@@ -125,16 +130,16 @@ func test_timed_harvest(
 
 func test_regrowth(player: CharacterBody2D, bush: ResourceNodeScript) -> void:
 	player.global_position = bush.global_position + Vector2.RIGHT * 48.0
-	for harvest_index in bush.definition.max_harvests:
+	while not bush.is_depleted():
 		if not bush.interact(player):
-			_failures.append("Berry bush could not begin harvest %d." % harvest_index)
+			_failures.append("Berry bush could not continue hand harvesting.")
 			return
 		bush.advance_simulation(bush.definition.harvest_time_seconds + 0.01)
 	if not bush.is_depleted():
 		_failures.append("Berry bush did not deplete after its configured harvest count.")
 		return
 	bush.advance_simulation(bush.definition.recovery_time_seconds + 0.01)
-	if bush.is_depleted() or bush.remaining_harvests != bush.definition.max_harvests:
+	if bush.is_depleted() or bush.health.current_health != bush.definition.maximum_health:
 		_failures.append("Berry bush did not regrow according to its data definition.")
 
 
@@ -145,7 +150,7 @@ func finish_with_failure(message: String) -> void:
 
 func finish() -> void:
 	if _failures.is_empty():
-		print("MILESTONE 3 TEST PASSED: catalogs, skills, harvesting, drops, depletion, and regrowth are valid.")
+		print("MILESTONE 3 TEST PASSED: catalogs, skills, health-based harvesting, drops, depletion, and regrowth are valid.")
 		quit(0)
 	else:
 		for failure in _failures:

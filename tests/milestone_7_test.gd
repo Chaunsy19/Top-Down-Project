@@ -35,6 +35,23 @@ func _run_tests() -> void:
 
 	var wall := await _build(system, world, player, registry.get_building(&"wood_wall"), cells[1])
 	_assert(wall != null and not world.is_cell_walkable(cells[1]), "A completed wall should block its grid cell.")
+	_assert(wall.health.maximum_health == 200.0, "Wood buildings should begin with 200 health.")
+	_assert(wall.take_damage(60.0, &"tool", [&"stone"]) == 0.0, "Stone tool damage should not affect a wood building.")
+	_assert(wall.take_damage(30.0, &"tool", [&"wood"]) == 30.0, "Wood tool damage should affect a wood building.")
+	_assert(wall.take_damage(12.0, &"melee") == 12.0, "Melee damage should affect a building regardless of material type.")
+	var health_before_attacks: float = wall.health.current_health
+	inventory.add_item(registry.get_item(&"stone_pickaxe"), 1)
+	inventory.add_item(registry.get_item(&"stone_axe"), 1)
+	var hotbar := player.get_node("Hotbar") as HotbarComponent
+	hotbar.assign_from_inventory(0, inventory.find_first_item(&"stone_pickaxe"))
+	hotbar.assign_from_inventory(1, inventory.find_first_item(&"stone_axe"))
+	hotbar.select_slot(0)
+	player.perform_melee_attack_at(wall.global_position)
+	_assert(wall.health.current_health == health_before_attacks - 12.0, "A pickaxe should fall back to melee damage against wood.")
+	hotbar.select_slot(1)
+	player.perform_melee_attack_at(wall.global_position)
+	_assert(wall.health.current_health == health_before_attacks - 42.0, "An axe should use tool damage against a wood building.")
+	hotbar.select_slot(1)
 	player.global_position = world.to_global(world.cell_to_world(cells[1] + Vector2i.RIGHT))
 	await physics_frame
 	_assert(player.test_move(player.global_transform, Vector2.LEFT * world.grid_size), "A completed wall should physically collide with the player.")

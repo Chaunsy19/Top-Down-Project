@@ -22,6 +22,8 @@ costs = Array[Resource]([SubResource("CostFloor")])
 construction_time = 0.6
 blocks_movement = false
 primary_color = Color(0.43, 0.28, 0.16, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood"])
 
 [sub_resource type="Resource" id="CostWall"]
 script = ExtResource("3")
@@ -37,6 +39,8 @@ behavior = "wall"
 costs = Array[Resource]([SubResource("CostWall")])
 construction_time = 1.5
 primary_color = Color(0.38, 0.23, 0.13, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood"])
 
 [sub_resource type="Resource" id="CostDoor"]
 script = ExtResource("3")
@@ -52,6 +56,8 @@ behavior = "door"
 costs = Array[Resource]([SubResource("CostDoor")])
 construction_time = 1.5
 primary_color = Color(0.52, 0.32, 0.17, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood"])
 
 [sub_resource type="Resource" id="CostStorage"]
 script = ExtResource("3")
@@ -67,6 +73,8 @@ behavior = "storage"
 costs = Array[Resource]([SubResource("CostStorage")])
 construction_time = 2.0
 primary_color = Color(0.45, 0.3, 0.18, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood"])
 storage_slots = 20
 
 [sub_resource type="Resource" id="CostFireWood"]
@@ -88,6 +96,8 @@ behavior = "workstation"
 costs = Array[Resource]([SubResource("CostFireWood"), SubResource("CostFireStone")])
 construction_time = 2.0
 primary_color = Color(0.82, 0.34, 0.12, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood", &"stone"])
 workstation_definition = ExtResource("6")
 
 [sub_resource type="Resource" id="CostBed"]
@@ -105,6 +115,8 @@ costs = Array[Resource]([SubResource("CostBed")])
 construction_time = 1.0
 blocks_movement = false
 primary_color = Color(0.32, 0.43, 0.38, 1)
+maximum_health = 200.0
+damage_material_tags = Array[StringName]([&"wood"])
 
 [resource]
 script = ExtResource("1")

@@ -27,6 +27,10 @@ func uses_hold_interaction() -> bool:
 	return true
 
 
+func prefers_utility_when_armed() -> bool:
+	return true
+
+
 func _perform_interaction(actor: Node2D) -> void:
 	_builder = actor
 

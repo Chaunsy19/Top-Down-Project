@@ -43,8 +43,7 @@ func _run_tests() -> void:
 	duplicate.queue_free()
 
 	var mined_cell: Vector2i = rock.get_occupied_cell()
-	rock.remaining_harvests = 0
-	rock._begin_depletion()
+	rock.take_damage(rock.health.current_health, &"melee")
 	await process_frame
 	_assert(world.get_cell_occupant(mined_cell) == null, "Mining out stone should release its occupied cell.")
 	_assert(world.is_cell_walkable(mined_cell), "A mined-out stone cell should become walkable.")

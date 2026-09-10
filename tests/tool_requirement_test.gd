@@ -42,6 +42,14 @@ func run_tests() -> void:
 		_failures.append("Stone pickaxe is missing its pickaxe capability profile.")
 	if axe.tool_profile.maximum_durability <= 0 or pickaxe.tool_profile.maximum_durability <= 0:
 		_failures.append("Tier-one tools are missing future durability capacity.")
+	if axe.tool_damage != 30.0 or axe.tool_damage_tags != Array([&"wood"]):
+		_failures.append("Stone axe should export 30 wood-only tool damage.")
+	if pickaxe.tool_damage != 60.0 or pickaxe.tool_damage_tags != Array([&"stone"]):
+		_failures.append("Stone pickaxe should export 60 stone-only tool damage.")
+	if axe.melee_damage <= 0.0 or pickaxe.melee_damage <= 0.0:
+		_failures.append("Every tool should export independent melee damage.")
+	if tree.definition.maximum_health != 150.0 or rock.definition.maximum_health != 300.0:
+		_failures.append("Tree and stone health are not set to their initial 150/300 values.")
 
 	inventory.add_item(axe, 1)
 	if tree.has_required_tool(player):
@@ -63,8 +71,8 @@ func run_tests() -> void:
 	if not bush.definition.required_tool_tags.is_empty():
 		_failures.append("Berry bush data should have no required tool tags.")
 
-	var loose_sticks := world.get_node("LooseSticks")
-	var loose_stones := world.get_node("LooseStones")
+	var loose_sticks := world.find_child("LooseSticks", true, false)
+	var loose_stones := world.find_child("LooseStones", true, false)
 	if loose_sticks.item_stack.item_definition.item_id != &"stick":
 		_failures.append("Loose starter sticks are missing from the world.")
 	if loose_stones.item_stack.item_definition.item_id != &"stone":

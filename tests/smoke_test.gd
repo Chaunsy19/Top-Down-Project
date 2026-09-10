@@ -73,6 +73,7 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/ui/hotbar_slot.gd",
 	"res://scripts/ui/hotbar_ui.gd",
 	"res://scripts/data/building/build_cost.gd",
+	"res://scripts/combat/health_component.gd",
 	"res://scripts/data/building/building_definition.gd",
 	"res://scripts/data/building/building_catalog.gd",
 	"res://scripts/building/building_system.gd",

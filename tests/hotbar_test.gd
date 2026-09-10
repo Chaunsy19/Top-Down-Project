@@ -39,7 +39,7 @@ func _run_tests() -> void:
 	_assert(player.is_combat_ready, "A weapon-capable hotbar item should become combat ready.")
 	_assert(hotbar.select_slot(1), "Selecting slot 2 should swap to its pickaxe.")
 	_assert(equipment.get_hand_stack().item_definition.item_id == &"stone_pickaxe", "Slot 2 equipped the wrong item.")
-	_assert(not player.is_combat_ready, "A tool-only hotbar item should remain in utility mode.")
+	_assert(player.is_combat_ready, "Any selected tool should support contextual work and melee attacks.")
 	_assert(inventory.find_first_item(&"stone_axe") >= 0, "Switching tools should return the previous tool to inventory.")
 	_assert(hotbar.select_slot(8), "Selecting an empty slot should unequip the current item.")
 	_assert(equipment.get_hand_stack() == null, "An empty selected slot should leave the hand empty.")
