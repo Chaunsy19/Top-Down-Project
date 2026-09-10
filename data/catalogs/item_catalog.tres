@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ItemCatalog" load_steps=9 format=3]
+[gd_resource type="Resource" script_class="ItemCatalog" load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/data/items/item_catalog.gd" id="1_catalog"]
 [ext_resource type="Resource" path="res://data/items/wood.tres" id="2_wood"]
@@ -9,6 +9,10 @@
 [ext_resource type="Resource" path="res://data/items/stick.tres" id="7_stick"]
 [ext_resource type="Resource" path="res://data/items/cooked_berry_meal.tres" id="8_meal"]
 
+[ext_resource type="Resource" path="res://data/items/wood_armor_head.tres" id="armor_head"]
+[ext_resource type="Resource" path="res://data/items/wood_armor_torso.tres" id="armor_torso"]
+[ext_resource type="Resource" path="res://data/items/wood_armor_legs.tres" id="armor_legs"]
+
 [resource]
 script = ExtResource("1_catalog")
-items = Array[Resource]([ExtResource("2_wood"), ExtResource("3_stone"), ExtResource("4_berries"), ExtResource("5_axe"), ExtResource("6_pickaxe"), ExtResource("7_stick"), ExtResource("8_meal")])
+items = Array[Resource]([ExtResource("2_wood"), ExtResource("3_stone"), ExtResource("4_berries"), ExtResource("5_axe"), ExtResource("6_pickaxe"), ExtResource("7_stick"), ExtResource("8_meal"), ExtResource("armor_head"), ExtResource("armor_torso"), ExtResource("armor_legs")])

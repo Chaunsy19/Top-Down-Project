@@ -215,3 +215,11 @@ All notable project changes are recorded here by milestone.
 - Removed automatic menu pausing for all registered windows. Closing menus also preserves explicit pause state.
 - P can explicitly pause/resume with a menu open; crafting now respects explicit pause.
 - Inventory, crafting, and window suites pass. Health mechanics and live-menu bleeding checks pass; existing local scene edits fail the health panel bounds and blood icon asset assertions.
+
+### Milestone 8 — Head, torso, and leg armor slots
+
+- Added separate head, torso, and legs equipment slots with inventory equip, swap, and safe unequip behavior.
+- Added data-defined armor coverage and protection against new regional wounds and bleeding; arms remain uncovered.
+- Connected the Equipment panel's three slots to inventory dropdowns showing equipped protection.
+- Added three basic hand-crafted wood armor pieces with 20% protection for playable verification.
+- Verified armor crafting, coverage, bleeding reduction, mismatched slots, full-inventory swaps, failed unequip preservation, and UI integration. Armor, crafting, hotbar, UI window, and smoke suites pass; existing Godot startup/shutdown warnings remain.

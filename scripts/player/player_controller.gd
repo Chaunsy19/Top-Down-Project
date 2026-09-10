@@ -162,7 +162,8 @@ func get_action_multiplier() -> float:
 func take_region_damage(region: StringName, amount: float, bleeding_rate: float = 0.0) -> float:
 	if survival_needs == null or survival_needs.body_health.is_collapsed():
 		return 0.0
-	var applied := survival_needs.body_health.apply_damage(region, amount, bleeding_rate)
+	var protection := equipment.get_region_protection(region) if equipment != null else 0.0
+	var applied := survival_needs.body_health.apply_damage(region, amount * (1.0 - protection), bleeding_rate * (1.0 - protection))
 	if applied > 0.0:
 		survival_needs.set_resting(false)
 		survival_needs.needs_changed.emit(survival_needs.hunger, survival_needs.fatigue, survival_needs.body_health.blood)

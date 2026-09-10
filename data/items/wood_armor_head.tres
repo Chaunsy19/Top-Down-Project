@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/data/items/item_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+item_id = &"wood_armor_head"
+display_name = "Wood Helmet"
+description = "Basic wood armor. Reduces new damage and bleeding on covered regions by 20%."
+categories = Array[StringName]([&"apparel"])
+stack_limit = 1
+weight = 1.0
+world_color = Color(0.55, 0.36, 0.2, 1)
+armor_slot = "head"
+armor_protection = 0.2

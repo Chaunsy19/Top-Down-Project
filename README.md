@@ -163,3 +163,13 @@ Manual check: run the scene, open Health, select a region and click **Test wound
 Automated check: `godot --headless --path . --script res://tests/milestone_8_health_test.gd`.
 
 Bleeding drains 10% more blood than the original tuning (an 8-point wound starts at 8.8 blood/hour). Clotting timing and recovery rates are unchanged.
+
+## Armor slots
+
+Equipment now has exactly three armor slots: Head, Torso, and Legs. Press C to hand-craft a Wood Helmet (4 wood), Wood Vest (8 wood), or Wood Leg Guards (6 wood); each takes 3 seconds before injury penalties. Open Equipment from the dock and select an inventory item from the matching slot dropdown. Select Empty to return equipped armor to inventory. A swap returns the old armor and requires enough inventory capacity.
+
+Each starter armor piece reduces new regional damage and bleeding by 20%. Head covers the head, torso covers the torso, and legs cover both legs. Arms are uncovered. Equipping armor does not stop existing bleeding. Armor does not replace the held tool/weapon and currently has no durability mechanic. Menus remain live.
+
+Manual check: craft a helmet, equip it, then use Test wound on the head. The 25-damage test wound should inflict 20 condition damage and start at 7.04 blood/hour (including the 10% bleeding increase). Compare with an uncovered arm, which takes 25 damage and starts at 8.8 blood/hour. Unequip the helmet and confirm it returns to inventory.
+
+Automated check: `godot --headless --path . --script res://tests/armor_slots_test.gd`.

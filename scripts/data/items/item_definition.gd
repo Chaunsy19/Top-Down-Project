@@ -12,6 +12,10 @@ extends Resource
 @export var icon: Texture2D
 @export var tool_profile: Resource
 
+@export_group("Armor")
+@export var armor_slot := ""
+@export_range(0.0, 0.9, 0.05) var armor_protection := 0.0
+
 @export_group("Damage")
 @export_range(0.0, 10000.0, 0.5) var melee_damage := 5.0
 @export_range(0.0, 10000.0, 0.5) var tool_damage := 0.0
@@ -24,6 +28,11 @@ func has_category(category_id: StringName) -> bool:
 
 func validate() -> PackedStringArray:
 	var errors := PackedStringArray()
+	if not armor_slot.is_empty():
+		if armor_slot not in ["head", "torso", "legs"] or not has_category(&"apparel") or stack_limit != 1:
+			errors.append("Armor '%s' requires a head/torso/legs slot, apparel category, and stack limit of one." % item_id)
+	if not is_finite(armor_protection) or armor_protection < 0.0 or armor_protection > 0.9:
+		errors.append("Item '%s' has invalid armor protection." % item_id)
 	if item_id.is_empty():
 		errors.append("Item definition is missing item_id.")
 	if display_name.strip_edges().is_empty():

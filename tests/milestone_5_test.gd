@@ -124,8 +124,8 @@ func test_recipe_data() -> void:
 	var errors: PackedStringArray = registry.validate_catalogs()
 	for error in errors:
 		_failures.append("Catalog validation: %s" % error)
-	if registry.get_recipes().size() != 3:
-		_failures.append("Recipe catalog should contain both tools and one cooked food recipe.")
+	if registry.get_recipes().size() != 6:
+		_failures.append("Recipe catalog should contain both tools, cooked food, and three armor recipes.")
 	for recipe_id in [&"stone_axe", &"stone_pickaxe", &"cooked_berry_meal"]:
 		if registry.get_recipe(recipe_id) == null:
 			_failures.append("Recipe catalog is missing '%s'." % recipe_id)

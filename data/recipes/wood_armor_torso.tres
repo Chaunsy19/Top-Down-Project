@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="RecipeDefinition" load_steps=6 format=3]
+[ext_resource type="Script" path="res://scripts/data/recipes/recipe_definition.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/data/recipes/recipe_ingredient.gd" id="2"]
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="3"]
+[ext_resource type="Resource" path="res://data/items/wood_armor_torso.tres" id="4"]
+[sub_resource type="Resource" id="Cost"]
+script = ExtResource("2")
+item_definition = ExtResource("3")
+quantity = 8
+[resource]
+script = ExtResource("1")
+recipe_id = &"wood_armor_torso"
+display_name = "Wood Vest"
+category = &"armor"
+ingredients = Array[Resource]([SubResource("Cost")])
+output_item = ExtResource("4")
+output_quantity = 1
+crafting_time_seconds = 3.0
