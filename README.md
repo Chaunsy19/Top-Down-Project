@@ -128,7 +128,7 @@ Add a definition file, reference it from the matching catalog, then instantiate 
 - Ambient light transitions continuously through dawn, daylight, dusk, and near-black night.
 - Campfires use a soft radial falloff without hard-edged shadows and become more visually important as ambient light fades.
 - Hunger and fatigue decline with game time. Food restores hunger; pressing **R** rests in place and restores fatigue.
-- Critical hunger or fatigue damages health and reduces movement speed.
+- Critical hunger or fatigue reduces movement speed. Blood depletion is lethal.
 - Press **F4** during development to jump forward six hours and inspect lighting phases without changing normal gameplay speed.
 
 ## Automated checks
@@ -154,10 +154,10 @@ godot --headless --path . --script res://tests/action_mode_test.gd
 
 ## Regional health and bleeding (milestone 8 health slice)
 
-Open Health from the character dock to see head, torso, each arm, each leg, blood, injury severity, bleeding per game hour, and current effectiveness. Each region starts at 100 condition; overall survival health remains separate. Leg damage slows movement, arm damage reduces work/attack effectiveness, and blood loss weakens both. Zero head/torso condition or blood causes collapse; restart the scene after collapse in this prototype.
+Open Health from the character dock to see head, torso, each arm, each leg, blood, injury severity, bleeding per game hour, and current effectiveness. Each region starts at 100 condition; blood is the only survival meter. Leg damage slows movement, arm damage reduces work/attack effectiveness, and blood loss weakens both. Zero blood causes death; restart the scene after death in this prototype. Region depletion alone does not kill.
 
 Wounds clot at 4 bleeding-rate points per game hour. Once clotted, resting with hunger and rest at least 50 restores 2 condition and blood per game hour. No bandaging or medicine is included yet.
 
-Manual check: run the scene, open Health, select a region and click **Test wound** (development builds only: 25 damage and 8 blood/hour). Close Health to let time advance. Compare movement after leg damage and harvesting after arm damage; reopen Health to inspect blood loss and clotting. Press T while holstered and well-fed to recover after bleeding stops. Opening Health pauses the simulation. Repeated head/torso wounds can test collapse.
+Manual check: run the scene, open Health, select a region and click **Test wound** (development builds only: 25 damage and 8 blood/hour). Close Health to let time advance. Compare movement after leg damage and harvesting after arm damage; reopen Health to inspect blood loss and clotting. Press T while holstered and well-fed to recover after bleeding stops. Opening Health pauses the simulation. Repeated bleeding wounds can test death from blood loss. The blood icon in the dock pulses red while bleeding and stops when bleeding clots or the player dies.
 
 Automated check: `godot --headless --path . --script res://tests/milestone_8_health_test.gd`.

@@ -61,7 +61,7 @@ func get_bleeding_rate() -> float:
 
 
 func is_collapsed() -> bool:
-	return blood <= 0.0 or condition[&"head"] <= 0.0 or condition[&"torso"] <= 0.0
+	return blood <= 0.0
 
 
 func get_movement_multiplier() -> float:

@@ -27,7 +27,7 @@ func run() -> void:
 	var player: PlayerController = get_first_node_in_group("player")
 	player.take_region_damage(&"left_arm", 80.0, 8.0)
 	check(player.get_action_multiplier() < 1.0, "Arm injury affects actor action effectiveness")
-	check(player.survival_needs.health == 100.0, "Overall health remains separate")
+	check(player.survival_needs.body_health.blood == 100.0, "Wounds drain blood over time")
 	var ui: CharacterUI = get_first_node_in_group("character_ui")
 	ui.open_health()
 	await process_frame
@@ -38,7 +38,22 @@ func run() -> void:
 	check(player.survival_needs.body_health.blood == before, "Modal pause stops bleeding")
 	ui.close_health()
 	player.take_region_damage(&"head", 100.0)
-	check(player.get_action_multiplier() == 0.0 and player.survival_needs.get_movement_multiplier() == 0.0, "Vital region depletion collapses actor")
+	check(player.get_action_multiplier() > 0.0, "Region depletion alone does not kill")
+	var hud := main.get_node("SurvivalHUD")
+	hud._refresh()
+	var pulse_color: Color = hud.health_button.modulate
+	hud._process(0.2)
+	check(hud.health_button.modulate != pulse_color, "Blood icon pulses while bleeding")
+	check(hud.health_button.icon.resource_path.ends_with("blood.png"), "Blood icon asset is used")
+	player.survival_needs.body_health.blood = 1.0
+	player.survival_needs.body_health.advance_game_minutes(60.0)
+	check(player.get_action_multiplier() == 0.0 and player.survival_needs.get_movement_multiplier() == 0.0, "Blood depletion kills actor")
+	player.survival_needs.body_health.advance_game_minutes(600.0, true)
+	check(player.survival_needs.body_health.blood == 0.0, "Rest cannot revive dead actor")
+	hud._refresh()
+	pulse_color = hud.health_button.modulate
+	hud._process(0.2)
+	check(hud.health_button.modulate == pulse_color, "Dead actor icon stops pulsing")
 	main.queue_free()
 	await process_frame
 	if failures.is_empty():
@@ -47,4 +62,3 @@ func run() -> void:
 		for failure in failures:
 			push_error(failure)
 	quit(0 if failures.is_empty() else 1)
-

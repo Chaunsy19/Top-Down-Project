@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/ui/survival_hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/Icons/backpack.png" id="2_backpack"]
-[ext_resource type="Texture2D" path="res://assets/Icons/health.png" id="3_health"]
+[ext_resource type="Texture2D" path="res://assets/Icons/blood.png" id="3_health"]
 [ext_resource type="Texture2D" path="res://assets/Icons/warrior-helmet-lv3.png" id="4_equipment"]
 [ext_resource type="Texture2D" path="res://assets/Icons/ham.png" id="5_hunger"]
 [ext_resource type="Texture2D" path="res://assets/Icons/bed.png" id="6_rest"]

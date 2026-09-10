@@ -56,7 +56,7 @@ func _test_clock_and_ambient(clock: Node, ambient: CanvasModulate) -> void:
 func _test_needs_and_eating(needs: Node, inventory: Node) -> void:
 	needs.hunger = 60.0
 	needs.fatigue = 60.0
-	needs.health = 100.0
+	needs.body_health.blood = 100.0
 	needs.advance_game_minutes(60.0)
 	_assert(is_equal_approx(needs.hunger, 56.0), "Hunger should decline with game time.")
 	_assert(is_equal_approx(needs.fatigue, 56.75), "Fatigue should decline while awake.")
@@ -77,9 +77,9 @@ func _test_needs_and_eating(needs: Node, inventory: Node) -> void:
 
 	needs.hunger = 0.0
 	needs.fatigue = 0.0
-	needs.health = 100.0
+	needs.body_health.blood = 100.0
 	needs.advance_game_minutes(60.0)
-	_assert(needs.health < 100.0, "Critical needs should damage health.")
+	_assert(needs.body_health.blood == 100.0, "Hunger and fatigue should not consume blood.")
 	_assert(needs.get_movement_multiplier() < 0.5, "Critical needs should substantially slow movement.")
 
 

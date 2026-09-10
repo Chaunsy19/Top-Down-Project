@@ -9,7 +9,7 @@ var _equipment: EquipmentComponent
 
 @onready var health_panel: PanelContainer = %HealthPanel
 @onready var equipment_panel: PanelContainer = %EquipmentPanel
-@onready var health_bar: ProgressBar = %HealthBar
+@onready var blood_bar: ProgressBar = %BloodBar
 @onready var hunger_bar: ProgressBar = %HungerBar
 @onready var rest_bar: ProgressBar = %RestBar
 @onready var condition_label: Label = %ConditionLabel
@@ -104,12 +104,12 @@ func _find_player() -> void:
 
 func _refresh() -> void:
 	if is_instance_valid(_needs):
-		health_bar.value = _needs.health
+		blood_bar.value = _needs.body_health.blood
 		hunger_bar.value = _needs.hunger
 		rest_bar.value = _needs.fatigue
-		condition_label.text = "%s\nOverall health: %.0f / 100\nHunger: %.0f / 100\nRest: %.0f / 100" % [
+		condition_label.text = "%s\nBlood: %.0f / 100\nHunger: %.0f / 100\nRest: %.0f / 100" % [
 			_needs.get_condition_text(),
-			_needs.health,
+			_needs.body_health.blood,
 			_needs.hunger,
 			_needs.fatigue,
 		]

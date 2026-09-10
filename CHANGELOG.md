@@ -201,3 +201,10 @@ All notable project changes are recorded here by milestone.
 - Made the world clock explicitly pausable so time and bleeding stop during modal pause.
 - Verified health integration, smoke, milestones 5–7, action mode, and UI windows suites. Existing map occupancy and Godot shutdown warnings remain.
 - Equipment, armor, and additional weapon work are deferred; milestone 8 is not complete.
+
+### Blood as the survival meter
+
+- Removed overall character health. Blood depletion alone causes death; regional condition remains for injuries and impairment.
+- Hunger and fatigue retain movement penalties without inflicting health damage. Rest cannot revive a character with no blood.
+- Replaced the dock health icon with the supplied blood asset and a red pulse while actively bleeding. The character panel now displays a blood meter.
+- Updated regression tests for blood-only death and bleeding icon animation.

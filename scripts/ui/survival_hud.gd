@@ -4,6 +4,7 @@ const CharacterUIScript = preload("res://scripts/ui/character_ui.gd")
 const ALERT_ICON_COLOR := Color(1.0, 0.55, 0.34, 1.0)
 const RESTING_ICON_COLOR := Color(0.45, 0.72, 1.0, 1.0)
 
+var _pulse_time := 0.0
 var _world_clock: Node
 var _needs: Node
 var _player: PlayerController
@@ -27,7 +28,8 @@ func _ready() -> void:
 	call_deferred("_find_sources")
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_pulse_time += delta
 	if not is_instance_valid(_world_clock) or not is_instance_valid(_needs) or not is_instance_valid(_player):
 		_find_sources()
 	_refresh()
@@ -45,12 +47,15 @@ func _refresh() -> void:
 		period_label.text = _world_clock.get_period_name()
 	if not is_instance_valid(_needs):
 		return
-	health_button.tooltip_text = "Health: %.0f / 100 — open health" % _needs.health
+	health_button.tooltip_text = "Blood: %.1f / 100 · Bleeding: %.1f/hour — open injuries" % [_needs.body_health.blood, _needs.body_health.get_bleeding_rate()]
 	equipment_button.tooltip_text = "Open equipment"
 	inventory_button.tooltip_text = "Open inventory"
 	hunger_button.tooltip_text = "Hunger low: %.0f / 100 — open inventory" % _needs.hunger
 	rest_button.tooltip_text = "%s: %.0f / 100" % ["Resting" if _needs.is_resting else "Rest low", _needs.fatigue]
-	health_button.modulate = ALERT_ICON_COLOR if _needs.health <= _needs.critical_threshold else Color.WHITE
+	var bleeding: bool = _needs.body_health.get_bleeding_rate() > 0.0 and not _needs.body_health.is_collapsed()
+	health_button.modulate = Color(1.0, 0.35, 0.35, 0.65 + 0.35 * sin(_pulse_time * TAU * 1.5)) if bleeding else (ALERT_ICON_COLOR if _needs.body_health.blood <= _needs.critical_threshold else Color.WHITE)
+	if not bleeding:
+		_pulse_time = 0.0
 	hunger_button.visible = _needs.hunger <= _needs.critical_threshold
 	hunger_button.modulate = ALERT_ICON_COLOR
 	rest_button.visible = _needs.fatigue <= _needs.critical_threshold or _needs.is_resting

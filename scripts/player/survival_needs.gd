@@ -1,20 +1,17 @@
 class_name SurvivalNeeds
 extends Node
 
-signal needs_changed(hunger: float, fatigue: float, health: float)
+signal needs_changed(hunger: float, fatigue: float, blood: float)
 signal resting_changed(is_resting: bool)
 
 @export_range(0.0, 100.0, 0.1) var hunger_depletion_per_game_hour := 4.0
 @export_range(0.0, 100.0, 0.1) var fatigue_depletion_per_game_hour := 3.25
 @export_range(0.0, 100.0, 0.1) var fatigue_recovery_per_game_hour := 20.0
 @export_range(0.0, 100.0, 0.1) var critical_threshold := 20.0
-@export_range(0.0, 100.0, 0.1) var critical_health_damage_per_game_hour := 4.0
-@export_range(0.0, 100.0, 0.1) var safe_health_recovery_per_game_hour := 1.0
 
 var body_health := preload("res://scripts/combat/body_health.gd").new()
 var hunger := 100.0
 var fatigue := 100.0
-var health := 100.0
 var is_resting := false
 
 
@@ -42,12 +39,7 @@ func advance_game_minutes(game_minutes: float) -> void:
 		fatigue = minf(fatigue + fatigue_recovery_per_game_hour * game_hours, 100.0)
 	else:
 		fatigue = maxf(fatigue - fatigue_depletion_per_game_hour * game_hours, 0.0)
-	var critical_needs := int(hunger <= critical_threshold) + int(fatigue <= critical_threshold)
-	if critical_needs > 0:
-		health = maxf(health - critical_health_damage_per_game_hour * critical_needs * game_hours, 0.0)
-	elif health > 0.0 and not body_health.is_collapsed() and body_health.get_bleeding_rate() <= 0.0 and hunger >= 50.0 and fatigue >= 50.0:
-		health = minf(health + safe_health_recovery_per_game_hour * game_hours, 100.0)
-	needs_changed.emit(hunger, fatigue, health)
+	needs_changed.emit(hunger, fatigue, body_health.blood)
 
 
 func consume_item(inventory: Node, slot_index: int) -> bool:
@@ -60,7 +52,7 @@ func consume_item(inventory: Node, slot_index: int) -> bool:
 	if inventory.remove_from_slot(slot_index, 1) == null:
 		return false
 	hunger = minf(hunger + nutrition, 100.0)
-	needs_changed.emit(hunger, fatigue, health)
+	needs_changed.emit(hunger, fatigue, body_health.blood)
 	return true
 
 
@@ -69,7 +61,7 @@ func set_resting(value: bool) -> void:
 		return
 	is_resting = value
 	resting_changed.emit(is_resting)
-	needs_changed.emit(hunger, fatigue, health)
+	needs_changed.emit(hunger, fatigue, body_health.blood)
 
 
 func toggle_resting() -> void:
@@ -77,21 +69,19 @@ func toggle_resting() -> void:
 
 
 func get_movement_multiplier() -> float:
-	if is_resting or health <= 0.0 or body_health.is_collapsed():
+	if is_resting or body_health.is_collapsed():
 		return 0.0
 	var multiplier := 1.0
 	if hunger <= critical_threshold:
 		multiplier *= 0.7
 	if fatigue <= critical_threshold:
 		multiplier *= 0.6
-	if health < 50.0:
-		multiplier *= lerpf(0.45, 1.0, health / 50.0)
 	return multiplier * body_health.get_movement_multiplier()
 
 
 func get_condition_text() -> String:
-	if health <= 0.0 or body_health.is_collapsed():
-		return "Collapsed"
+	if body_health.is_collapsed():
+		return "Dead — blood depleted"
 	if is_resting:
 		return "Resting"
 	if hunger <= critical_threshold and fatigue <= critical_threshold:
@@ -108,4 +98,4 @@ func get_condition_text() -> String:
 
 
 func get_action_multiplier() -> float:
-	return body_health.get_action_multiplier() if health > 0.0 else 0.0
+	return body_health.get_action_multiplier()
