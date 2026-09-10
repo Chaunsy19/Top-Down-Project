@@ -84,6 +84,12 @@ func _update_presentation() -> void:
 
 
 func _draw() -> void:
+	if item_stack != null and item_stack.item_definition.icon != null:
+		var art: Texture2D = item_stack.item_definition.icon
+		var draw_size := art.get_size() * (24.0 / maxf(art.get_width(), art.get_height()))
+		texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		draw_texture_rect(art, Rect2(-draw_size / 2.0, draw_size), false)
+		return
 	var color := Color.WHITE
 	if item_stack != null and item_stack.item_definition != null:
 		color = item_stack.item_definition.world_color

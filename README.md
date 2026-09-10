@@ -173,3 +173,9 @@ Each starter armor piece reduces new regional damage and bleeding by 20%. Head c
 Manual check: craft a helmet, equip it, then use Test wound on the head. The 25-damage test wound should inflict 20 condition damage and start at 7.04 blood/hour (including the 10% bleeding increase). Compare with an uncovered arm, which takes 25 damage and starts at 8.8 blood/hour. Unequip the helmet and confirm it returns to inventory.
 
 Automated check: `godot --headless --path . --script res://tests/armor_slots_test.gd`.
+
+## Tool swing visuals
+
+The axe and pickaxe use the supplied pixel art in inventory, hotbar, dropped items, and the player's hand. Select the assigned hotbar slot to draw the tool; it follows mouse aim continuously. Each strike sweeps the tool through a short arc and returns it to its aimed pose. Selecting the active slot again holsters it. The swing is visual feedback; damage remains one strike per click.
+
+Manual check: equip each tool, aim around the player, click to swing or harvest, and toggle the active hotbar slot to hide it. Drop and pick up the tool to inspect its world icon. Automated check: `godot --headless --path . --script res://tests/tool_visual_test.gd`.

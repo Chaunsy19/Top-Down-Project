@@ -3,13 +3,21 @@
 [ext_resource type="Script" uid="uid://di4s6xtou0gr2" path="res://scripts/data/items/item_definition.gd" id="1_item"]
 [ext_resource type="Script" uid="uid://cvhgtqr7m0e0q" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
 
+[ext_resource type="Texture2D" path="res://assets/Tools/Pickaxe.png" id="3_art"]
+
+[sub_resource type="AtlasTexture" id="ToolIcon"]
+atlas = ExtResource("3_art")
+region = Rect2(18, 4, 26, 25)
+
 [sub_resource type="Resource" id="ToolProfile_pickaxe"]
 script = ExtResource("2_tool")
 capability_tags = Array[StringName]([&"pickaxe"])
 maximum_durability = 90
 
 [resource]
+
 script = ExtResource("1_item")
+icon = SubResource("ToolIcon")
 item_id = &"stone_pickaxe"
 display_name = "Stone Pickaxe"
 description = "A basic first-tier pickaxe for mining stone."

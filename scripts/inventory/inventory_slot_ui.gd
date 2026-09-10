@@ -4,6 +4,7 @@ extends Button
 signal slot_activated(slot_index: int, mouse_button: int, shift_pressed: bool, double_click: bool)
 signal stack_dropped(source_inventory: InventoryComponent, source_slot: int, target_inventory: InventoryComponent, target_slot: int, moved_quantity: int)
 
+var _item_icon: TextureRect
 var slot_index := -1
 var item_stack: Resource
 var inventory: InventoryComponent
@@ -15,6 +16,14 @@ var inventory: InventoryComponent
 
 func _ready() -> void:
 	focus_mode = Control.FOCUS_NONE
+	_item_icon = TextureRect.new()
+	_item_icon.position = item_glyph.position
+	_item_icon.size = item_glyph.size
+	_item_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_item_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_item_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_item_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(_item_icon)
 	_update_style(false)
 
 
@@ -26,12 +35,14 @@ func configure(index: int, stack: Resource, owner_inventory: InventoryComponent 
 		return
 	if item_stack == null:
 		item_glyph.visible = false
+		_item_icon.texture = null
 		item_name.text = ""
 		quantity_label.text = ""
 		tooltip_text = "Empty slot"
 	else:
 		var definition: Resource = item_stack.item_definition
-		item_glyph.visible = true
+		item_glyph.visible = definition.icon == null
+		_item_icon.texture = definition.icon
 		item_glyph.color = definition.world_color
 		item_name.text = definition.display_name
 		quantity_label.text = str(item_stack.quantity) if definition.stack_limit > 1 else ""

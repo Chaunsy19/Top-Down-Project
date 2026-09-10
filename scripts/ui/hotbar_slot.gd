@@ -1,6 +1,7 @@
 class_name HotbarSlotUI
 extends Button
 
+var _item_icon: TextureRect
 var slot_index := -1
 var hotbar: HotbarComponent
 
@@ -12,6 +13,14 @@ var hotbar: HotbarComponent
 
 func _ready() -> void:
 	focus_mode = Control.FOCUS_NONE
+	_item_icon = TextureRect.new()
+	_item_icon.position = item_glyph.position
+	_item_icon.size = item_glyph.size
+	_item_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_item_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_item_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_item_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(_item_icon)
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 
 
@@ -24,13 +33,15 @@ func configure(index: int, item_id: StringName, stack: Resource, selected: bool)
 	key_label.text = str(index + 1)
 	if item_id.is_empty():
 		item_glyph.visible = false
+		_item_icon.texture = null
 		item_label.text = "Empty"
 		status_label.text = ""
 		tooltip_text = "Hotbar %d — Drop a tool or weapon here" % (index + 1)
 	else:
 		var registry := get_node_or_null("/root/ContentRegistry")
 		var definition: Resource = stack.item_definition if stack != null else (registry.get_item(item_id) if registry != null else null)
-		item_glyph.visible = definition != null
+		item_glyph.visible = definition != null and definition.icon == null
+		_item_icon.texture = definition.icon if definition != null else null
 		item_glyph.color = definition.world_color if definition != null else Color("#735052")
 		item_label.text = definition.display_name if definition != null else String(item_id).capitalize()
 		if stack == null:

@@ -10,6 +10,7 @@ extends Resource
 @export_range(0.0, 100.0, 0.5) var nutrition := 0.0
 @export var world_color := Color.WHITE
 @export var icon: Texture2D
+@export var held_grip := Vector2(0.05, 0.5)
 @export var tool_profile: Resource
 
 @export_group("Armor")

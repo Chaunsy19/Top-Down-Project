@@ -3,13 +3,23 @@
 [ext_resource type="Script" uid="uid://di4s6xtou0gr2" path="res://scripts/data/items/item_definition.gd" id="1_item"]
 [ext_resource type="Script" uid="uid://cvhgtqr7m0e0q" path="res://scripts/data/items/tool_profile.gd" id="2_tool"]
 
+[ext_resource type="Texture2D" path="res://assets/Tools/Axe.png" id="3_art"]
+
+[sub_resource type="AtlasTexture" id="ToolIcon"]
+atlas = ExtResource("3_art")
+region = Rect2(15, 9, 34, 13)
+
 [sub_resource type="Resource" id="ToolProfile_axe"]
 script = ExtResource("2_tool")
 capability_tags = Array[StringName]([&"axe"])
 maximum_durability = 80
 
 [resource]
+
+
 script = ExtResource("1_item")
+icon = SubResource("ToolIcon")
+held_grip = Vector2(0.05, 0.75)
 item_id = &"stone_axe"
 display_name = "Stone Axe"
 description = "A simple first-tier axe for cutting trees."

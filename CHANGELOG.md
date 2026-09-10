@@ -223,3 +223,10 @@ All notable project changes are recorded here by milestone.
 - Connected the Equipment panel's three slots to inventory dropdowns showing equipped protection.
 - Added three basic hand-crafted wood armor pieces with 20% protection for playable verification.
 - Verified armor crafting, coverage, bleeding reduction, mismatched slots, full-inventory swaps, failed unequip preservation, and UI integration. Armor, crafting, hotbar, UI window, and smoke suites pass; existing Godot startup/shutdown warnings remain.
+
+### Axe and pickaxe visuals
+
+- Connected the supplied Tools/Axe.png and Tools/Pickaxe.png assets to item icons, hotbar slots, held tools, and world drops.
+- Cropped transparent padding through AtlasTexture resources without modifying the source images; added item-defined grip positioning.
+- Replaced the placeholder held-tool motion with a 0.24-second angular sweep, followed by a return to the mouse-aimed idle pose. Explicit pause freezes the animation.
+- Verified tool visuals, contextual action mode, hotbar, and inventory suites. Existing Godot startup/shutdown warnings remain.
