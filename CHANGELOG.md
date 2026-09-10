@@ -256,3 +256,10 @@ All notable project changes are recorded here by milestone.
 - Flipped the held axe vertically around its grip so the blade faces the chop direction. Inventory artwork and the pickaxe retain their orientation.
 - Tool visual regression suite passes.
 
+
+### Pickaxe stone strike sound
+
+- Added the supplied pickaxestrike.mp3 on successful pickaxe tool damage to stone, including the final depletion hit.
+- Shared a 0.5-second sound cooldown across targets per actor; attack damage and click rate are unchanged.
+- Strike audio and action-mode regression suites pass.
+

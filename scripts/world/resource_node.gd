@@ -124,6 +124,11 @@ func take_damage(amount: float, damage_kind: StringName = &"melee", effective_ta
 	if health == null or is_depleted():
 		return 0.0
 	var applied := health.apply_damage(amount, damage_kind, effective_tags)
+	if applied > 0.0 and damage_kind == &"tool" and is_instance_valid(source):
+		var strike_audio := source.get_node_or_null("ToolStrikeAudio")
+		var equipment := source.get_node_or_null("Equipment")
+		if strike_audio != null and equipment != null:
+			strike_audio.try_play_strike(definition.damage_material_tags, equipment.get_hand_stack())
 	if applied > 0.0 and health.is_depleted():
 		_finish_depletion(source)
 	else:

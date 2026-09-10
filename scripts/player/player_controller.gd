@@ -23,6 +23,9 @@ var is_combat_ready := false
 
 func _ready() -> void:
 	add_to_group("player")
+	var strike_audio := preload("res://scripts/player/tool_strike_audio.gd").new()
+	strike_audio.name = "ToolStrikeAudio"
+	add_child(strike_audio)
 	if hotbar != null:
 		hotbar.selected_slot_changed.connect(_on_hotbar_selection_changed)
 	if equipment != null:
