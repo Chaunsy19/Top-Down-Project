@@ -78,7 +78,11 @@ func _draw() -> void:
 	if definition.icon != null:
 		var texture_size: Vector2 = definition.icon.get_size()
 		var draw_size := texture_size * (34.0 / maxf(texture_size.x, 1.0))
+		# Mirror around the grip so the handle stays anchored to the hand.
+		if definition.held_flip_v:
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, -1.0))
 		draw_texture_rect(definition.icon, Rect2(-definition.held_grip * draw_size, draw_size), false)
+		draw_set_transform(Vector2.ZERO)
 		draw_circle(Vector2.ZERO, 2.5, FIST_COLOR)
 		return
 	var item_color: Color = definition.world_color

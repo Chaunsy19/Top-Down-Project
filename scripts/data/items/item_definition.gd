@@ -11,6 +11,7 @@ extends Resource
 @export var world_color := Color.WHITE
 @export var icon: Texture2D
 @export var held_grip := Vector2(0.05, 0.5)
+@export var held_flip_v := false
 @export var tool_profile: Resource
 
 @export_group("Armor")

@@ -250,3 +250,9 @@ All notable project changes are recorded here by milestone.
 - Added a short windup, outward reach toward mouse aim, follow-through, and recovery over 0.32 seconds.
 - Tool visual and action-mode suites pass for the tucked pose, outward chop, recovery, aiming, and holstering.
 
+
+### Held axe orientation
+
+- Flipped the held axe vertically around its grip so the blade faces the chop direction. Inventory artwork and the pickaxe retain their orientation.
+- Tool visual regression suite passes.
+

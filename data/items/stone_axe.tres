@@ -20,6 +20,7 @@ maximum_durability = 80
 script = ExtResource("1_item")
 icon = SubResource("ToolIcon")
 held_grip = Vector2(0.05, 0.75)
+held_flip_v = true
 item_id = &"stone_axe"
 display_name = "Stone Axe"
 description = "A simple first-tier axe for cutting trees."
