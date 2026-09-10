@@ -70,6 +70,8 @@ const REQUIRED_SCRIPTS := [
 	"res://scripts/world/looping_sprite_animation.gd",
 	"res://scripts/ui/survival_hud.gd",
 	"res://scripts/ui/ui_manager.gd",
+	"res://scripts/ui/draggable_window_handle.gd",
+	"res://scripts/ui/character_ui.gd",
 	"res://scripts/ui/hotbar_slot.gd",
 	"res://scripts/ui/hotbar_ui.gd",
 	"res://scripts/data/building/build_cost.gd",

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/test/foundation_test.tscn" id="2_test"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://ui/hotbar/hotbar_ui.tscn" id="7_hotbar"]
 [ext_resource type="Script" path="res://scripts/building/building_system.gd" id="8_building"]
 [ext_resource type="PackedScene" path="res://ui/building/build_ui.tscn" id="9_build_ui"]
+[ext_resource type="PackedScene" path="res://ui/character/character_ui.tscn" id="10_character_ui"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_main")
@@ -22,6 +23,8 @@ script = ExtResource("1_main")
 [node name="CraftingUI" parent="." instance=ExtResource("5_crafting")]
 
 [node name="SurvivalHUD" parent="." instance=ExtResource("6_survival")]
+
+[node name="CharacterUI" parent="." instance=ExtResource("10_character_ui")]
 
 [node name="HotbarUI" parent="." instance=ExtResource("7_hotbar")]
 

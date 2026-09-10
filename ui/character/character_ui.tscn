@@ -1,0 +1,247 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/character_ui.gd" id="1_ui"]
+[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
+
+[sub_resource type="StyleBoxFlat" id="StylePanel"]
+bg_color = Color(0.075, 0.095, 0.09, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.42, 0.47, 0.44, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBarBackground"]
+bg_color = Color(0.12, 0.15, 0.14, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleHealth"]
+bg_color = Color(0.36, 0.68, 0.4, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleNeed"]
+bg_color = Color(0.78, 0.55, 0.23, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[node name="CharacterUI" type="CanvasLayer"]
+layer = 22
+script = ExtResource("1_ui")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HealthPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(380, 330)
+offset_left = 420.0
+offset_top = 120.0
+offset_right = 800.0
+offset_bottom = 450.0
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Margin" type="MarginContainer" parent="Root/HealthPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Layout" type="VBoxContainer" parent="Root/HealthPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Root/HealthPanel/Margin/Layout"]
+layout_mode = 2
+mouse_filter = 0
+script = ExtResource("2_drag")
+drag_target_path = NodePath("../../..")
+
+[node name="Title" type="Label" parent="Root/HealthPanel/Margin/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 20
+text = "HEALTH"
+
+[node name="HealthCloseButton" type="Button" parent="Root/HealthPanel/Margin/Layout/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+text = "×"
+
+[node name="Line" type="HSeparator" parent="Root/HealthPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="HealthLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+layout_mode = 2
+text = "OVERALL HEALTH"
+
+[node name="HealthBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBarBackground")
+theme_override_styles/fill = SubResource("StyleHealth")
+
+[node name="HungerLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+layout_mode = 2
+text = "HUNGER"
+
+[node name="HungerBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBarBackground")
+theme_override_styles/fill = SubResource("StyleNeed")
+
+[node name="RestLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+layout_mode = 2
+text = "REST"
+
+[node name="RestBar" type="ProgressBar" parent="Root/HealthPanel/Margin/Layout"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+theme_override_styles/background = SubResource("StyleBarBackground")
+theme_override_styles/fill = SubResource("StyleNeed")
+
+[node name="ConditionLabel" type="Label" parent="Root/HealthPanel/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.72, 0.78, 0.75, 1)
+text = "Stable"
+
+[node name="EquipmentPanel" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 320)
+offset_left = 700.0
+offset_top = 145.0
+offset_right = 1100.0
+offset_bottom = 465.0
+mouse_filter = 0
+theme_override_styles/panel = SubResource("StylePanel")
+
+[node name="Margin" type="MarginContainer" parent="Root/EquipmentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
+
+[node name="Layout" type="VBoxContainer" parent="Root/EquipmentPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+mouse_filter = 0
+script = ExtResource("2_drag")
+drag_target_path = NodePath("../../..")
+
+[node name="Title" type="Label" parent="Root/EquipmentPanel/Margin/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.82, 0.62, 1)
+theme_override_font_sizes/font_size = 20
+text = "EQUIPMENT"
+
+[node name="EquipmentCloseButton" type="Button" parent="Root/EquipmentPanel/Margin/Layout/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+focus_mode = 0
+text = "×"
+
+[node name="Line" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="HeadRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "HEAD"
+
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/HeadRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
+text = "Empty — reserved"
+
+[node name="BodyRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "BODY"
+
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/BodyRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
+text = "Empty — reserved"
+
+[node name="LegsRow" type="HBoxContainer" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="Slot" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "LEGS"
+
+[node name="Value" type="Label" parent="Root/EquipmentPanel/Margin/Layout/LegsRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.58, 0.64, 0.61, 1)
+text = "Empty — reserved"
+
+[node name="HandLine" type="HSeparator" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+
+[node name="HandTitle" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+layout_mode = 2
+text = "HELD ITEM"
+
+[node name="HandItemLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.76, 0.42, 1)
+theme_override_font_sizes/font_size = 18
+text = "Empty"
+
+[node name="HandDetailLabel" type="Label" parent="Root/EquipmentPanel/Margin/Layout"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.7, 0.76, 0.73, 1)
+text = "Select a tool or weapon from the hotbar."
+autowrap_mode = 2

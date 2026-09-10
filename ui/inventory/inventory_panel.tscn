@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/inventory/inventory_panel.gd" id="1_panel"]
+[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
 
 [node name="InventoryPanel" type="PanelContainer"]
 custom_minimum_size = Vector2(500, 500)
@@ -19,6 +20,9 @@ theme_override_constants/separation = 8
 
 [node name="Header" type="HBoxContainer" parent="Margin/Layout"]
 layout_mode = 2
+mouse_filter = 0
+script = ExtResource("2_drag")
+drag_target_path = NodePath("../../..")
 
 [node name="Title" type="Label" parent="Margin/Layout/Header"]
 unique_name_in_owner = true
@@ -64,7 +68,7 @@ text = "Select a slot"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.62, 0.59, 1)
 theme_override_font_sizes/font_size = 11
-text = "Drag: move, merge, or swap  •  Drag tools/weapons to hotbar  •  Right-click: split  •  Shift/double-click: quick transfer  •  Esc: close"
+text = "Drag title: move window  •  Drag items: move, merge, swap, or assign hotbar  •  Right-click: split  •  Esc: close"
 autowrap_mode = 2
 
 [node name="Actions" type="HBoxContainer" parent="Margin/Layout"]

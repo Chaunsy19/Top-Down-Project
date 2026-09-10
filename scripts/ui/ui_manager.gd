@@ -3,6 +3,7 @@ extends Node
 signal modal_stack_changed(open_modal_count: int)
 
 var _modal_stack: Array[Dictionary] = []
+var _paused_by_modals := false
 
 
 func _ready() -> void:
@@ -14,7 +15,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-func register_modal(owner: Object, close_callback: Callable) -> void:
+func register_modal(owner: Object, close_callback: Callable, pauses_game := true) -> void:
 	if not is_instance_valid(owner) or not close_callback.is_valid():
 		push_warning("UIManager rejected an invalid modal registration.")
 		return
@@ -22,7 +23,9 @@ func register_modal(owner: Object, close_callback: Callable) -> void:
 	_modal_stack.append({
 		"owner": owner,
 		"close_callback": close_callback,
+		"pauses_game": pauses_game,
 	})
+	_sync_modal_pause()
 	modal_stack_changed.emit(_modal_stack.size())
 
 
@@ -33,6 +36,7 @@ func unregister_modal(owner: Object) -> void:
 			_modal_stack.remove_at(index)
 			removed = true
 	if removed:
+		_sync_modal_pause()
 		modal_stack_changed.emit(_modal_stack.size())
 
 
@@ -42,9 +46,11 @@ func close_top_modal() -> bool:
 		var owner: Object = entry.owner
 		var close_callback: Callable = entry.close_callback
 		if is_instance_valid(owner) and close_callback.is_valid():
+			_sync_modal_pause()
 			modal_stack_changed.emit(_modal_stack.size())
 			close_callback.call()
 			return true
+	_sync_modal_pause()
 	modal_stack_changed.emit(0)
 	return false
 
@@ -67,5 +73,25 @@ func _cleanup_invalid_entries() -> void:
 			_modal_stack.remove_at(index)
 			changed = true
 	if changed:
+		_sync_modal_pause()
 		modal_stack_changed.emit(_modal_stack.size())
 
+
+func _sync_modal_pause() -> void:
+	var should_pause := false
+	for entry in _modal_stack:
+		if bool(entry.get("pauses_game", true)):
+			should_pause = true
+			break
+	if should_pause and not get_tree().paused:
+		get_tree().paused = true
+		_paused_by_modals = true
+		var game_state := get_node_or_null("/root/GameState")
+		if game_state != null:
+			game_state.set_paused(true)
+	elif not should_pause and _paused_by_modals:
+		get_tree().paused = false
+		_paused_by_modals = false
+		var game_state := get_node_or_null("/root/GameState")
+		if game_state != null:
+			game_state.set_paused(false)

@@ -1,23 +1,34 @@
 extends CanvasLayer
 
+const CharacterUIScript = preload("res://scripts/ui/character_ui.gd")
+const ALERT_ICON_COLOR := Color(1.0, 0.55, 0.34, 1.0)
+const RESTING_ICON_COLOR := Color(0.45, 0.72, 1.0, 1.0)
+
 var _world_clock: Node
 var _needs: Node
+var _player: PlayerController
 
 @onready var time_label: Label = %TimeLabel
 @onready var period_label: Label = %PeriodLabel
-@onready var hunger_bar: ProgressBar = %HungerBar
-@onready var fatigue_bar: ProgressBar = %FatigueBar
-@onready var health_bar: ProgressBar = %HealthBar
-@onready var condition_label: Label = %ConditionLabel
+@onready var health_button: Button = %HealthButton
+@onready var equipment_button: Button = %EquipmentButton
+@onready var inventory_button: Button = %InventoryButton
+@onready var hunger_button: Button = %HungerButton
+@onready var rest_button: Button = %RestButton
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	health_button.pressed.connect(_open_health)
+	equipment_button.pressed.connect(_open_equipment)
+	inventory_button.pressed.connect(_open_inventory)
+	hunger_button.pressed.connect(_open_inventory)
+	rest_button.pressed.connect(_toggle_rest)
 	call_deferred("_find_sources")
 
 
 func _process(_delta: float) -> void:
-	if not is_instance_valid(_world_clock) or not is_instance_valid(_needs):
+	if not is_instance_valid(_world_clock) or not is_instance_valid(_needs) or not is_instance_valid(_player):
 		_find_sources()
 	_refresh()
 
@@ -25,6 +36,7 @@ func _process(_delta: float) -> void:
 func _find_sources() -> void:
 	_world_clock = get_tree().get_first_node_in_group("world_clock")
 	_needs = get_tree().get_first_node_in_group("survival_needs")
+	_player = get_tree().get_first_node_in_group("player") as PlayerController
 
 
 func _refresh() -> void:
@@ -33,10 +45,44 @@ func _refresh() -> void:
 		period_label.text = _world_clock.get_period_name()
 	if not is_instance_valid(_needs):
 		return
-	hunger_bar.value = _needs.hunger
-	fatigue_bar.value = _needs.fatigue
-	health_bar.value = _needs.health
-	condition_label.text = "%s  •  T: %s" % [
-		_needs.get_condition_text(),
-		"wake" if _needs.is_resting else "rest",
-	]
+	health_button.tooltip_text = "Health: %.0f / 100 — open health" % _needs.health
+	equipment_button.tooltip_text = "Open equipment"
+	inventory_button.tooltip_text = "Open inventory"
+	hunger_button.tooltip_text = "Hunger low: %.0f / 100 — open inventory" % _needs.hunger
+	rest_button.tooltip_text = "%s: %.0f / 100" % ["Resting" if _needs.is_resting else "Rest low", _needs.fatigue]
+	health_button.modulate = ALERT_ICON_COLOR if _needs.health <= _needs.critical_threshold else Color.WHITE
+	hunger_button.visible = _needs.hunger <= _needs.critical_threshold
+	hunger_button.modulate = ALERT_ICON_COLOR
+	rest_button.visible = _needs.fatigue <= _needs.critical_threshold or _needs.is_resting
+	rest_button.modulate = RESTING_ICON_COLOR if _needs.is_resting else ALERT_ICON_COLOR
+
+
+func _open_health() -> void:
+	var character_ui := get_tree().get_first_node_in_group("character_ui") as CharacterUIScript
+	if character_ui != null:
+		character_ui.toggle_health()
+
+
+func _open_equipment() -> void:
+	var character_ui := get_tree().get_first_node_in_group("character_ui") as CharacterUIScript
+	if character_ui != null:
+		character_ui.toggle_equipment()
+
+
+func _open_inventory() -> void:
+	var inventory_ui := get_tree().get_first_node_in_group("inventory_ui")
+	if inventory_ui == null:
+		return
+	if inventory_ui.is_open():
+		inventory_ui.close_inventory()
+	else:
+		inventory_ui.open_player_inventory()
+
+
+func _toggle_rest() -> void:
+	if not is_instance_valid(_needs) or not is_instance_valid(_player):
+		return
+	if _player.is_combat_ready:
+		rest_button.tooltip_text = "Put away the held item before resting"
+		return
+	_needs.toggle_resting()

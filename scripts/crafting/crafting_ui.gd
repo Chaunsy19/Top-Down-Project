@@ -7,7 +7,6 @@ var _crafting: Node
 var _workstation_tags: Array[StringName] = []
 var _selected_recipe: Resource
 var _recipe_buttons: Array[Button] = []
-var _paused_by_ui := false
 
 @onready var overlay: Control = %Overlay
 @onready var context_label: Label = %ContextLabel
@@ -51,7 +50,6 @@ func open_crafting(actor: Node2D, workstation_tags: Array[StringName] = [], cont
 	context_label.text = context.to_upper()
 	overlay.visible = true
 	_rebuild_recipe_list()
-	_pause_for_ui()
 	var ui_manager := get_node_or_null("/root/UIManager")
 	if ui_manager != null:
 		ui_manager.register_modal(self, Callable(self, "close_crafting"))
@@ -62,12 +60,6 @@ func close_crafting() -> void:
 	var ui_manager := get_node_or_null("/root/UIManager")
 	if ui_manager != null:
 		ui_manager.unregister_modal(self)
-	if _paused_by_ui:
-		get_tree().paused = false
-		var game_state := get_node_or_null("/root/GameState")
-		if game_state != null:
-			game_state.set_paused(false)
-		_paused_by_ui = false
 
 
 func is_open() -> bool:
@@ -192,15 +184,6 @@ func _on_crafting_completed(recipe: Resource) -> void:
 func _on_crafting_failed(_recipe: Resource, reason: String) -> void:
 	_refresh_recipe_states()
 	status_label.text = reason
-
-
-func _pause_for_ui() -> void:
-	if not get_tree().paused:
-		get_tree().paused = true
-		var game_state := get_node_or_null("/root/GameState")
-		if game_state != null:
-			game_state.set_paused(true)
-		_paused_by_ui = true
 
 
 func _show_notification(message: String) -> void:

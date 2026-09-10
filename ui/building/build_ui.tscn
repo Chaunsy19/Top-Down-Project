@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/building/build_ui.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
 
 [node name="BuildUI" type="CanvasLayer"]
 layer = 12
@@ -32,9 +33,23 @@ theme_override_constants/margin_bottom = 10
 [node name="Layout" type="VBoxContainer" parent="Root/CatalogPanel/Margin"]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="Root/CatalogPanel/Margin/Layout"]
+[node name="Header" type="HBoxContainer" parent="Root/CatalogPanel/Margin/Layout"]
 layout_mode = 2
-text = "BUILD  •  B to close"
+mouse_filter = 0
+script = ExtResource("2_drag")
+drag_target_path = NodePath("../../..")
+
+[node name="Title" type="Label" parent="Root/CatalogPanel/Margin/Layout/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "BUILD"
+
+[node name="CloseButton" type="Button" parent="Root/CatalogPanel/Margin/Layout/Header"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+focus_mode = 0
+text = "×"
 
 [node name="BuildingList" type="VBoxContainer" parent="Root/CatalogPanel/Margin/Layout"]
 unique_name_in_owner = true

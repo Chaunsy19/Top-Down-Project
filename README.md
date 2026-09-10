@@ -20,6 +20,8 @@ The current test scene contains a directly controlled player on a grid-backed st
 
 The test world is a small editable island using the Tilebase artwork, eight deterministic variations per terrain, and soft shoreline/terrain blending. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the palette, painting workflow, and reproducible atlas pipeline.
 
+The bottom-right character dock opens Inventory (backpack), Health, and Equipment. Low hunger and rest add contextual ham and bed alerts. UI windows can be repositioned by dragging their title bars, closed with their own × button, or dismissed from newest to oldest with **Escape**.
+
 ## Project structure
 
 - `scenes/` — reusable scenes and runnable levels

@@ -2,6 +2,13 @@
 
 All notable project changes are recorded here by milestone.
 
+### Draggable UI windows and character dock
+
+- Added a reusable, screen-clamped draggable title-bar controller to inventory, containers, crafting, building, Health, and Equipment.
+- Added independently closable Health and Equipment windows plus independent player/container inventory closing.
+- Added a bottom-right icon dock for Inventory, Health, Equipment, low hunger, and low rest using the provided icon assets.
+- Centralized modal pause ownership so multiple open windows close safely without resuming the world too early.
+
 ### Smoother terrain-blend corners
 
 - Changed terrain overlay compositing so same-terrain variation blends render beneath actual terrain transitions instead of cutting notches into their corners.

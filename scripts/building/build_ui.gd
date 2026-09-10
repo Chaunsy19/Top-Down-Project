@@ -13,6 +13,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	panel.visible = false
 	active_label.visible = false
+	%CloseButton.pressed.connect(close_build_palette)
 	call_deferred("_bind_system")
 
 
@@ -26,7 +27,7 @@ func _bind_system() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and panel.visible:
-		panel.visible = false
+		close_build_palette()
 		get_viewport().set_input_as_handled()
 		return
 	if not event.is_action_pressed("building") or get_tree().paused:
@@ -38,6 +39,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		_system.cancel_placement()
 	panel.visible = not panel.visible
 	get_viewport().set_input_as_handled()
+
+
+func close_build_palette() -> void:
+	panel.visible = false
+	if _system != null:
+		_system.cancel_placement()
 
 
 func _rebuild_catalog() -> void:

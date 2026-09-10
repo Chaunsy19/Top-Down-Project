@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/crafting/crafting_ui.gd" id="1_ui"]
+[ext_resource type="Script" path="res://scripts/ui/draggable_window_handle.gd" id="2_drag"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_backdrop"]
 bg_color = Color(0.02, 0.025, 0.024, 0.72)
@@ -49,6 +50,9 @@ theme_override_constants/separation = 10
 
 [node name="Header" type="HBoxContainer" parent="Overlay/Panel/Margin/Layout"]
 layout_mode = 2
+mouse_filter = 0
+script = ExtResource("2_drag")
+drag_target_path = NodePath("../../..")
 
 [node name="Title" type="Label" parent="Overlay/Panel/Margin/Layout/Header"]
 layout_mode = 2
@@ -162,4 +166,4 @@ text = "CRAFT"
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.62, 0.59, 1)
 theme_override_font_sizes/font_size = 11
-text = "C: open/close hand crafting  •  E: use workstation  •  Esc: close"
+text = "C: open/close hand crafting  •  Drag title bar to move  •  Esc: close"
