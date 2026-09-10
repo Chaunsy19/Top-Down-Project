@@ -139,7 +139,7 @@ func get_harvest_ratio() -> float:
 
 
 func uses_hold_interaction() -> bool:
-	return true
+	return false
 
 
 func prefers_utility_when_armed() -> bool:
@@ -243,7 +243,7 @@ func _perform_interaction(actor: Node2D) -> void:
 	_active_tool_stack = find_compatible_tool(actor)
 	harvest_progress = 0.0
 	harvest_started.emit(actor)
-	_update_presentation()
+	_complete_work_strike()
 
 
 func _complete_work_strike() -> void:

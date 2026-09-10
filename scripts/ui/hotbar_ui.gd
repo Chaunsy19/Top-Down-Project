@@ -56,7 +56,7 @@ func _refresh_mode() -> void:
 		mode_label.text = "HELD ITEM  •  LMB use / melee  •  Select again to holster"
 		mode_label.add_theme_color_override("font_color", Color("#e27b62"))
 	elif _hotbar != null and _hotbar.selected_slot >= 0 and _hotbar.get_stack_for_slot(_hotbar.selected_slot) != null:
-		mode_label.text = "TOOL READY  •  Hold LMB use  •  Select again to put away"
+		mode_label.text = "TOOL READY  •  LMB use  •  Select again to put away"
 		mode_label.add_theme_color_override("font_color", Color("#d6b86a"))
 	else:
 		mode_label.text = "HANDS FREE  •  LMB interact  •  Select a hotbar item"

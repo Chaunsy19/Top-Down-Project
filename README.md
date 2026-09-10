@@ -16,7 +16,7 @@ No third-party plugins or dependencies are currently required.
 2. Import this folder's `project.godot`.
 3. Open the project and press **F6** for the current scene or **F5** for the main scene.
 
-The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim with the mouse, hold left click for harvesting, use **1–9** for assigned tools/weapons, **T** to rest, **I** for inventory, **C** for hand crafting, **B** for building, and **P** to pause. Selecting a hotbar tool readies it; selecting that slot again puts it away.
+The current test scene contains a directly controlled player on a grid-backed starter island. Move with **WASD** or the arrow keys, aim with the mouse, left-click once per harvesting or combat strike, use **1–9** for assigned tools/weapons, **T** to rest, **I** for inventory, **C** for hand crafting, **B** for building, and **P** to pause. Selecting a hotbar tool readies it; selecting that slot again puts it away.
 
 The test world is a small editable island using the Tilebase artwork, eight deterministic variations per terrain, and soft shoreline/terrain blending. See [`docs/MAP_DESIGN.md`](docs/MAP_DESIGN.md) for the palette, painting workflow, and reproducible atlas pipeline.
 

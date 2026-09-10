@@ -70,9 +70,8 @@ func run_tests() -> void:
 		equipped_stack.current_durability = 1
 		player.global_position = tree.global_position + Vector2.RIGHT * 48.0
 		if not tree.interact(player):
-			_failures.append("Tree harvest could not start with an equipped axe.")
+			_failures.append("Tree strike could not run with an equipped axe.")
 		else:
-			tree.advance_simulation(tree.get_effective_harvest_time() + 0.01)
 			if equipment.get_hand_stack() != null:
 				_failures.append("Zero-durability axe was not removed from equipment.")
 

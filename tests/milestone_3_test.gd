@@ -43,7 +43,7 @@ func run_tests() -> void:
 	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_pickaxe"))
 	test_skill_requirement(player, skills, rock)
 	equipment.equip_from_inventory(inventory, inventory.find_first_item(&"stone_axe"))
-	await test_timed_harvest(player, skills, interactor, tree)
+	await test_click_harvest(player, skills, interactor, tree)
 	test_regrowth(player, bush)
 
 	main.queue_free()
@@ -84,7 +84,7 @@ func test_skill_requirement(
 		_failures.append("Rock rejected an actor meeting its mining requirement.")
 
 
-func test_timed_harvest(
+func test_click_harvest(
 	player: CharacterBody2D,
 	skills: SkillTrackerScript,
 	interactor: PlayerInteractorScript,
@@ -100,24 +100,20 @@ func test_timed_harvest(
 		return
 	var initial_health: float = tree.health.current_health
 	if not interactor.try_interact():
-		_failures.append("Tree harvesting could not be started.")
+		_failures.append("Tree harvesting click did not succeed.")
 		return
-	if not tree.is_harvesting():
-		_failures.append("Tree did not enter its timed harvesting state.")
-		return
-	var effective_harvest_time := tree.get_effective_harvest_time(player)
-	tree.advance_simulation(effective_harvest_time * 0.5)
-	if tree.health.current_health != initial_health or not tree.is_harvesting():
-		_failures.append("Tree harvest completed before its configured duration.")
-		return
-	tree.advance_simulation(effective_harvest_time * 0.5 + 0.01)
 	if tree.health.current_health != initial_health - 30.0:
-		_failures.append("A stone axe work strike did not apply its configured 30 tool damage.")
+		_failures.append("One tree click did not immediately apply the configured 30 axe damage.")
+	if tree.is_harvesting() or interactor.is_holding_primary_action():
+		_failures.append("A tree click incorrectly entered a held harvesting state.")
+	var health_after_click: float = tree.health.current_health
+	tree.advance_simulation(10.0)
+	if tree.health.current_health != health_after_click:
+		_failures.append("Tree harvesting repeated damage without another click.")
 	while not tree.is_depleted():
 		if not tree.interact(player):
 			_failures.append("Tree could not continue health-based harvesting.")
 			return
-		tree.advance_simulation(tree.get_effective_harvest_time(player) + 0.01)
 	if skills.get_experience(&"forestry") != tree.definition.experience_reward:
 		_failures.append("Tree did not award configured forestry experience on depletion.")
 	var wood_drops := get_nodes_in_group("world_item_drop").filter(
@@ -134,9 +130,8 @@ func test_regrowth(player: CharacterBody2D, bush: ResourceNodeScript) -> void:
 		if not bush.interact(player):
 			_failures.append("Berry bush could not continue hand harvesting.")
 			return
-		bush.advance_simulation(bush.definition.harvest_time_seconds + 0.01)
 	if not bush.is_depleted():
-		_failures.append("Berry bush did not deplete after its configured harvest count.")
+		_failures.append("Berry bush did not deplete after its configured click damage.")
 		return
 	bush.advance_simulation(bush.definition.recovery_time_seconds + 0.01)
 	if bush.is_depleted() or bush.health.current_health != bush.definition.maximum_health:

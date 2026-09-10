@@ -20,7 +20,7 @@ offset_top = 58.0
 offset_right = 700.0
 offset_bottom = 88.0
 theme_override_colors/font_color = Color(0.78, 0.84, 0.81, 1)
-text = "Hold LMB interact  •  R combat  •  T rest  •  I inventory  •  C crafting  •  P pause"
+text = "LMB interact / strike  •  1–9 hotbar  •  T rest  •  I inventory  •  C crafting  •  B build  •  P pause"
 
 [node name="Panel" type="PanelContainer" parent="."]
 unique_name_in_owner = true

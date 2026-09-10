@@ -41,29 +41,21 @@ func _run_tests() -> void:
 
 	var initial_health: float = tree.health.current_health
 	_assert(interactor.begin_primary_action_at(tree.get_interaction_point()), "Clicking a valid resource should use the selected hotbar tool.")
-	_assert(interactor.is_holding_primary_action() and tree.is_harvesting(), "Harvesting should enter the held-action state.")
+	_assert(not interactor.is_holding_primary_action() and not tree.is_harvesting(), "A harvesting click should finish as a single strike, not enter a held-action state.")
+	_assert(tree.health.current_health == initial_health - 30.0, "One harvesting click should immediately apply one axe strike.")
 	tree._process(0.5)
-	_assert(is_zero_approx(tree.harvest_progress), "Harvest progress must not advance independently of the held action.")
-	interactor.continue_primary_action(tree.get_effective_harvest_time(player) * 0.5)
-	_assert(tree.harvest_progress > 0.0 and tree.health.current_health == initial_health, "A partial hold should advance without applying a strike.")
-	interactor.end_primary_action()
-	_assert(not tree.is_harvesting() and is_zero_approx(tree.harvest_progress), "Releasing left click should cancel and reset partial work.")
+	interactor.continue_primary_action(10.0)
+	_assert(tree.health.current_health == initial_health - 30.0, "Keeping the button held should not repeat harvesting strikes.")
 
-	_assert(interactor.begin_primary_action_on(tree), "A harvest should restart after cancellation.")
-	interactor.continue_primary_action(tree.get_effective_harvest_time(player) + 0.01)
-	_assert(tree.health.current_health == initial_health - 30.0, "Holding for the full duration should apply one axe work strike.")
-	interactor.end_primary_action()
+	_assert(interactor.begin_primary_action_on(tree), "A second click should apply another harvesting strike.")
+	_assert(tree.health.current_health == initial_health - 60.0, "Each distinct click should apply exactly one axe strike.")
 
 	var attacks: Array[Vector2] = []
 	player.attack_requested.connect(func(direction: Vector2) -> void: attacks.append(direction))
-	_assert(interactor.begin_primary_action_on(tree), "A weapon-capable tool should still route clicks on work targets to utility actions.")
-	interactor.end_primary_action()
-	var attack_event := InputEventAction.new()
-	attack_event.action = &"attack"
-	attack_event.pressed = true
-	player._unhandled_input(attack_event)
-	_assert(attacks.size() == 1, "Combat-ready left click should emit one attack request.")
-	_assert(combat_visual.is_attack_animating(), "A combat click should play visible fist or weapon attack feedback.")
+	_assert(player.perform_primary_action_at(tree.get_interaction_point()), "A weapon-capable tool should route a click on its work target to a harvesting strike.")
+	_assert(tree.health.current_health == initial_health - 90.0, "The player action route should apply exactly one tool strike.")
+	_assert(attacks.size() == 1, "A harvesting click should emit one attack animation request.")
+	_assert(combat_visual.is_attack_animating(), "A harvesting click should play visible tool-swing feedback.")
 
 	_assert(hotbar.select_slot(0), "Selecting the active slot again should holster its item.")
 	_assert(player.are_weapons_holstered() and equipment.get_hand_stack() == null, "Hotbar holstering should clear combat readiness and the equipped hand.")

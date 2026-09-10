@@ -55,8 +55,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		survival_needs.toggle_resting()
 		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed("attack") and is_combat_ready and not get_tree().paused:
-		if interactor == null or not interactor.begin_armed_primary_action_at(get_global_mouse_position()):
-			perform_melee_attack_at(get_global_mouse_position())
+		perform_primary_action_at(get_global_mouse_position())
 		get_viewport().set_input_as_handled()
 
 
@@ -82,6 +81,13 @@ func _sync_combat_readiness() -> void:
 	var definition: Resource = hand_stack.item_definition if hand_stack != null else null
 	var selected_from_hotbar := hotbar != null and hotbar.selected_slot >= 0
 	set_combat_ready(selected_from_hotbar and definition != null and (definition.has_category(&"weapon") or definition.has_category(&"tool")))
+
+
+func perform_primary_action_at(world_position: Vector2) -> bool:
+	if interactor != null and interactor.begin_armed_primary_action_at(world_position):
+		attack_requested.emit(aim_direction)
+		return true
+	return perform_melee_attack_at(world_position) != null
 
 
 func perform_melee_attack_at(world_position: Vector2) -> Node2D:

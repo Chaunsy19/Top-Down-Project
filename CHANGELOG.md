@@ -2,6 +2,12 @@
 
 All notable project changes are recorded here by milestone.
 
+### Click-per-strike harvesting
+
+- Changed resource harvesting from held progress to one damage strike per left-click.
+- Preserved tool requirements, typed damage, durability wear, skill rewards, drops, depletion, and regrowth.
+- Added immediate tool-swing feedback for successful harvesting clicks.
+
 ### Health and typed damage foundation
 
 - Replaced resource harvest counts with reusable health, damage, depletion, and recovery state.
