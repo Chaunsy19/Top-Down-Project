@@ -158,6 +158,8 @@ Open Health from the character dock to see head, torso, each arm, each leg, bloo
 
 Wounds clot at 4 bleeding-rate points per game hour. Once clotted, resting with hunger and rest at least 50 restores 2 condition and blood per game hour. No bandaging or medicine is included yet.
 
-Manual check: run the scene, open Health, select a region and click **Test wound** (development builds only: 25 damage and 8 blood/hour). Close Health to let time advance. Compare movement after leg damage and harvesting after arm damage; reopen Health to inspect blood loss and clotting. Press T while holstered and well-fed to recover after bleeding stops. Opening Health pauses the simulation. Repeated bleeding wounds can test death from blood loss. The blood icon in the dock pulses red while bleeding and stops when bleeding clots or the player dies.
+Manual check: run the scene, open Health, select a region and click **Test wound** (development builds only: 25 damage and 8 blood/hour). Time and bleeding continue while Health or any other menu is open. Compare movement after leg damage and harvesting after arm damage; reopen Health to inspect blood loss and clotting. Press T while holstered and well-fed to recover after bleeding stops. Menus never pause the simulation; P explicitly pauses or resumes it. Repeated bleeding wounds can test death from blood loss. The blood icon in the dock pulses red while bleeding and stops when bleeding clots or the player dies.
 
 Automated check: `godot --headless --path . --script res://tests/milestone_8_health_test.gd`.
+
+Bleeding drains 10% more blood than the original tuning (an 8-point wound starts at 8.8 blood/hour). Clotting timing and recovery rates are unchanged.

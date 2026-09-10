@@ -34,13 +34,13 @@ func _run_tests() -> void:
 		_assert(button != null and button.icon != null, "%s should exist and use its icon asset." % button_name)
 
 	hud.health_button.pressed.emit()
-	_assert(character_ui.is_health_open() and paused, "The health dock button should open its panel and pause safely.")
+	_assert(character_ui.is_health_open() and not paused, "The health dock button should open its panel and keep the world running.")
 	hud.equipment_button.pressed.emit()
 	_assert(character_ui.is_equipment_open() and ui_manager.get_open_modal_count() == 2, "Health and Equipment should be able to remain open independently.")
 	character_ui.close_health()
-	_assert(not character_ui.is_health_open() and character_ui.is_equipment_open() and paused, "Closing Health should leave Equipment open and retain the modal pause.")
+	_assert(not character_ui.is_health_open() and character_ui.is_equipment_open() and not paused, "Closing Health should leave Equipment open and keep the world running.")
 	ui_manager.close_top_modal()
-	_assert(not character_ui.is_equipment_open() and not paused, "Closing the final character panel should resume the world.")
+	_assert(not character_ui.is_equipment_open() and not paused, "Closing the final character panel should leave the world running.")
 
 	character_ui.open_health()
 	var health_header := character_ui.health_panel.get_node("Margin/Layout/Header") as DragHandleScript

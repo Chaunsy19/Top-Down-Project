@@ -120,8 +120,8 @@ func test_scene_item_lifecycle() -> void:
 		_failures.append("Transferred stone axe was not present in player inventory.")
 
 	inventory_ui.open_container(crate, player, player_inventory, crate.inventory)
-	if not inventory_ui.is_open() or not paused:
-		_failures.append("Opening a container did not show and safely pause the inventory UI.")
+	if not inventory_ui.is_open() or paused:
+		_failures.append("Opening a container did not show the live the inventory UI.")
 	if inventory_ui.player_panel.columns != 6 or inventory_ui.container_panel.columns != 4:
 		_failures.append("Player/container slot grids do not match the intended 6/4-column layout.")
 	if not inventory_ui.player_panel.currency_footer.visible:
@@ -169,7 +169,7 @@ func test_escape_closes_ui(inventory_ui: InventoryUIScript, ui_manager: Node) ->
 	if inventory_ui.is_open():
 		_failures.append("Escape did not close the open inventory UI.")
 	if paused:
-		_failures.append("Escape did not resume the world after closing inventory.")
+		_failures.append("Escape did not keep the world running after closing inventory.")
 	if ui_manager.has_open_modal():
 		_failures.append("Closed inventory remained in the modal UI stack.")
 

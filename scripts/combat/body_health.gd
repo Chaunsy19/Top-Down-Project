@@ -4,6 +4,7 @@ extends Node
 
 signal changed()
 
+const BLOOD_LOSS_MULTIPLIER := 1.1
 const REGIONS: Array[StringName] = [&"head", &"torso", &"left_arm", &"right_arm", &"left_leg", &"right_leg"]
 @export var clotting_per_game_hour := 4.0
 @export var recovery_per_game_hour := 2.0
@@ -41,7 +42,7 @@ func advance_game_minutes(minutes: float, can_recover: bool = false) -> void:
 		var rate: float = injury.bleeding
 		var clotting := maxf(clotting_per_game_hour, 0.0)
 		var duration := minf(hours, rate / clotting) if clotting > 0.0 else hours
-		blood = maxf(0.0, blood - rate * duration + 0.5 * clotting * duration * duration)
+		blood = maxf(0.0, blood - (rate * duration - 0.5 * clotting * duration * duration) * BLOOD_LOSS_MULTIPLIER)
 		injury.bleeding = maxf(0.0, rate - clotting * hours)
 		if can_recover and rate <= 0.0:
 			condition[region] = minf(100.0, condition[region] + maxf(recovery_per_game_hour, 0.0) * hours)
@@ -57,7 +58,7 @@ func get_bleeding_rate() -> float:
 	var total := 0.0
 	for injury in injuries.values():
 		total += float(injury.bleeding)
-	return total
+	return total * BLOOD_LOSS_MULTIPLIER
 
 
 func is_collapsed() -> bool:
@@ -82,5 +83,5 @@ func _capacity(left: StringName, right: StringName) -> float:
 func get_region_text(region: StringName) -> String:
 	var value: float = condition[region]
 	var severity := "Healthy" if value >= 100.0 else ("Minor" if value > 70.0 else ("Moderate" if value > 35.0 else "Severe"))
-	var rate: float = injuries.get(region, {}).get("bleeding", 0.0)
+	var rate: float = injuries.get(region, {}).get("bleeding", 0.0) * BLOOD_LOSS_MULTIPLIER
 	return "%s: %.0f/100 · %s%s" % [String(region).replace("_", " ").capitalize(), value, severity, " · bleeding %.1f/h" % rate if rate > 0.0 else ""]

@@ -19,9 +19,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if get_tree().paused:
-		var crafting_ui := get_tree().get_first_node_in_group("crafting_ui")
-		if crafting_ui == null or not crafting_ui.is_open():
-			return
+		return
 	advance_crafting(delta)
 
 

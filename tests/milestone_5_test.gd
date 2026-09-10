@@ -91,8 +91,8 @@ func run_tests() -> void:
 			_failures.append("Campfire recipe did not produce the cooked meal.")
 
 	crafting_ui.open_crafting(player, no_workstation_tags, "HAND CRAFTING")
-	if not crafting_ui.is_open() or not paused or not ui_manager.has_open_modal():
-		_failures.append("Crafting UI did not open as a paused modal.")
+	if not crafting_ui.is_open() or paused or not ui_manager.has_open_modal():
+		_failures.append("Crafting UI did not open without pausing.")
 	var inventory_event := InputEventAction.new()
 	inventory_event.action = &"inventory"
 	inventory_event.pressed = true
@@ -104,10 +104,11 @@ func run_tests() -> void:
 	pause_event.pressed = true
 	main._unhandled_input(pause_event)
 	if not paused:
-		_failures.append("Pause input resumed the world behind a modal UI.")
+		_failures.append("Explicit pause should work with a menu open.")
 	ui_manager.close_top_modal()
-	if crafting_ui.is_open() or paused or ui_manager.has_open_modal():
+	if crafting_ui.is_open() or not paused or ui_manager.has_open_modal():
 		_failures.append("Escape-modal behavior did not close crafting cleanly.")
+	main._unhandled_input(pause_event)
 	campfire.interact(player)
 	if not crafting_ui.is_open() or crafting_ui.context_label.text != "CAMPFIRE":
 		_failures.append("Interacting with the campfire did not open its crafting context.")

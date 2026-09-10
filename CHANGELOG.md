@@ -208,3 +208,10 @@ All notable project changes are recorded here by milestone.
 - Hunger and fatigue retain movement penalties without inflicting health damage. Rest cannot revive a character with no blood.
 - Replaced the dock health icon with the supplied blood asset and a red pulse while actively bleeding. The character panel now displays a blood meter.
 - Updated regression tests for blood-only death and bleeding icon animation.
+
+### Hardcore bleeding and live menus
+
+- Increased actual blood loss and displayed bleeding rates by 10%, preserving clotting and recovery timing.
+- Removed automatic menu pausing for all registered windows. Closing menus also preserves explicit pause state.
+- P can explicitly pause/resume with a menu open; crafting now respects explicit pause.
+- Inventory, crafting, and window suites pass. Health mechanics and live-menu bleeding checks pass; existing local scene edits fail the health panel bounds and blood icon asset assertions.
