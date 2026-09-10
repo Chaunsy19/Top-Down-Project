@@ -9,6 +9,7 @@ var audio: AudioStreamPlayer
 var terrain_maps: Array[TerrainMap] = []
 var player: Node2D
 var target_gain := 0.0
+## Normalized fade state, not a volume setting. Use maximum_volume_db for loudness.
 var gain := 0.0
 var _check_elapsed := 0.0
 
@@ -67,7 +68,7 @@ func is_near_deep_water(terrain: TerrainMap, world_position: Vector2) -> bool:
 	return false
 
 func advance_fade(delta: float) -> void:
-	gain = move_toward(gain, target_gain, maxf(delta, 0.0) / maxf(fade_seconds, 0.01))
+	gain = move_toward(clampf(gain, 0.0, 1.0), clampf(target_gain, 0.0, 1.0), maxf(delta, 0.0) / maxf(fade_seconds, 0.01))
 	if gain > 0.0:
 		audio.volume_db = maximum_volume_db + linear_to_db(gain)
 		if not audio.playing and audio.stream != null:

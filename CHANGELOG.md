@@ -237,3 +237,9 @@ All notable project changes are recorded here by milestone.
 - Added 2.5-second fade-in/out, smooth fade reversal, and one shared ambience voice at -16 dB maximum.
 - Queries nearby terrain every 0.2 seconds and respects live menus and explicit pause.
 - Ocean ambience and smoke suites pass, including distance boundary, shallow-water exclusion, looping, fade reversal, silent stop, and main-scene integration.
+
+### Ocean fade-out correction
+
+- Reset ocean fade gain to zero and clamp runtime gain to 0–1, preventing out-of-range gain from extending the fade-out.
+- Verified startup silence, walking beyond the ten-tile radius, and full fade-out within the configured duration, including an invalid gain of 15.5.
+
