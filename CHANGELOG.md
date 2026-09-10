@@ -191,3 +191,13 @@ All notable project changes are recorded here by milestone.
 - Added equipment controls and durability display to the inventory UI.
 - Expanded loose starter materials so both first-tier tools can be crafted in the test world.
 - Added automated Milestone 5 coverage for crafting, equipment, durability, breakage, replacement, workstation rules, and modal behavior.
+
+## Milestone 8 — Health mechanics (partial milestone)
+
+- Added reusable health for head, torso, left/right arms, and left/right legs, separate from overall survival health.
+- Regional injuries track severity and bleeding. Blood loss integrates over game time, wounds gradually clot, and well-fed rest restores clotted tissue and blood.
+- Leg injuries slow movement; arm injuries reduce harvesting/attack strength and construction/crafting speed. Blood loss affects both. Depleted head, torso, or blood causes collapse.
+- Expanded Health with regional conditions, blood, bleeding rate, penalties, and a development-only targeted test wound control.
+- Made the world clock explicitly pausable so time and bleeding stop during modal pause.
+- Verified health integration, smoke, milestones 5–7, action mode, and UI windows suites. Existing map occupancy and Godot shutdown warnings remain.
+- Equipment, armor, and additional weapon work are deferred; milestone 8 is not complete.

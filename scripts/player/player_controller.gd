@@ -91,10 +91,13 @@ func perform_primary_action_at(world_position: Vector2) -> bool:
 
 
 func perform_melee_attack_at(world_position: Vector2) -> Node2D:
+	if get_action_multiplier() <= 0.0:
+		return null
 	var hand_stack := equipment.get_hand_stack() if equipment != null else null
 	var damage: float = unarmed_melee_damage
 	if hand_stack != null and hand_stack.item_definition != null:
 		damage = hand_stack.item_definition.melee_damage
+	damage *= get_action_multiplier()
 	var target: Node2D
 	var closest := INF
 	var reach := interactor.radius if interactor != null else 56.0
@@ -111,7 +114,7 @@ func perform_melee_attack_at(world_position: Vector2) -> Node2D:
 	if target != null:
 		var applied: float = 0.0
 		if hand_stack != null and hand_stack.item_definition.tool_damage > 0.0:
-			applied = target.call("take_damage", hand_stack.item_definition.tool_damage, &"tool", hand_stack.item_definition.tool_damage_tags, self)
+			applied = target.call("take_damage", hand_stack.item_definition.tool_damage * get_action_multiplier(), &"tool", hand_stack.item_definition.tool_damage_tags, self)
 		if applied <= 0.0:
 			target.call("take_damage", damage, &"melee", [], self)
 		if hand_stack != null:
@@ -151,3 +154,16 @@ func get_tool_socket() -> Marker2D:
 func _update_aim_pivot() -> void:
 	if is_instance_valid(aim_pivot):
 		aim_pivot.rotation = get_aim_angle()
+
+func get_action_multiplier() -> float:
+	return survival_needs.get_action_multiplier() if survival_needs != null else 1.0
+
+
+func take_region_damage(region: StringName, amount: float, bleeding_rate: float = 0.0) -> float:
+	if survival_needs == null or survival_needs.health <= 0.0:
+		return 0.0
+	var applied := survival_needs.body_health.apply_damage(region, amount, bleeding_rate)
+	if applied > 0.0:
+		survival_needs.set_resting(false)
+		survival_needs.needs_changed.emit(survival_needs.hunger, survival_needs.fatigue, survival_needs.health)
+	return applied

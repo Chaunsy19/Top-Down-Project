@@ -151,3 +151,13 @@ godot --headless --path . --script res://tests/campfire_animation_test.gd
 godot --headless --path . --script res://tests/hotbar_test.gd
 godot --headless --path . --script res://tests/action_mode_test.gd
 ```
+
+## Regional health and bleeding (milestone 8 health slice)
+
+Open Health from the character dock to see head, torso, each arm, each leg, blood, injury severity, bleeding per game hour, and current effectiveness. Each region starts at 100 condition; overall survival health remains separate. Leg damage slows movement, arm damage reduces work/attack effectiveness, and blood loss weakens both. Zero head/torso condition or blood causes collapse; restart the scene after collapse in this prototype.
+
+Wounds clot at 4 bleeding-rate points per game hour. Once clotted, resting with hunger and rest at least 50 restores 2 condition and blood per game hour. No bandaging or medicine is included yet.
+
+Manual check: run the scene, open Health, select a region and click **Test wound** (development builds only: 25 damage and 8 blood/hour). Close Health to let time advance. Compare movement after leg damage and harvesting after arm damage; reopen Health to inspect blood loss and clotting. Press T while holstered and well-fed to recover after bleeding stops. Opening Health pauses the simulation. Repeated head/torso wounds can test collapse.
+
+Automated check: `godot --headless --path . --script res://tests/milestone_8_health_test.gd`.

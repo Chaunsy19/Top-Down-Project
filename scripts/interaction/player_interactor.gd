@@ -67,7 +67,7 @@ func refresh_target() -> void:
 func try_interact() -> bool:
 	refresh_target()
 	var succeeded := false
-	if is_target_in_range(_current_target):
+	if _actor_can_act() and is_target_in_range(_current_target):
 		succeeded = _current_target.interact(get_parent() as Node2D)
 	interaction_attempted.emit(_current_target, succeeded)
 	_update_prompt()
@@ -87,7 +87,7 @@ func begin_armed_primary_action_at(world_position: Vector2) -> bool:
 
 
 func begin_primary_action_on(target: InteractableScript) -> bool:
-	if not is_target_in_range(target):
+	if not _actor_can_act() or not is_target_in_range(target):
 		return false
 	set_current_target(target)
 	var succeeded := target.interact(get_parent() as Node2D)
@@ -103,7 +103,7 @@ func continue_primary_action(delta: float) -> bool:
 	if not _primary_held or not is_instance_valid(_held_target):
 		return false
 	var actor := get_parent() as Node2D
-	if not is_target_in_range(_held_target):
+	if not _actor_can_act() or not is_target_in_range(_held_target):
 		end_primary_action()
 		return false
 	var still_active := _held_target.continue_hold_interaction(actor, delta)
@@ -179,3 +179,8 @@ func _update_prompt() -> void:
 func _draw() -> void:
 	draw_circle(Vector2.ZERO, radius, Color(0.902, 0.765, 0.416, 0.035))
 	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 64, Color(0.902, 0.765, 0.416, 0.42), 1.5, true)
+
+
+func _actor_can_act() -> bool:
+	var actor := get_parent()
+	return not actor.has_method("get_action_multiplier") or actor.get_action_multiplier() > 0.0

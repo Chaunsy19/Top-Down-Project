@@ -21,6 +21,7 @@ var total_game_minutes := 0.0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_PAUSABLE
 	add_to_group("world_clock")
 	day = maxi(starting_day, 1)
 	hour = wrapf(starting_hour, 0.0, 24.0)

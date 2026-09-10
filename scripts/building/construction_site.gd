@@ -38,7 +38,8 @@ func _perform_interaction(actor: Node2D) -> void:
 func continue_hold_interaction(actor: Node2D, delta: float) -> bool:
 	if definition == null or actor != _builder:
 		return false
-	progress += maxf(delta, 0.0)
+	var efficiency: float = actor.get_action_multiplier() if actor.has_method("get_action_multiplier") else 1.0
+	progress += maxf(delta, 0.0) * efficiency
 	queue_redraw()
 	if progress < definition.construction_time:
 		return true

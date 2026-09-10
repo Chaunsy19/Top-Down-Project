@@ -257,6 +257,8 @@ func _complete_work_strike() -> void:
 	if used_tool != null and used_tool.item_definition != null:
 		damage = used_tool.item_definition.tool_damage
 		damage_tags = used_tool.item_definition.tool_damage_tags
+	if actor.has_method("get_action_multiplier"):
+		damage *= actor.get_action_multiplier()
 	var applied := take_damage(damage, &"tool", damage_tags, actor)
 	if applied > 0.0:
 		_wear_used_tool(actor, used_tool)

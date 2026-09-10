@@ -76,7 +76,9 @@ func start_crafting(recipe: Resource, workstation_tags: Array[StringName]) -> bo
 func advance_crafting(delta: float) -> void:
 	if active_recipe == null or delta <= 0.0:
 		return
-	elapsed_time += delta
+	var actor := get_parent()
+	var efficiency: float = actor.get_action_multiplier() if actor.has_method("get_action_multiplier") else 1.0
+	elapsed_time += delta * efficiency
 	crafting_progressed.emit(active_recipe, get_progress_ratio())
 	if elapsed_time < active_recipe.crafting_time_seconds:
 		return

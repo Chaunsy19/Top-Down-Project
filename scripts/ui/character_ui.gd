@@ -1,6 +1,8 @@
 class_name CharacterUI
 extends CanvasLayer
 
+var _body_label: Label
+var _test_region: OptionButton
 var _player: Node2D
 var _needs: Node
 var _equipment: EquipmentComponent
@@ -22,6 +24,21 @@ func _ready() -> void:
 	equipment_panel.visible = false
 	%HealthCloseButton.pressed.connect(close_health)
 	%EquipmentCloseButton.pressed.connect(close_equipment)
+	_body_label = Label.new()
+	_body_label.add_theme_font_size_override("font_size", 14)
+	health_panel.get_node("Margin/Layout").add_child(_body_label)
+	if OS.is_debug_build():
+		var row := HBoxContainer.new()
+		health_panel.get_node("Margin/Layout").add_child(row)
+		_test_region = OptionButton.new()
+		for region in BodyHealth.REGIONS:
+			_test_region.add_item(String(region).replace("_", " ").capitalize())
+		row.add_child(_test_region)
+		var test_button := Button.new()
+		test_button.text = "Test wound"
+		test_button.tooltip_text = "Development: 25 region damage and 8 blood loss per game hour."
+		test_button.pressed.connect(_test_wound)
+		row.add_child(test_button)
 	call_deferred("_find_player")
 
 
@@ -96,6 +113,14 @@ func _refresh() -> void:
 			_needs.hunger,
 			_needs.fatigue,
 		]
+		var body: BodyHealth = _needs.body_health
+		var lines := PackedStringArray()
+		lines.append("Blood: %.1f/100 · Bleeding: %.1f/hour" % [body.blood, body.get_bleeding_rate()])
+		for region in BodyHealth.REGIONS:
+			lines.append(body.get_region_text(region))
+		lines.append("Movement: %d%% · Work/attacks: %d%%" % [roundi(_needs.get_movement_multiplier() * 100.0), roundi(_needs.get_action_multiplier() * 100.0)])
+		lines.append("Wounds clot over time. Rest well-fed to recover.")
+		_body_label.text = "\n".join(lines)
 	if is_instance_valid(_equipment):
 		var hand_stack := _equipment.get_hand_stack()
 		if hand_stack == null or hand_stack.item_definition == null:
@@ -119,3 +144,8 @@ func _unregister_window(window: Control) -> void:
 	var ui_manager := get_node_or_null("/root/UIManager")
 	if ui_manager != null:
 		ui_manager.unregister_modal(window)
+
+func _test_wound() -> void:
+	if is_instance_valid(_player):
+		_player.take_region_damage(BodyHealth.REGIONS[_test_region.selected], 25.0, 8.0)
+		_refresh()
