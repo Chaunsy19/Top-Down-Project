@@ -5,7 +5,7 @@ signal aim_direction_changed(direction: Vector2)
 signal combat_mode_changed(is_combat_ready: bool)
 signal attack_requested(direction: Vector2)
 
-@export_range(1.0, 1000.0, 1.0) var movement_speed := 220.0
+@export_range(1.0, 1000.0, 1.0) var movement_speed := 125.0
 @export_range(1.0, 5000.0, 1.0) var acceleration := 1600.0
 @export_range(1.0, 5000.0, 1.0) var deceleration := 2000.0
 @export_range(0.0, 64.0, 0.5) var aim_deadzone := 4.0

@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BuildingCatalog" format=3]
+[gd_resource type="Resource" script_class="BuildingCatalog" format=3 uid="uid://c58nf562pt60g"]
 
-[ext_resource type="Script" path="res://scripts/data/building/building_catalog.gd" id="1"]
+[ext_resource type="Script" uid="uid://mjaugqlwjmjb" path="res://scripts/data/building/building_catalog.gd" id="1"]
 [ext_resource type="Resource" path="res://data/buildings/wood_floor.tres" id="1_hhqlk"]
 [ext_resource type="Resource" path="res://data/buildings/wood_wall.tres" id="2_y2iv3"]
 [ext_resource type="Resource" path="res://data/buildings/wood_door.tres" id="3_4fvok"]

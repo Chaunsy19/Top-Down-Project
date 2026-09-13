@@ -1,17 +1,16 @@
-[gd_resource type="Resource" script_class="ItemCatalog" load_steps=12 format=3]
+[gd_resource type="Resource" script_class="ItemCatalog" format=3 uid="uid://bogy3ugjcpjv0"]
 
-[ext_resource type="Script" path="res://scripts/data/items/item_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" uid="uid://cv1ytufo7pmg2" path="res://scripts/data/items/item_catalog.gd" id="1_catalog"]
 [ext_resource type="Resource" path="res://data/items/wood.tres" id="2_wood"]
 [ext_resource type="Resource" path="res://data/items/stone.tres" id="3_stone"]
-[ext_resource type="Resource" path="res://data/items/berries.tres" id="4_berries"]
-[ext_resource type="Resource" path="res://data/items/stone_axe.tres" id="5_axe"]
-[ext_resource type="Resource" path="res://data/items/stone_pickaxe.tres" id="6_pickaxe"]
-[ext_resource type="Resource" path="res://data/items/stick.tres" id="7_stick"]
+[ext_resource type="Resource" uid="uid://btibk6t8qswqj" path="res://data/items/berries.tres" id="4_berries"]
+[ext_resource type="Resource" uid="uid://b4v7bjvyf0h6e" path="res://data/items/stone_axe.tres" id="5_axe"]
+[ext_resource type="Resource" uid="uid://cwbyqh5p76yih" path="res://data/items/stone_pickaxe.tres" id="6_pickaxe"]
+[ext_resource type="Resource" uid="uid://c08lphc4pmlgq" path="res://data/items/stick.tres" id="7_stick"]
 [ext_resource type="Resource" path="res://data/items/cooked_berry_meal.tres" id="8_meal"]
-
 [ext_resource type="Resource" path="res://data/items/wood_armor_head.tres" id="armor_head"]
-[ext_resource type="Resource" path="res://data/items/wood_armor_torso.tres" id="armor_torso"]
 [ext_resource type="Resource" path="res://data/items/wood_armor_legs.tres" id="armor_legs"]
+[ext_resource type="Resource" path="res://data/items/wood_armor_torso.tres" id="armor_torso"]
 
 [resource]
 script = ExtResource("1_catalog")

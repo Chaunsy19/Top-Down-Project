@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="BuildingDefinition" format=3]
+[gd_resource type="Resource" script_class="BuildingDefinition" format=3 uid="uid://ctvvknloq53qk"]
 
 [ext_resource type="Resource" path="res://data/items/wood.tres" id="1_34ejw"]
-[ext_resource type="Script" path="res://scripts/data/building/build_cost.gd" id="2_qnam8"]
+[ext_resource type="Script" uid="uid://dl0sdp1j6ujna" path="res://scripts/data/building/build_cost.gd" id="2_qnam8"]
 [ext_resource type="Resource" path="res://data/items/stone.tres" id="3_flchb"]
-[ext_resource type="Script" path="res://scripts/data/building/building_definition.gd" id="4_fpogm"]
-[ext_resource type="Resource" path="res://data/workstations/campfire.tres" id="5_yun6g"]
+[ext_resource type="Script" uid="uid://b5aqn0h448dr6" path="res://scripts/data/building/building_definition.gd" id="4_fpogm"]
+[ext_resource type="Resource" uid="uid://bd18ndih8loqn" path="res://data/workstations/campfire.tres" id="5_yun6g"]
 
 [sub_resource type="Resource" id="Resource_v5pns"]
 script = ExtResource("2_qnam8")
