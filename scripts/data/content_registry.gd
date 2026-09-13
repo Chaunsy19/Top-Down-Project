@@ -7,6 +7,7 @@ const RECIPE_CATALOG_PATH := "res://data/catalogs/recipe_catalog.tres"
 const WORKSTATION_CATALOG_PATH := "res://data/catalogs/workstation_catalog.tres"
 const BUILDING_CATALOG_PATH := "res://data/catalogs/building_catalog.tres"
 
+var skill_catalog: Resource
 var item_catalog: Resource
 var item_category_catalog: Resource
 var resource_node_catalog: Resource
@@ -16,6 +17,7 @@ var building_catalog: Resource
 
 
 func _ready() -> void:
+	skill_catalog = load("res://data/catalogs/skill_catalog.tres")
 	item_catalog = load(ITEM_CATALOG_PATH)
 	item_category_catalog = load(ITEM_CATEGORY_CATALOG_PATH)
 	resource_node_catalog = load(RESOURCE_NODE_CATALOG_PATH)
@@ -125,3 +127,10 @@ func validate_catalogs() -> PackedStringArray:
 				if cost != null and cost.item_definition != null and item_catalog.get_item(cost.item_definition.item_id) == null:
 					errors.append("Building '%s' costs uncatalogued item '%s'." % [building.building_id, cost.item_definition.item_id])
 	return errors
+
+func get_skill(skill_id: StringName) -> Resource:
+	return skill_catalog.get_skill(skill_id) if skill_catalog != null else null
+
+func get_skill_display_name(skill_id: StringName) -> String:
+	var definition := get_skill(skill_id)
+	return definition.display_name if definition != null else String(skill_id).capitalize()

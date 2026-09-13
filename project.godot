@@ -164,3 +164,7 @@ debug_cycle_time={
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/content_database/plugin.cfg")

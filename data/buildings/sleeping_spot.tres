@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" format=3]
+
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="1_wlpqw"]
+[ext_resource type="Script" path="res://scripts/data/building/build_cost.gd" id="2_vcesf"]
+[ext_resource type="Script" path="res://scripts/data/building/building_definition.gd" id="3_fpw2t"]
+
+[sub_resource type="Resource" id="Resource_ko5q1"]
+script = ExtResource("2_vcesf")
+item_definition = ExtResource("1_wlpqw")
+quantity = 4
+
+[resource]
+script = ExtResource("3_fpw2t")
+building_id = &"sleeping_spot"
+display_name = "Sleeping Spot"
+description = "A basic place to rest."
+behavior = "sleeping_spot"
+costs = Array[Resource]([SubResource("Resource_ko5q1")])
+blocks_movement = false
+primary_color = Color(0.32, 0.43, 0.38, 1)

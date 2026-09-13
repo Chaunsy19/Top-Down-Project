@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SkillCatalog" load_steps=5 format=3]
+[ext_resource type="Script" path="res://scripts/data/skills/skill_catalog.gd" id="1"]
+[ext_resource type="Resource" path="res://data/skills/foraging.tres" id="2"]
+[ext_resource type="Resource" path="res://data/skills/forestry.tres" id="3"]
+[ext_resource type="Resource" path="res://data/skills/mining.tres" id="4"]
+[resource]
+script = ExtResource("1")
+skills = Array[Resource]([ExtResource("2"), ExtResource("3"), ExtResource("4")])

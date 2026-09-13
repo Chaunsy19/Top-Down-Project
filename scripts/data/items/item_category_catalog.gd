@@ -1,3 +1,4 @@
+@tool
 class_name ItemCategoryCatalog
 extends Resource
 
@@ -23,4 +24,3 @@ func validate() -> PackedStringArray:
 			errors.append("Duplicate category_id '%s'." % category.category_id)
 		seen_ids[category.category_id] = true
 	return errors
-

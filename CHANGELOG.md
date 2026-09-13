@@ -263,3 +263,10 @@ All notable project changes are recorded here by milestone.
 - Shared a 0.5-second sound cooldown across targets per actor; attack damage and click rate are unchanged.
 - Strike audio and action-mode regression suites pass.
 
+
+### Reusable Content Database editor
+
+- Added and enabled a searchable Godot dock for six content types with Inspector editing, creation, duplication, validation, catalog rebuilding, and reference-checked removal to the Recycle Bin.
+- Extracted the six inline building records into individual files while preserving their values and links.
+- Added skill definition resources and catalog with display metadata and default starting levels, preserving per-actor overrides and XP accumulation.
+- Database, smoke, crafting, building, and armor tests pass; editor plugin imports without script errors. Existing host certificate/editor-settings and shutdown warnings remain.

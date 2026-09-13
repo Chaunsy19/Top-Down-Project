@@ -15,7 +15,11 @@ func _ready() -> void:
 
 
 func get_skill_level(skill_id: StringName) -> int:
-	return _levels.get(skill_id, 0)
+	if _levels.has(skill_id):
+		return _levels[skill_id]
+	var registry := get_node_or_null("/root/ContentRegistry")
+	var definition: Resource = registry.get_skill(skill_id) if registry != null else null
+	return definition.starting_level if definition != null else 0
 
 
 func set_skill_level(skill_id: StringName, level: int) -> void:
@@ -32,3 +36,9 @@ func add_experience(skill_id: StringName, amount: int) -> void:
 
 func get_experience(skill_id: StringName) -> int:
 	return _experience.get(skill_id, 0)
+
+
+func get_skill_display_name(skill_id: StringName) -> String:
+	var registry := get_node_or_null("/root/ContentRegistry")
+	var definition: Resource = registry.get_skill(skill_id) if registry != null else null
+	return definition.display_name if definition != null else String(skill_id).capitalize()

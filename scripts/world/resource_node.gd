@@ -102,7 +102,7 @@ func get_debug_state() -> String:
 	return "Ready | %.0f/%.0f HP | %s %d+ | %s" % [
 		health.current_health,
 		health.maximum_health,
-		String(definition.skill_id).capitalize(),
+		get_node("/root/ContentRegistry").get_skill_display_name(definition.skill_id),
 		definition.required_skill_level,
 		tool_text,
 	]

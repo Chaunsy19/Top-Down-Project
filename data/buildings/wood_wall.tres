@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BuildingDefinition" format=3]
+
+[ext_resource type="Resource" path="res://data/items/wood.tres" id="1_wrkcr"]
+[ext_resource type="Script" path="res://scripts/data/building/build_cost.gd" id="2_jo322"]
+[ext_resource type="Script" path="res://scripts/data/building/building_definition.gd" id="3_kd4mo"]
+
+[sub_resource type="Resource" id="Resource_fwrtu"]
+script = ExtResource("2_jo322")
+item_definition = ExtResource("1_wrkcr")
+quantity = 5
+
+[resource]
+script = ExtResource("3_kd4mo")
+building_id = &"wood_wall"
+display_name = "Wood Wall"
+description = "A solid wooden wall tile."
+costs = Array[Resource]([SubResource("Resource_fwrtu")])
+construction_time = 1.5
+primary_color = Color(0.38, 0.23, 0.13, 1)
